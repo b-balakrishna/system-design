@@ -1,6 +1,8 @@
-# 🧠 System Design — From Foundations to Scale
+# 🧠 System Design — Frontend, Backend & Everything In Between
 
-A structured, self-paced roadmap for mastering system design — covering frontend, backend, distributed systems, and cloud architecture. Built for engineers who want to go beyond tutorials and understand *why* systems are designed the way they are.
+A structured, self-paced roadmap for mastering system design end-to-end — from how browsers render pixels to how distributed systems reach consensus across data centers. Most system design resources focus only on backend. This one doesn't. Every layer of the stack is a first-class citizen here.
+
+Built for engineers who want to go beyond tutorials and understand *why* systems are designed the way they are — whether that's a React rendering pipeline, a sharding strategy, or a multi-region failover plan.
 
 ---
 
@@ -30,11 +32,15 @@ system-design/
 | Client-Server Architecture | How clients and servers communicate; request-response model |
 | HTTP & HTTPS | Protocol mechanics, methods, status codes, TLS/SSL |
 | DNS | Domain resolution, record types, propagation |
+| CDN | Content delivery networks, edge caching, cache invalidation |
+| OSI Model & Networking | 7 layers, TCP/IP, UDP, how data travels across networks |
 | Browser Architecture | Processes, threads, rendering engine, JS engine |
+| WebSockets & Long Polling | Real-time communication — polling vs SSE vs WebSocket |
 | REST APIs | Resource-based design, statelessness, constraints |
 | Authentication vs Authorization | Identity verification vs permission scoping |
 | Cookies, Sessions, JWT | Stateful vs stateless auth strategies |
 | Caching Basics | Cache-aside, write-through, TTL, invalidation |
+| Rate Limiting | Token bucket, leaky bucket, sliding window — protecting APIs |
 | Database Fundamentals | ACID, transactions, normalization |
 | SQL vs NoSQL | Relational vs document/key-value/graph trade-offs |
 
@@ -48,14 +54,18 @@ system-design/
 |---|---|
 | Monolith Architecture | Single deployable unit; simplicity vs coupling |
 | Modular Monolith | Domain-separated code within a monolith; stepping stone to microservices |
+| Microservices Architecture | Independent services, bounded contexts, inter-service communication |
 | Load Balancers | L4 vs L7, round-robin, least connections, sticky sessions |
 | Reverse Proxy | Request forwarding, SSL termination, rate limiting |
 | API Gateway | Routing, auth, rate limiting, aggregation at the edge |
+| Circuit Breaker | Fault tolerance, fail-fast, half-open state, Hystrix/Resilience4j |
 | Database Indexing | B-tree, composite indexes, covering indexes, trade-offs |
 | Replication | Leader-follower, synchronous vs async, read replicas |
 | Sharding | Horizontal partitioning, shard keys, hotspot avoidance |
+| Connection Pooling | Why raw connections are expensive, pool sizing, PgBouncer |
 | Redis | In-memory data store, pub/sub, sorted sets, use cases |
 | Message Queues | Async decoupling, Kafka vs RabbitMQ, at-least-once delivery |
+| Message Broker vs Event Streaming | SNS/SQS vs Kafka — when to use which |
 
 ---
 
@@ -74,6 +84,9 @@ system-design/
 | Distributed Transactions | Two-phase commit, compensating transactions |
 | Service Discovery | Client-side vs server-side, Consul, Eureka |
 | Consensus Algorithms | Raft, Paxos — how nodes agree in the face of failures |
+| Leader Election | Bully algorithm, ZooKeeper, why it matters in distributed systems |
+| Consistent Hashing | Distributing load across nodes with minimal reshuffling |
+| Bloom Filters | Probabilistic data structures — space-efficient membership checks |
 | Distributed Caching | Consistent hashing, cache invalidation at scale |
 
 ---
@@ -91,8 +104,14 @@ system-design/
 | State Management | Local, global, server, URL state — choosing the right tool |
 | Code Splitting | Route-based and component-based splitting strategies |
 | Lazy Loading | Images, components, routes — deferring non-critical resources |
+| Web Workers & Service Workers | Offloading computation; offline support and background sync |
+| Browser Storage | localStorage, sessionStorage, IndexedDB — when to use each |
+| WebSockets on the Frontend | Real-time UI patterns, connection management, reconnect strategies |
+| Bundlers & Build Tools | Webpack, Vite, esbuild — module graphs, tree shaking, HMR |
+| Progressive Web Apps (PWA) | App shell, service workers, push notifications, installability |
 | Micro Frontends | Independent deployability, module federation, trade-offs |
 | Design Systems | Tokens, component libraries, consistency at scale |
+| Accessibility (a11y) at Scale | ARIA, keyboard navigation, screen readers, auditing at the org level |
 | Frontend Performance | Core Web Vitals, LCP, CLS, INP, profiling and optimization |
 
 ---
@@ -105,23 +124,27 @@ system-design/
 |---|---|
 | Docker | Containerization, images, layers, networking |
 | Kubernetes | Orchestration, pods, services, deployments, scaling |
+| Serverless Architecture | FaaS, Lambda, cold starts, event-driven design, trade-offs |
 | CI/CD | Pipelines, blue-green deploys, canary releases, rollback |
+| Infrastructure as Code | Terraform, Pulumi — declarative infra, state management, drift |
 | AWS Fundamentals | EC2, S3, RDS, Lambda, VPC, IAM — core building blocks |
 | High Availability | Redundancy, failover, SLAs, eliminating single points of failure |
 | Disaster Recovery | RTO, RPO, backup strategies, runbooks |
 | Observability | The three pillars — logs, metrics, traces |
 | Logging, Metrics, Tracing | ELK, Prometheus/Grafana, OpenTelemetry, distributed tracing |
 | Security Architecture | Zero trust, least privilege, secrets management, threat modeling |
+| Cost Optimization | Right-sizing, spot instances, reserved capacity, FinOps principles |
 | Multi-Region Design | Data residency, latency, active-active vs active-passive |
 
 ---
 
 ## 🎯 Who This Is For
 
-- Engineers preparing for system design interviews (L4–L6)
-- Frontend engineers expanding into full-stack/infra thinking
-- Backend engineers formalizing distributed systems knowledge
-- Anyone building production systems who wants a structured mental model
+- **Frontend engineers** who want to go deep on browser internals, rendering strategies, performance, and micro frontends
+- **Backend engineers** who want to go deep on distributed systems, database internals, scalability patterns, and resilience
+- **Full-stack engineers** who want a single structured reference across the entire stack
+- **Engineers preparing for system design interviews** — frontend, backend, or both (L4–L6)
+- Anyone building production systems who wants to understand *every layer*, not just their own
 
 ---
 
