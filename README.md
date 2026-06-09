@@ -29,15 +29,15 @@ system-design/
 
 | Phase | Folder | Focus | Topics |
 |---|---|---|---:|
-| Phase 0 | [phase-0-interview-primer](phase-0-interview-primer) | Interview framing, requirements, estimation, diagrams, trade-offs | 8 |
-| Phase 1 | [phase-1-low-level-design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies | 6 |
-| Phase 2 | [phase-2-foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases | 19 |
-| Phase 3 | [phase-3-backend](phase-3-backend) | Backend architecture, databases, queues, locking, search, storage | 25 |
-| Phase 4 | [phase-4-distributed-systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, distributed data structures | 22 |
-| Phase 5 | [phase-5-frontend](phase-5-frontend) | Browser internals, rendering, state, performance, frontend architecture | 25 |
-| Phase 6 | [phase-6-cloud-and-scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, resilience, security | 20 |
-| Phase 7 | [phase-7-ai-and-ml-systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, guardrails, AI observability | 15 |
-| Phase 8 | [phase-8-case-studies](phase-8-case-studies) | End-to-end system design examples | 17 |
+| Phase 0 | [Interview Primer](phase-0-interview-primer) | Interview framing, requirements, estimation, diagrams, trade-offs | 8 |
+| Phase 1 | [Low Level Design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies | 6 |
+| Phase 2 | [Foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases | 19 |
+| Phase 3 | [Backend](phase-3-backend) | Backend architecture, databases, queues, locking, search, storage | 25 |
+| Phase 4 | [Distributed Systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, distributed data structures | 22 |
+| Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, performance, frontend architecture | 25 |
+| Phase 6 | [Cloud and Scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, resilience, security | 20 |
+| Phase 7 | [AI and ML Systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, guardrails, AI observability | 15 |
+| Phase 8 | [Case Studies](phase-8-case-studies) | End-to-end system design examples | 17 |
 
 ---
 
