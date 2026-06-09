@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Color tokens (swapped by the .dark class on <html>) ---- */
+:root {
+  --bg: #f7f8fa;
+  --bg-elev: #ffffff;
+  --bg-sunk: #eef1f5;
+  --text: #1c2127;
+  --text-soft: #5a6472;
+  --text-faint: #8a93a2;
+  --border: #e3e8ef;
+  --border-strong: #d3dae4;
+  --accent: #4f46e5;
+  --accent-soft: #eef0fe;
+  --accent-text: #4f46e5;
+}
+
+.dark {
+  --bg: #0e1116;
+  --bg-elev: #161b22;
+  --bg-sunk: #0a0d12;
+  --text: #e6edf3;
+  --text-soft: #9da7b3;
+  --text-faint: #6e7681;
+  --border: #232a33;
+  --border-strong: #30363d;
+  --accent: #7c83ff;
+  --accent-soft: #1d2333;
+  --accent-text: #a9adff;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin, theme-aware scrollbars */
+@layer utilities {
+  .scroll-slim {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .scroll-slim::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  .scroll-slim::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 999px;
+  }
+  .scroll-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* Mermaid SVGs render full width inside their card */
+.mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}
