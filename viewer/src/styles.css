@@ -68,3 +68,13 @@ body {
   max-width: 100%;
   height: auto;
 }
+
+/*
+  prose-pre:bg-sunk gives code blocks a light background in light theme.
+  prose-slate's --tw-prose-pre-code is #e2e8f0 (near-white) — designed for dark
+  backgrounds — so we reset it to a dark value in light theme.
+  In dark mode, dark:prose-invert overrides this back to a light color.
+*/
+html:not(.dark) .prose {
+  --tw-prose-pre-code: var(--text);
+}
