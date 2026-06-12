@@ -33,9 +33,9 @@ system-design/
 | Phase 1 | [Low Level Design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies | 6 |
 | Phase 2 | [Foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases | 19 |
 | Phase 3 | [Backend](phase-3-backend) | Backend & data architecture, databases, queues, messaging reliability, search, storage | 38 |
-| Phase 4 | [Distributed Systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, distributed data structures | 22 |
-| Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, performance, frontend architecture | 25 |
-| Phase 6 | [Cloud and Scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, resilience, security | 20 |
+| Phase 4 | [Distributed Systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, event/stream patterns, resilience, distributed data structures | 32 |
+| Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, data fetching, performance, observability, frontend architecture | 29 |
+| Phase 6 | [Cloud and Scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, reliability engineering (SLOs, chaos, autoscaling), platform & security | 28 |
 | Phase 7 | [AI and ML Systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, guardrails, AI observability | 15 |
 | Phase 8 | [Case Studies](phase-8-case-studies) | End-to-end system design examples | 17 |
 
@@ -178,6 +178,16 @@ system-design/
 | 20 | [Count-Min Sketch](phase-4-distributed-systems/topic-20-count-min-sketch.md) |
 | 21 | [HyperLogLog](phase-4-distributed-systems/topic-21-hyperloglog.md) |
 | 22 | [Distributed Caching](phase-4-distributed-systems/topic-22-distributed-caching.md) |
+| 23 | [Event-Driven Architecture](phase-4-distributed-systems/topic-23-event-driven-architecture.md) |
+| 24 | [Stream Processing](phase-4-distributed-systems/topic-24-stream-processing.md) |
+| 25 | [Change Data Capture (CDC)](phase-4-distributed-systems/topic-25-change-data-capture-cdc.md) |
+| 26 | [Kafka Internals](phase-4-distributed-systems/topic-26-kafka-internals.md) |
+| 27 | [Distributed Rate Limiting](phase-4-distributed-systems/topic-27-distributed-rate-limiting.md) |
+| 28 | [Distributed Scheduling](phase-4-distributed-systems/topic-28-distributed-scheduling.md) |
+| 29 | [Bulkheads](phase-4-distributed-systems/topic-29-bulkheads.md) |
+| 30 | [Request Hedging](phase-4-distributed-systems/topic-30-request-hedging.md) |
+| 31 | [Retry Storms & Failure Domains](phase-4-distributed-systems/topic-31-retry-storms-and-failure-domains.md) |
+| 32 | [Cell-Based Architecture](phase-4-distributed-systems/topic-32-cell-based-architecture.md) |
 
 ---
 
@@ -212,6 +222,12 @@ system-design/
 | 23 | [Design Systems](phase-5-frontend/topic-23-design-systems.md) |
 | 24 | [Accessibility (a11y) at Scale](phase-5-frontend/topic-24-accessibility-a11y-at-scale.md) |
 | 25 | [Frontend Performance](phase-5-frontend/topic-25-frontend-performance.md) |
+| 26 | [Client Data Fetching & Caching](phase-5-frontend/topic-26-client-data-fetching-and-caching.md) |
+| 27 | [React Architecture at Scale](phase-5-frontend/topic-27-react-architecture-at-scale.md) |
+| 28 | [Frontend Observability & RUM](phase-5-frontend/topic-28-frontend-observability-and-rum.md) |
+| 29 | [Frontend CI/CD & Deployment](phase-5-frontend/topic-29-frontend-ci-cd-and-deployment.md) |
+
+> New in this revision (topics 26–29): client data fetching & caching (server-state libraries), React architecture at scale (RSC), frontend observability & RUM, and frontend CI/CD & deployment.
 
 ---
 
@@ -241,6 +257,16 @@ system-design/
 | 18 | [Security Architecture](phase-6-cloud-and-scalability/topic-18-security-architecture.md) |
 | 19 | [Cost Optimization](phase-6-cloud-and-scalability/topic-19-cost-optimization.md) |
 | 20 | [Multi-Region Design](phase-6-cloud-and-scalability/topic-20-multi-region-design.md) |
+| 21 | [SLOs, SLIs & Error Budgets](phase-6-cloud-and-scalability/topic-21-slos-slis-and-error-budgets.md) |
+| 22 | [Chaos Engineering](phase-6-cloud-and-scalability/topic-22-chaos-engineering.md) |
+| 23 | [Load & Stress Testing](phase-6-cloud-and-scalability/topic-23-load-and-stress-testing.md) |
+| 24 | [Autoscaling Strategies](phase-6-cloud-and-scalability/topic-24-autoscaling-strategies.md) |
+| 25 | [Deployment Strategies: Blue-Green & Canary](phase-6-cloud-and-scalability/topic-25-deployment-strategies-blue-green-and-canary.md) |
+| 26 | [Capacity Planning](phase-6-cloud-and-scalability/topic-26-capacity-planning.md) |
+| 27 | [Platform Engineering & Internal Developer Platforms](phase-6-cloud-and-scalability/topic-27-platform-engineering-and-idp.md) |
+| 28 | [Secrets Management](phase-6-cloud-and-scalability/topic-28-secrets-management.md) |
+
+> New in this revision (topics 21–28): the reliability-engineering layer (SLOs/SLIs/error budgets, chaos engineering, load testing, autoscaling, capacity planning), explicit deployment strategies (blue-green & canary), and platform/security (internal developer platforms, secrets management). Note: Time-Series DBs (15) and Geospatial Indexing (16) are data topics that pair with Phase 3; Data Pipelines (17) anchors the data-engineering material — see ROADMAP-REVIEW.md.
 
 ---
 
