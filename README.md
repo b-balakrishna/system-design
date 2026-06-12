@@ -32,7 +32,7 @@ system-design/
 | Phase 0 | [Interview Primer](phase-0-interview-primer) | Interview framing, requirements, estimation, diagrams, trade-offs | 8 |
 | Phase 1 | [Low Level Design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies | 6 |
 | Phase 2 | [Foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases | 19 |
-| Phase 3 | [Backend](phase-3-backend) | Backend architecture, databases, queues, locking, search, storage | 25 |
+| Phase 3 | [Backend](phase-3-backend) | Backend & data architecture, databases, queues, messaging reliability, search, storage | 38 |
 | Phase 4 | [Distributed Systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, distributed data structures | 22 |
 | Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, performance, frontend architecture | 25 |
 | Phase 6 | [Cloud and Scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, resilience, security | 20 |
@@ -101,9 +101,9 @@ system-design/
 
 ---
 
-## Phase 3 — Backend
+## Phase 3 — Backend & Data Architecture
 
-> Core patterns for building reliable, scalable server-side systems.
+> Core patterns for building reliable, scalable server-side systems, plus data-layer internals, backend architecture discipline, and messaging reliability.
 
 | # | Topic |
 |---:|---|
@@ -132,6 +132,21 @@ system-design/
 | 23 | [Search Systems](phase-3-backend/topic-23-search-systems.md) |
 | 24 | [Object Storage](phase-3-backend/topic-24-object-storage.md) |
 | 25 | [Concurrency and Thread Models](phase-3-backend/topic-25-concurrency-and-thread-models.md) |
+| 26 | [Domain-Driven Design (DDD)](phase-3-backend/topic-26-domain-driven-design.md) |
+| 27 | [Clean & Hexagonal Architecture](phase-3-backend/topic-27-clean-and-hexagonal-architecture.md) |
+| 28 | [Multi-Tenant Architecture](phase-3-backend/topic-28-multi-tenant-architecture.md) |
+| 29 | [Backend-for-Frontend (BFF)](phase-3-backend/topic-29-backend-for-frontend-bff.md) |
+| 30 | [Storage Engines: B-Trees vs LSM-Trees](phase-3-backend/topic-30-storage-engines-btrees-vs-lsm-trees.md) |
+| 31 | [Query Optimization & Execution Plans](phase-3-backend/topic-31-query-optimization-and-execution-plans.md) |
+| 32 | [Partitioning Strategies & Hot Partitions](phase-3-backend/topic-32-partitioning-strategies-and-hot-partitions.md) |
+| 33 | [Secondary Indexes](phase-3-backend/topic-33-secondary-indexes.md) |
+| 34 | [Data Lifecycle & Archival](phase-3-backend/topic-34-data-lifecycle-and-archival.md) |
+| 35 | [Dead Letter Queues & Retry Strategies](phase-3-backend/topic-35-dead-letter-queues-and-retry-strategies.md) |
+| 36 | [Outbox & Inbox Pattern](phase-3-backend/topic-36-outbox-and-inbox-pattern.md) |
+| 37 | [Exactly-Once vs At-Least-Once Delivery](phase-3-backend/topic-37-exactly-once-vs-at-least-once-delivery.md) |
+| 38 | [Choreography vs Orchestration](phase-3-backend/topic-38-choreography-vs-orchestration.md) |
+
+> New in this revision (topics 26–38): backend architecture discipline (DDD, hexagonal, multi-tenancy, BFF), data-layer depth (storage engines, query optimization, partitioning/hot partitions, secondary indexes, data lifecycle), and messaging reliability (DLQ/retries, outbox/inbox, delivery semantics, choreography vs orchestration). See `ROADMAP-REVIEW.md` for the full rationale.
 
 ---
 
