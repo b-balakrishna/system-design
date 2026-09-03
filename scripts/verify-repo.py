@@ -27,8 +27,8 @@ def check_readme_links(workspace):
     links = re.findall(r'\[([^\]]+)\]\((phase-[^)]+\.md)\)', content)
     errors = []
     
-    if len(links) != 205:
-        errors.append(f"Expected 205 topic links in README.md, found {len(links)}")
+    if len(links) != 211:
+        errors.append(f"Expected 211 topic links in README.md, found {len(links)}")
 
     for text, link in links:
         full_path = os.path.join(workspace, link.replace('/', os.sep))
@@ -132,7 +132,7 @@ def main():
         print(f"   FAILED ({len(readme_errors)} errors)")
         all_errors.extend(readme_errors)
     else:
-        print("   PASSED (205 valid, non-empty topic links)")
+        print("   PASSED (211 valid, non-empty topic links)")
         
     print("2. Checking cross-references...")
     xref_errors = check_cross_references(workspace)

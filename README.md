@@ -37,7 +37,7 @@ system-design/
 | Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, data fetching, performance, observability, frontend architecture | 29 |
 | Phase 6 | [Cloud and Scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, reliability engineering (SLOs, chaos, autoscaling), platform & security | 28 |
 | Phase 7 | [AI and ML Systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, context engineering, MCP, semantic caching, safety & evals | 26 |
-| Phase 8 | [Case Studies](phase-8-case-studies) | End-to-end system design examples | 17 |
+| Phase 8 | [Case Studies](phase-8-case-studies) | End-to-end system design examples | 23 |
 
 ---
 
@@ -332,6 +332,12 @@ system-design/
 | 15 | [Design a CI/CD Pipeline](phase-8-case-studies/topic-15-design-a-ci-cd-pipeline.md) | Distributed Infra & Data (Batch 4) |
 | 16 | [Design an LLM-Powered Search](phase-8-case-studies/topic-16-design-an-llm-powered-search.md) | Applied AI & Modern Frontend (Batch 5) |
 | 17 | [Design a React Component Library](phase-8-case-studies/topic-17-design-a-react-component-library.md) | Applied AI & Modern Frontend (Batch 5) |
+| 18 | [Design a Cloud Storage System](phase-8-case-studies/topic-18-design-a-cloud-storage-system.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
+| 19 | [Design a Proximity Service](phase-8-case-studies/topic-19-design-a-proximity-service.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
+| 20 | [Design a Metrics Monitoring System](phase-8-case-studies/topic-20-design-a-metrics-monitoring-system.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
+| 21 | [Design a Live Streaming Platform](phase-8-case-studies/topic-21-design-a-live-streaming-platform.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
+| 22 | [Design a Distributed Key-Value Store](phase-8-case-studies/topic-22-design-a-distributed-key-value-store.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
+| 23 | [Design an LLM Serving Platform](phase-8-case-studies/topic-23-design-an-llm-serving-platform.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
 
 ---
 
