@@ -28,6 +28,8 @@ export default function Sidebar({ onOpenPalette, modKey }: SidebarProps) {
       .filter((p) => p.topics.length > 0);
   }, [phases, filter, completedIds]);
 
+  const totalTopics = useMemo(() => phases.reduce((acc, p) => acc + p.topics.length, 0), [phases]);
+
   return (
     <aside
       className={`scroll-slim fixed inset-y-0 left-0 top-[57px] z-30 w-[300px] overflow-y-auto border-r border-line bg-elev px-3 pb-12 pt-4 shadow-card transition-transform duration-200 md:static md:top-0 md:z-0 md:shadow-none ${
@@ -73,7 +75,7 @@ export default function Sidebar({ onOpenPalette, modKey }: SidebarProps) {
         <span>Numbers Cheat Sheet</span>
       </button>
 
-      {/* Spotlight Command Palette Trigger */}
+      {/* Search Trigger Button (Opens Spotlight Palette) */}
       <div className="my-3 px-0.5">
         <button
           type="button"
@@ -83,7 +85,7 @@ export default function Sidebar({ onOpenPalette, modKey }: SidebarProps) {
         >
           <div className="flex items-center gap-2">
             <span className="text-sm">🔍</span>
-            <span>Search 211 topics...</span>
+            <span>Search {totalTopics} topics...</span>
           </div>
           <kbd className="rounded border border-line bg-elev px-1.5 py-0.5 font-mono text-[10px] text-ink-soft group-hover:border-line-strong group-hover:text-ink">
             {modKey}

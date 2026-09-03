@@ -170,7 +170,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search 211 topics, phases, keywords, or references..."
+            placeholder={`Search ${flatTopics.length} topics, phases, keywords, or references...`}
             className="flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint"
           />
           {query && (
@@ -253,7 +253,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
               <kbd className="rounded border border-line bg-elev px-1 py-0.5 font-mono">↵</kbd> to open & highlight
             </span>
           </div>
-          <span>211 Topics Available</span>
+          <span>{flatTopics.length} Topics Available</span>
         </div>
       </div>
     </div>

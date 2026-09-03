@@ -148,6 +148,21 @@ def check_content_depth_and_headings(disk_topics):
 
     return errors
 
+def check_latex_math_syntax(disk_topics):
+    errors = []
+    for rel_path, abs_path in disk_topics.items():
+        with open(abs_path, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+
+        # Check for unescaped & inside display math $$ ... $$
+        for m in re.finditer(r'\$\$([^\$]+)\$\$', content):
+            math_block = m.group(1)
+            if re.search(r'(?<!\\)&', math_block):
+                if not ('\\begin{align' in math_block or '\\begin{matrix' in math_block):
+                    errors.append(f"{rel_path}: Unescaped '&' inside $$ LaTeX math block")
+
+    return errors
+
 def main():
     workspace = get_workspace_root()
     print(f"==================================================")
@@ -201,6 +216,14 @@ def main():
     else:
         print(f"   PASSED (All {len(disk_topics)} topics exceed depth threshold with valid H1 structure)")
 
+    print("6. Checking LaTeX Math Syntax...")
+    math_errors = check_latex_math_syntax(disk_topics)
+    if math_errors:
+        print(f"   FAILED ({len(math_errors)} errors)")
+        all_errors.extend(math_errors)
+    else:
+        print("   PASSED (0 unescaped '&' or LaTeX syntax errors)")
+
     print("\n" + "=" * 50)
     if all_errors:
         print(f"VERIFICATION FAILED WITH {len(all_errors)} ERRORS:")
@@ -210,7 +233,7 @@ def main():
             print(f"  ... and {len(all_errors) - 25} more errors.")
         sys.exit(1)
     else:
-        print(f"ALL 5 QUALITY GATES PASSED! (100% CLEAN - {len(disk_topics)} TOPICS)")
+        print(f"ALL 6 QUALITY GATES PASSED! (100% CLEAN - {len(disk_topics)} TOPICS)")
         sys.exit(0)
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # System Design: Frontend, Backend & Everything In Between
 
-[![Topics](https://img.shields.io/badge/curriculum-211%20%2F%20211%20topics-brightgreen)](README.md)
+[![Topics](https://img.shields.io/badge/curriculum-217%20%2F%20217%20topics-brightgreen)](README.md)
 [![Integrity Gates](https://img.shields.io/badge/quality%20gates-100%25%20passing-success)](scripts/verify-repo.py)
 [![Interactive Viewer](https://img.shields.io/badge/interactive%20viewer-live-blueviolet)](viewer)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -387,6 +387,12 @@ system-design/
 | 21 | [Design a Live Streaming Platform](phase-8-case-studies/topic-21-design-a-live-streaming-platform.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
 | 22 | [Design a Distributed Key-Value Store](phase-8-case-studies/topic-22-design-a-distributed-key-value-store.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
 | 23 | [Design an LLM Serving Platform](phase-8-case-studies/topic-23-design-an-llm-serving-platform.md) | Advanced Infra & Emerging Paradigms (Batch 6) |
+| 24 | [Design a Ticket Booking System](phase-8-case-studies/topic-24-design-a-ticket-booking-system.md) | Enterprise & Financial Engines (Batch 7) |
+| 25 | [Design a Real-Time Gaming Leaderboard](phase-8-case-studies/topic-25-design-a-real-time-gaming-leaderboard.md) | Enterprise & Financial Engines (Batch 7) |
+| 26 | [Design an Exchange Matching Engine](phase-8-case-studies/topic-26-design-an-exchange-matching-engine.md) | Enterprise & Financial Engines (Batch 7) |
+| 27 | [Design a Distributed Message Broker](phase-8-case-studies/topic-27-design-a-distributed-message-broker.md) | Enterprise & Financial Engines (Batch 7) |
+| 28 | [Design a Global Content Delivery Network](phase-8-case-studies/topic-28-design-a-global-content-delivery-network.md) | Enterprise & Financial Engines (Batch 7) |
+| 29 | [Design a Distributed Caching Service](phase-8-case-studies/topic-29-design-a-distributed-caching-service.md) | Enterprise & Financial Engines (Batch 7) |
 
 ---
 
