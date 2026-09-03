@@ -12,8 +12,8 @@
 
 ```mermaid
 flowchart TD
-    Client[Client Command] -->|1. Debit $50| Aggregate[Account Aggregate]
-    Aggregate -->|2. Validate Invariant: Balance >= 50| Success{Allowed?}
+    Client[Client Command] -->|"1. Debit $50"| Aggregate[Account Aggregate]
+    Aggregate -->|"2. Validate Invariant: Balance >= 50"| Success{Allowed?}
     
     Success -->|Yes| Store[Append event: MoneyDebited]
     Store -->|3. Append| EventStore[(Event Store: Append-Only Log)]

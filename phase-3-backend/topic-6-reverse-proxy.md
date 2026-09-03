@@ -12,7 +12,7 @@ flowchart LR
     C[Client] --> RP[Reverse Proxy<br/>Nginx / Envoy]
     RP -->|/api| API[App servers]
     RP -->|/static| ST[Static / cache]
-    RP -->|TLS, gzip,<br/>auth, rate limit| API
+    RP -->|"TLS, gzip,<br/>auth, rate limit"| API
 ```
 
 ## Problem It Solves

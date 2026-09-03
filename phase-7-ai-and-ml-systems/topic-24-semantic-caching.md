@@ -14,12 +14,12 @@ flowchart TD
     Embed --> QueryVec[Query Vector]
     QueryVec --> VectorDB[(Semantic Cache Store<br/>Vectors + Cached Completions)]
     
-    VectorDB --> Match{"Cosine Similarity<br/>Score >= Threshold θ?"}
+    VectorDB --> Match{"Cosine Similarity<br/>Score >= Threshold?"}
     
-    Match -->|Yes: Score 0.94| CacheHit["CACHE HIT (<20ms)<br/>Return Cached Completion"]
+    Match -->|"Yes: High Similarity"| CacheHit["CACHE HIT (Sub-20ms)<br/>Return Cached Completion"]
     CacheHit --> Response([Client Response])
     
-    Match -->|No: Score < θ| CacheMiss["CACHE MISS<br/>Invoke LLM Inference Engine"]
+    Match -->|"No: Low Similarity"| CacheMiss["CACHE MISS<br/>Invoke LLM Inference Engine"]
     CacheMiss --> LLM[Foundation Model / GPU Cluster]
     LLM --> Completion[Generate Completion]
     Completion --> StoreCache[Store Query Vector + Completion in Cache]

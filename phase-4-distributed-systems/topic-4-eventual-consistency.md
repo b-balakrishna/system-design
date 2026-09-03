@@ -13,7 +13,7 @@ flowchart TD
     subgraph Read Repair
         Coordinator -->|Read x| NodeA[Replica A: v2]
         Coordinator -->|Read x| NodeB[Replica B: v1]
-        Coordinator -->|Detects drift: v2 > v1| Resolver[Resolve to v2]
+        Coordinator -->|"Detects drift: v2 > v1"| Resolver[Resolve to v2]
         Resolver -->|1. Return v2| Client
         Resolver -->|2. Asynchronous write v2| NodeB
     end

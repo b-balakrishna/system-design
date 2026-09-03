@@ -22,11 +22,11 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          package_json_file: viewer/package.json   # reads version from packageManager field
+          package_json_file: viewer/package.json # reads version from packageManager field
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
           cache-dependency-path: viewer/pnpm-lock.yaml
 

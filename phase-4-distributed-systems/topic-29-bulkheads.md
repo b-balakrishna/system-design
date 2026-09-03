@@ -9,7 +9,7 @@
 ```mermaid
 flowchart TB
     subgraph NoBulkhead["No bulkhead (shared pool)"]
-        ALL[One thread pool] -->|slow dep B<br/>eats all threads| DEAD[All requests stall]
+        ALL[One thread pool] -->|"slow dep B<br/>eats all threads"| DEAD[All requests stall]
     end
     subgraph Bulkhead["Bulkheads (isolated pools)"]
         PA[Pool for A] --> SA[A healthy]

@@ -11,7 +11,7 @@
 flowchart TB
     M[Mobile] --> GW[API Gateway]
     W[Web] --> GW
-    GW -->|authN/Z, rate limit,<br/>routing, aggregation| O[Order Service]
+    GW -->|"authN/Z, rate limit,<br/>routing, aggregation"| O[Order Service]
     GW --> U[User Service]
     GW --> P[Product Service]
 ```

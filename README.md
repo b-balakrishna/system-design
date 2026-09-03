@@ -313,25 +313,25 @@ system-design/
 
 > Full system design walkthroughs that combine requirements, architecture, data modeling, scaling, reliability, and trade-offs.
 
-| # | Topic |
-| - :| - |
-| 1 | [Design a URL Shortener](phase-8-case-studies/topic-1-design-a-url-shortener.md) |
-| 2 | [Design Twitter/X Feed](phase-8-case-studies/topic-2-design-twitter-x-feed.md) |
-| 3 | [Design a Notification System](phase-8-case-studies/topic-3-design-a-notification-system.md) |
-| 4 | [Design a Chat Application](phase-8-case-studies/topic-4-design-a-chat-application.md) |
-| 5 | [Design YouTube Video Platform](phase-8-case-studies/topic-5-design-youtube-video-platform.md) |
-| 6 | [Design Google Docs Collaborative Editor](phase-8-case-studies/topic-6-design-google-docs-collaborative-editor.md) |
-| 7 | [Design an Autocomplete Typeahead](phase-8-case-studies/topic-7-design-an-autocomplete-typeahead.md) |
-| 8 | [Design a Web Crawler Search Indexer](phase-8-case-studies/topic-8-design-a-web-crawler-search-indexer.md) |
-| 9 | [Design a Rate Limiter](phase-8-case-studies/topic-9-design-a-rate-limiter.md) |
-| 10 | [Design a Ride-Sharing System](phase-8-case-studies/topic-10-design-a-ride-sharing-system.md) |
-| 11 | [Design an E-Commerce Checkout](phase-8-case-studies/topic-11-design-an-e-commerce-checkout.md) |
-| 12 | [Design a Payment System Wallet](phase-8-case-studies/topic-12-design-a-payment-system-wallet.md) |
-| 13 | [Design a Distributed Job Scheduler](phase-8-case-studies/topic-13-design-a-distributed-job-scheduler.md) |
-| 14 | [Design an Ad Click Aggregator](phase-8-case-studies/topic-14-design-an-ad-click-aggregator.md) |
-| 15 | [Design a CI/CD Pipeline](phase-8-case-studies/topic-15-design-a-ci-cd-pipeline.md) |
-| 16 | [Design an LLM-Powered Search](phase-8-case-studies/topic-16-design-an-llm-powered-search.md) |
-| 17 | [Design a React Component Library](phase-8-case-studies/topic-17-design-a-react-component-library.md) |
+| # | Topic | Domain Category |
+| - :| - | - |
+| 1 | [Design a URL Shortener](phase-8-case-studies/topic-1-design-a-url-shortener.md) | Foundational Core (Batch 1) |
+| 2 | [Design a Rate Limiter](phase-8-case-studies/topic-2-design-a-rate-limiter.md) | Foundational Core (Batch 1) |
+| 3 | [Design Twitter/X Feed](phase-8-case-studies/topic-3-design-twitter-x-feed.md) | Foundational Core (Batch 1) |
+| 4 | [Design a Notification System](phase-8-case-studies/topic-4-design-a-notification-system.md) | Foundational Core (Batch 1) |
+| 5 | [Design a Chat Application](phase-8-case-studies/topic-5-design-a-chat-application.md) | Real-Time & Media (Batch 2) |
+| 6 | [Design YouTube Video Platform](phase-8-case-studies/topic-6-design-youtube-video-platform.md) | Real-Time & Media (Batch 2) |
+| 7 | [Design Google Docs Collaborative Editor](phase-8-case-studies/topic-7-design-google-docs-collaborative-editor.md) | Real-Time & Media (Batch 2) |
+| 8 | [Design an Autocomplete Typeahead](phase-8-case-studies/topic-8-design-an-autocomplete-typeahead.md) | Real-Time & Media (Batch 2) |
+| 9 | [Design a Ride-Sharing System](phase-8-case-studies/topic-9-design-a-ride-sharing-system.md) | Transactional & FinTech (Batch 3) |
+| 10 | [Design an E-Commerce Checkout](phase-8-case-studies/topic-10-design-an-e-commerce-checkout.md) | Transactional & FinTech (Batch 3) |
+| 11 | [Design a Payment System Wallet](phase-8-case-studies/topic-11-design-a-payment-system-wallet.md) | Transactional & FinTech (Batch 3) |
+| 12 | [Design a Web Crawler Search Indexer](phase-8-case-studies/topic-12-design-a-web-crawler-search-indexer.md) | Distributed Infra & Data (Batch 4) |
+| 13 | [Design a Distributed Job Scheduler](phase-8-case-studies/topic-13-design-a-distributed-job-scheduler.md) | Distributed Infra & Data (Batch 4) |
+| 14 | [Design an Ad Click Aggregator](phase-8-case-studies/topic-14-design-an-ad-click-aggregator.md) | Distributed Infra & Data (Batch 4) |
+| 15 | [Design a CI/CD Pipeline](phase-8-case-studies/topic-15-design-a-ci-cd-pipeline.md) | Distributed Infra & Data (Batch 4) |
+| 16 | [Design an LLM-Powered Search](phase-8-case-studies/topic-16-design-an-llm-powered-search.md) | Applied AI & Modern Frontend (Batch 5) |
+| 17 | [Design a React Component Library](phase-8-case-studies/topic-17-design-a-react-component-library.md) | Applied AI & Modern Frontend (Batch 5) |
 
  - 
 
