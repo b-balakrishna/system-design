@@ -80,40 +80,47 @@ classDiagram
 - Omit trivial getters and setters unless they communicate a rule (for example, `setQuantity(n)` that validates non-negative).
 - Mark interface with `<<interface>>` and abstract class with `<<abstract>>`.
 
-### Inheritance
+### Member Visibility & UML Classifiers in Mermaid
 
-- Use inheritance (` - |>`) when a subtype truly "is a" parent type and honors its full contract (LSP from topic 1).
-- Example: `Car`, `Bike`, and `Truck` extend `Vehicle`.
-- LLD rule: put only shared behavior in `Vehicle`, such as `getLicensePlate()`. Do not force every vehicle to support behavior only some vehicles have (ISP from topic 1).
+In Mermaid class diagrams, prefixes indicate member visibility, while trailing suffixes define UML classifiers:
 
-### Realization
+| Symbol | Meaning | Example | UML Visual Convention |
+|---|---|---|---|
+| `+` | **Public** | `+getName() String` | Accessible by all callers |
+| `-` | **Private** | `-counter int` | Encapsulated internal state |
+| `#` | **Protected** | `#validate()` | Accessible by class and subclasses |
+| `~` | **Package / Internal** | `~cache Map` | Accessible within same package |
+| `$` | **Static Member** | `+getInstance()$ IdGenerator` | Renders **underlined** (static method or property) |
+| `*` | **Abstract Method** | `+render()*` | Renders in **italics** (abstract method) |
 
-- Use realization (`..|>`) when a class implements an interface.
-- Example: `CardPayment` and `WalletPayment` implement `PaymentProcessor.charge(amount)`.
-- LLD rule: the caller should depend on `PaymentProcessor`, not the concrete classes (DIP from topic 1).
+### UML Relationships & Mermaid Arrow Reference
 
-### Association
+In class diagrams, relationships define how objects interact, inherit, or manage lifecycles.
 
-- Association (` - >`) means one class uses or knows about another class.
-- Example: `CheckoutService` uses a `PaymentProcessor`.
-- The payment object does not have to be owned forever by checkout; it may be supplied for one operation only.
+```mermaid
+classDiagram
+    Vehicle <|-- Car : Inheritance (is-a)
+    PaymentProcessor <|.. CardPayment : Realization (implements)
+    ParkingLot *-- ParkingFloor : Composition (owns)
+    Team o-- Player : Aggregation (references)
+    OrderService --> PaymentGateway : Association (uses)
+```
 
-### Aggregation
+| Relationship | UML Type | Mermaid Arrow | Meaning | Lifecycle Rule | Code Pattern |
+|---|---|---|---|---|---|
+| **Inheritance** | Generalization | `Child <|-- Parent` | "Is-a" | Subclass inherits parent contract (LSP) | `class Car extends Vehicle` |
+| **Realization** | Implementation | `Class ..|> Interface` | "Implements" | Class fulfills interface abstraction (DIP) | `class Card implements Payment` |
+| **Composition** | Strong Ownership | `Parent *-- Child` | "Part-of" | Child **dies** if Parent dies (bound lifecycle) | `new ParkingFloor()` inside `ParkingLot` |
+| **Aggregation** | Weak Ownership | `Parent o-- Child` | "Has-a" | Child **survives** if Parent dies (independent) | `Player` passed into `Team(player)` |
+| **Association** | Dependency / Usage | `ClassA --> ClassB` | "Uses-a" | Transient caller relationship | `service.charge(gateway)` |
+| **Multiplicity** | Cardinality | `Lot "1" *-- "*" Floor` | Multiplicity | Defines 1-to-1, 1-to-many (`*`), or many-to-many | List/Array vs single field |
 
-- Aggregation (`o - `) is a weak whole-part relationship where the child has an independent lifecycle.
-- Example: `Team` has many `Player` objects, but a `Player` can exist after leaving the team.
+### 5-Second Interview Decision Rule: Composition vs. Aggregation
 
-### Composition
-
-- Composition (`* - `) is strong ownership. The child's lifecycle is tied to the parent.
-- Example: `ParkingLot` owns `ParkingFloor`; `ParkingFloor` owns `ParkingSpot`. Deleting the lot means deleting its floors and spots.
-
-### Multiplicity
-
-- `ParkingLot "1" - > "many" ParkingFloor`.
-- `ParkingFloor "1" - > "many" ParkingSpot`.
-- `Ticket "1" - > "1" ParkingSpot` while the vehicle is parked.
-- Multiplicity clarifies whether a field holds a single object, an optional object, or a collection.
+When deciding between Composition (`*--`) and Aggregation (`o--`) in an interview, ask one question:
+> *"If I delete the parent container object, does the child object cease to exist?"*
+- **YES**: **Composition (`*--`)**. Deleting `ParkingLot` deletes all its `ParkingFloor`s and `ParkingSpot`s. The children cannot exist without the parent.
+- **NO**: **Aggregation (`o--`)**. Deleting a `Team` does not delete the `Player`s. The players simply move to free agency.
 
 ### When to draw a sequence diagram
 

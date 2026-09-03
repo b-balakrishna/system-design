@@ -41,6 +41,20 @@ In a FAANG / Tier-1 system design interview, managing your time is half the eval
 
 ---
 
+## Reading Conventions & Notation Guide
+
+To get the most out of these notes, keep these standard notation conventions in mind:
+
+| Category | Symbol / Format | Meaning | Where It Appears |
+|---|---|---|---|
+| **UML Member Classifier** | `$` suffix (e.g. `+getInstance()$`) | **Static member** (rendered as underlined text in UML class diagrams) | Phase 1 Low-Level Design |
+| **UML Visibility** | `+` / `-` / `#` | `+` Public, `-` Private, `#` Protected | Phase 1 Class Diagrams |
+| **Inline Math** | `$ ... $` (e.g. `$O(1)$`, `$N=3$`) | Inline LaTeX mathematical notation (complexity, algorithms) | All Phases & Case Studies |
+| **Display Equations** | `$$ ... $$` | Centered display math blocks (capacity estimation formulas) | Phases 2-8 Capacity Sections |
+| **Hospitality Price Tiers** | `$` / `$$` / `$$$` | Price range rating (`$` = budget, `$$` = moderate, `$$$` = upscale) | Topic 19 Proximity Service |
+
+---
+
 ## How to Use This Repo
 
 Each topic lives in its own markdown file inside the relevant phase folder. Start with Phase 0 if you are preparing for interviews, Phase 1 if you want to strengthen object-oriented design, or jump directly to the phase that matches your current gaps.

@@ -201,6 +201,61 @@ export default function CheatSheet() {
           </div>
         </div>
       </section>
+
+      {/* Reading & Notation Conventions */}
+      <section className="rounded-xl border border-line bg-elev p-6 shadow-sm">
+        <h2 className="mb-4 text-xl font-bold tracking-tight text-ink">
+          5. Reading Conventions & Architecture Notations
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-line text-xs font-semibold uppercase text-ink-soft">
+                <th className="py-2.5 pr-4">Symbol / Notation</th>
+                <th className="py-2.5 pr-4">Context</th>
+                <th className="py-2.5">Meaning & Visual Rendering</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line/60">
+              <tr>
+                <td className="py-2.5 pr-4 font-mono font-bold text-brand-text">name$</td>
+                <td className="py-2.5 pr-4 font-medium text-ink">Mermaid UML Class Diagrams</td>
+                <td className="py-2.5 text-ink-soft">
+                  <strong>Static member</strong>. Suffix <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">$</code> tells Mermaid to render the method or property underlined per UML standards (e.g. <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">+getInstance()$</code>).
+                </td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-mono font-bold text-brand-text">+ / - / #</td>
+                <td className="py-2.5 pr-4 font-medium text-ink">Mermaid UML Class Diagrams</td>
+                <td className="py-2.5 text-ink-soft">
+                  <strong>Visibility modifiers</strong>: <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">+</code> Public, <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">-</code> Private, <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">#</code> Protected, <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">~</code> Package.
+                </td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-mono font-bold text-brand-text">$ ... $</td>
+                <td className="py-2.5 pr-4 font-medium text-ink">Technical Notes & Algorithms</td>
+                <td className="py-2.5 text-ink-soft">
+                  <strong>Inline LaTeX math</strong>. Delimits mathematical variables, formulas, and Big-O notation (e.g. <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">$O(1)$</code>, <code className="rounded bg-sunk px-1 py-0.5 font-mono text-xs">$N=3$</code>).
+                </td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-mono font-bold text-brand-text">$$ ... $$</td>
+                <td className="py-2.5 pr-4 font-medium text-ink">Capacity Estimations</td>
+                <td className="py-2.5 text-ink-soft">
+                  <strong>Display equation block</strong>. Delimits multi-line capacity estimation math, bandwidth calculations, and storage formulas.
+                </td>
+              </tr>
+              <tr>
+                <td className="py-2.5 pr-4 font-mono font-bold text-brand-text">$ / $$ / $$$</td>
+                <td className="py-2.5 pr-4 font-medium text-ink">Proximity Service (Yelp / Maps)</td>
+                <td className="py-2.5 text-ink-soft">
+                  <strong>Hospitality price tier</strong> ratings ($ = budget, $$ = moderate, $$$ = upscale).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

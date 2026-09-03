@@ -197,5 +197,10 @@ classDiagram
     }
 ```
 
+> [!NOTE]
+> **Reading the Diagram ($ = static)**: In Mermaid UML class diagram notation, a trailing `$` indicates a **static member** (underlined in UML standards):
+> - `-instance IdGenerator$`: private static field holding the singleton instance.
+> - `+getInstance()$ IdGenerator`: public static method returning the singleton instance.
+
 - Why it fits: there is one process-level responsibility - generating unique IDs.
 - LLD caution: inject `IdGenerator` into classes that need it rather than letting every class call `getInstance()` directly. Injection keeps the dependency visible and testable (DIP).
