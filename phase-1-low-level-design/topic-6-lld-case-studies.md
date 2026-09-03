@@ -41,7 +41,7 @@ flowchart LR
 - **Full model vs. interview model**: a real implementation needs many more details; an interview design should focus on core entities and flows.
 - **Abstract interfaces vs. concrete classes**: interfaces protect the design from external details, but too many make the diagram noisy.
 
- - 
+---
 
 ## Case Study 1: Parking Lot
 
@@ -145,7 +145,7 @@ sequenceDiagram
 
 - **Extension:** adding `Truck` or `NearestExitStrategy` should not rewrite the parking flow.
 
- - 
+---
 
 ## Case Study 2: Vending Machine
 
@@ -248,7 +248,7 @@ sequenceDiagram
 
 - **Extension:** adding a refund action is a new behavior in each state, not a branch in every method.
 
- - 
+---
 
 ## Case Study 3: Elevator
 
@@ -333,7 +333,7 @@ sequenceDiagram
 
 - **Extension:** a new scheduling strategy can be plugged in without changing `Elevator`.
 
- - 
+---
 
 ## Case Study 4: Document Editor
 
@@ -437,7 +437,7 @@ sequenceDiagram
 
 - **Extension:** adding `ResizeImageCommand` follows the same `EditorCommand` contract.
 
- - 
+---
 
 ## Case Study 5: Tic-Tac-Toe
 
@@ -523,7 +523,7 @@ sequenceDiagram
 
 - **Extension:** a 4×4 version or a connect-4 variant can use a different `WinCondition`.
 
- - 
+---
 
 ## Case Study 6: ATM Machine
 
@@ -649,7 +649,7 @@ sequenceDiagram
 
 - **Extension:** contactless or biometric entry changes `CardInsertedState` internals only - the flow is the same.
 
- - 
+---
 
 ## Case Study 7: Library Management System
 
@@ -768,7 +768,7 @@ sequenceDiagram
 
 - **Extension:** a new `WeeklyFinePolicy` adds one class. A new notification channel adds one `LoanObserver` implementation.
 
- - 
+---
 
 ## Case Study 8: Movie Ticket Booking (BookMyShow)
 
@@ -897,7 +897,7 @@ sequenceDiagram
 
 - **Extension:** adding a new payment method adds one `Payment` implementation. Adding loyalty points adds one `BookingObserver`.
 
- - 
+---
 
 ## Case Study 9: Chess Game
 
@@ -1032,7 +1032,7 @@ sequenceDiagram
 
 - **Extension:** adding en passant changes `PawnStrategy` only. Adding timed chess adds a `Clock` per player - `Game` observes it.
 
- - 
+---
 
 ## How to Present in an Interview
 

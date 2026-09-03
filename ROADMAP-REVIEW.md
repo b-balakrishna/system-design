@@ -4,7 +4,7 @@
 > Scope: full review of structure, sequencing, prerequisites, gaps, and Staff+ readiness, benchmarked against DDIA, the System Design Interview Handbook, Grokking, Frontend System Design, Staff+ expectations, production-readiness standards, modern cloud, and 2026 AI/ML system design.
 > Method: every topic file was read. Recommendations include a technical justification and a learning rationale. No topic is added merely to inflate count.
 
- - 
+---
 
 ## 0. Executive Summary
 
@@ -30,7 +30,7 @@ The quality bar set by Phases 0-2 is high and should be the template for everyth
 | AI/ML (7) | Good 2024 baseline, missing 2026 agentic layer | Empty | Senior |
 | Staff+ leadership | **Absent** | - | - |
 
- - 
+---
 
 ## 1. Roadmap Review: Phase by Phase
 
@@ -118,7 +118,7 @@ An excellent, well-chosen set spanning read-heavy (URL shortener, Twitter feed, 
 - **Sequencing:** order the case studies by difficulty and by which phases they exercise; add a per-case "prerequisite topics" header so each case study explicitly closes the loop back to the concept phases.
 - **Format recommendation:** each case study should follow Phase 0's 6-step framework verbatim (requirements → estimation → API → data model → high-level → deep-dive/scale) so the primer and the case studies reinforce each other.
 
- - 
+---
 
 ## 2. Missing Topics Report (Prioritized)
 
@@ -236,7 +236,7 @@ Priority key: **P0** = foundational prerequisite or universally-asked, fixes a r
 | P2 | Technical Strategy & Roadmapping | Multi-quarter technical direction, tech-debt strategy. | New Staff+ phase |
 | P2 | Organizational Scaling | Scaling teams, ownership models, platform vs product. | New Staff+ phase |
 
- - 
+---
 
 ## 3. Reordering, Splits & Merges
 
@@ -269,7 +269,7 @@ Priority key: **P0** = foundational prerequisite or universally-asked, fixes a r
 | Phase 6 Observability (12) + Logging/Metrics/Tracing (13) | Heavy overlap. Make 12 the conceptual umbrella (the three pillars, cardinality, sampling) and 13 the hands-on implementation, with no duplicated content - or merge into one richer topic. |
 | Phase 5 Code Splitting (8) + Lazy Loading (9) | Closely related; could be one topic ("Code Splitting & Lazy Loading") unless each is kept deliberately short. Lower priority - defensible to keep separate. |
 
- - 
+---
 
 ## 4. Final Recommended Roadmap
 
@@ -414,7 +414,7 @@ Phase 11  -  Staff+ Engineering & Architecture Leadership (NEW, ~8)
 
 This grows the roadmap from 138 to roughly **205 topics**. Every addition maps to a specific gap identified in §1; none are filler.
 
- - 
+---
 
 ## 5. Top 20 Highest-Impact Additions
 
@@ -441,7 +441,7 @@ Ranked by how much each lifts the roadmap toward its stated goals (FAANG/Senior/
 19. **Bulkheads + Request Hedging + Cell-Based Architecture**: the resilience patterns that distinguish Staff answers.
 20. **Embedding Pipelines & Vector Search Architecture**: separates ANN-index reality from "use a vector DB."
 
- - 
+---
 
 ## 6. Staff Engineer Readiness Analysis
 
