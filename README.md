@@ -36,7 +36,7 @@ system-design/
 | Phase 4 | [Distributed Systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, event/stream patterns, resilience, distributed data structures | 32 |
 | Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, data fetching, performance, observability, frontend architecture | 29 |
 | Phase 6 | [Cloud and Scalability](phase-6-cloud-and-scalability) | Containers, cloud, delivery, observability, reliability engineering (SLOs, chaos, autoscaling), platform & security | 28 |
-| Phase 7 | [AI and ML Systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, guardrails, AI observability | 15 |
+| Phase 7 | [AI and ML Systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, context engineering, MCP, semantic caching, safety & evals | 26 |
 | Phase 8 | [Case Studies](phase-8-case-studies) | End-to-end system design examples | 17 |
 
 ---
@@ -291,6 +291,19 @@ system-design/
 | 13 | [A/B Testing Models](phase-7-ai-and-ml-systems/topic-13-a-b-testing-models.md) |
 | 14 | [AI Observability](phase-7-ai-and-ml-systems/topic-14-ai-observability.md) |
 | 15 | [Cost and Latency Trade-Offs in AI Systems](phase-7-ai-and-ml-systems/topic-15-cost-and-latency-trade-offs-in-ai-systems.md) |
+| 16 | [Feature Stores](phase-7-ai-and-ml-systems/topic-16-feature-stores.md) |
+| 17 | [Model Registry & Versioning](phase-7-ai-and-ml-systems/topic-17-model-registry-and-versioning.md) |
+| 18 | [Embedding Pipelines & Vector Search Architecture](phase-7-ai-and-ml-systems/topic-18-embedding-pipelines-and-vector-search-architecture.md) |
+| 19 | [Context Engineering](phase-7-ai-and-ml-systems/topic-19-context-engineering.md) |
+| 20 | [Tool-Calling Architecture](phase-7-ai-and-ml-systems/topic-20-tool-calling-architecture.md) |
+| 21 | [Agent Memory & Long-Term Memory](phase-7-ai-and-ml-systems/topic-21-agent-memory-and-long-term-memory.md) |
+| 22 | [Multi-Agent Systems](phase-7-ai-and-ml-systems/topic-22-multi-agent-systems.md) |
+| 23 | [Model Context Protocol (MCP) Architecture](phase-7-ai-and-ml-systems/topic-23-mcp-model-context-protocol-architecture.md) |
+| 24 | [Semantic Caching](phase-7-ai-and-ml-systems/topic-24-semantic-caching.md) |
+| 25 | [Hallucination Mitigation & AI Safety](phase-7-ai-and-ml-systems/topic-25-hallucination-mitigation-and-ai-safety.md) |
+| 26 | [Evaluation Pipelines](phase-7-ai-and-ml-systems/topic-26-evaluation-pipelines.md) |
+
+> New in this revision (topics 16–26): the 2026 agentic and MLOps layer — feature stores, model registry, embedding/vector search pipelines, context engineering, tool-calling, agent memory, multi-agent systems, MCP architecture, semantic caching, hallucination mitigation/safety, and evaluation pipelines.
 
 ---
 

@@ -78,7 +78,9 @@ const TERM_MAP: Record<string, string> = {
   ui: "UI",          ux: "UX",
   id: "ID",          ids: "IDs",
   sdk: "SDK",        cli: "CLI",         rpc: "RPC",
-  a11y: "a11y",
+  a11y: "a11y",      mcp: "MCP",         rum: "RUM",
+  idp: "IDP",        cdc: "CDC",
+  slo: "SLO",        slos: "SLOs",       sli: "SLI",         slis: "SLIs",
 };
 
 // Full-slug overrides for slugs that contain version numbers or other
