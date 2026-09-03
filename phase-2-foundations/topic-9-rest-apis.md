@@ -3,17 +3,17 @@
 ## Concept
 
 - **REST** (Representational State Transfer) is an architectural style for building networked APIs, described by Roy Fielding in his 2000 PhD dissertation. It is built on top of HTTP (topic 2) and inherits its semantics.
-- REST is not a specification or standard — it's a set of **constraints**. An API that follows these constraints is called RESTful.
+- REST is not a specification or standard - it's a set of **constraints**. An API that follows these constraints is called RESTful.
 - The goal is **uniform interface**: any client that understands HTTP can use any REST API without a custom SDK, because the vocabulary (methods, status codes, URIs) is standardised.
 - REST is the dominant style for public APIs, inter-service communication, and mobile backends.
 
 **REST's six constraints**:
-1. **Client-Server** — separate concerns (topic 1).
-2. **Stateless** — every request contains all context needed; no server-side session.
-3. **Cacheable** — responses declare whether they can be cached.
-4. **Uniform Interface** — resources identified by URIs, representations transferred via standard media types, self-descriptive messages.
-5. **Layered System** — client can't tell if it's talking to the origin or an intermediary (CDN, load balancer).
-6. **Code on Demand** (optional) — server can send executable code (JavaScript to browsers).
+1. **Client-Server**: separate concerns (topic 1).
+2. **Stateless**: every request contains all context needed; no server-side session.
+3. **Cacheable**: responses declare whether they can be cached.
+4. **Uniform Interface**: resources identified by URIs, representations transferred via standard media types, self-descriptive messages.
+5. **Layered System**: client can't tell if it's talking to the origin or an intermediary (CDN, load balancer).
+6. **Code on Demand** (optional) - server can send executable code (JavaScript to browsers).
 
 ```mermaid
 sequenceDiagram
@@ -32,18 +32,18 @@ sequenceDiagram
     API-->>Mobile: 201 Created\nLocation: /api/v1/orders/99
 ```
 
-## Resource Design — The Core Skill
+## Resource Design: The Core Skill
 
 REST models **resources** (nouns), not operations (verbs). Resources are things you act on, not things you do.
 
 ### Resource naming
 
 | Bad (RPC style) | Good (REST style) | Reason |
-|---|---|---|
-| POST /createUser | POST /users | Verb in URL is redundant — POST already means create |
+| - | - | - |
+| POST /createUser | POST /users | Verb in URL is redundant - POST already means create |
 | GET /getUserById?id=42 | GET /users/42 | Path parameters for resource identity |
 | POST /deleteOrder | DELETE /orders/42 | Use HTTP method for the operation |
-| GET /getAllProducts | GET /products | "all" is implied — just return the collection |
+| GET /getAllProducts | GET /products | "all" is implied - just return the collection |
 | POST /updateUserPassword | PATCH /users/42/password | Resource path encodes what's being changed |
 
 Rules:
@@ -56,20 +56,20 @@ Rules:
 ### Complete CRUD mapping
 
 | Operation | HTTP Method | URI | Request Body | Success Response |
-|---|---|---|---|---|
-| List all orders | GET | `/orders` | — | 200 + array |
-| List with filter | GET | `/orders?status=shipped&page=2` | — | 200 + array |
-| Get one order | GET | `/orders/42` | — | 200 + object |
+| - | - | - | - | - |
+| List all orders | GET | `/orders` | - | 200 + array |
+| List with filter | GET | `/orders?status=shipped&page=2` | - | 200 + array |
+| Get one order | GET | `/orders/42` | - | 200 + object |
 | Create order | POST | `/orders` | `{items, address}` | 201 + object + `Location: /orders/42` |
 | Replace order | PUT | `/orders/42` | full order object | 200 + object |
 | Update order fields | PATCH | `/orders/42` | `{status: "cancelled"}` | 200 + object |
-| Delete order | DELETE | `/orders/42` | — | 204 |
-| Nested resource | GET | `/users/42/orders` | — | 200 + array |
+| Delete order | DELETE | `/orders/42` | - | 204 |
+| Nested resource | GET | `/users/42/orders` | - | 200 + array |
 | Action on resource | POST | `/orders/42/cancel` | optional `{reason}` | 200 + object |
 
 The last row (`/orders/42/cancel`) is a pragmatic exception: sometimes an action (cancel, publish, archive) doesn't map cleanly to a method. Using `POST /orders/42/cancel` is acceptable and widely used.
 
-## HTTP Methods in REST — Deep Dive
+## HTTP Methods in REST: Deep Dive
 
 ### Idempotency in practice
 
@@ -81,10 +81,10 @@ sequenceDiagram
     participant S as Server
 
     C->>S: DELETE /orders/42
-    Note over S: Network timeout — client doesn't know if it succeeded
-    C->>S: DELETE /orders/42 (retry — safe, idempotent)
-    S-->>C: 404 Not Found (order already deleted — that's fine)
-    Note over C: Client knows the order is gone — mission accomplished
+    Note over S: Network timeout  -  client doesn't know if it succeeded
+    C->>S: DELETE /orders/42 (retry  -  safe, idempotent)
+    S-->>C: 404 Not Found (order already deleted  -  that's fine)
+    Note over C: Client knows the order is gone  -  mission accomplished
 ```
 
 vs. POST:
@@ -94,9 +94,9 @@ sequenceDiagram
     participant S as Server
 
     C->>S: POST /payments {amount: 100}
-    Note over S: Network timeout — client doesn't know if payment was created
-    C->>S: POST /payments {amount: 100} (retry — DANGEROUS)
-    S-->>C: 201 Created (second charge created — customer charged twice!)
+    Note over S: Network timeout  -  client doesn't know if payment was created
+    C->>S: POST /payments {amount: 100} (retry  -  DANGEROUS)
+    S-->>C: 201 Created (second charge created  -  customer charged twice!)
 ```
 
 **Idempotency Key** pattern for non-idempotent operations:
@@ -118,7 +118,7 @@ Returning all records in one response is impractical at scale. Three strategies:
 ```
 GET /orders?offset=40&limit=20
 ```
-Returns records 41–60.
+Returns records 41-60.
 
 ```json
 {
@@ -133,8 +133,8 @@ Returns records 41–60.
 }
 ```
 
-**Pros**: random access — jump to any page.
-**Cons**: `OFFSET 1000000 LIMIT 20` in SQL requires the database to count and skip 1 million rows — slow. Also inconsistent: if a record is inserted between page 1 and page 2 requests, some records shift and might be returned twice or skipped.
+**Pros**: random access - jump to any page.
+**Cons**: `OFFSET 1000000 LIMIT 20` in SQL requires the database to count and skip 1 million rows - slow. Also inconsistent: if a record is inserted between page 1 and page 2 requests, some records shift and might be returned twice or skipped.
 
 ### Cursor pagination
 
@@ -154,8 +154,8 @@ The cursor encodes the last record seen (often a Base64-encoded ID or composite 
 }
 ```
 
-**Pros**: O(log N) performance (uses index seek, not scan). Stable — insertions don't shift pages.
-**Cons**: no random access — can't jump to page 5. Previous page navigation is harder.
+**Pros**: O(log N) performance (uses index seek, not scan). Stable - insertions don't shift pages.
+**Cons**: no random access - can't jump to page 5. Previous page navigation is harder.
 
 ### Keyset pagination
 
@@ -168,9 +168,9 @@ Most practical for `ORDER BY id` queries. Uses the primary key index directly.
 
 ### Which to use?
 
-- Default: **cursor pagination** — performant, stable, sufficient for most UIs.
-- Need random page access: **offset pagination** — accept the performance cost.
-- Internal APIs with trusted clients: **keyset pagination** — simplest to implement correctly.
+- Default: **cursor pagination** - performant, stable, sufficient for most UIs.
+- Need random page access: **offset pagination** - accept the performance cost.
+- Internal APIs with trusted clients: **keyset pagination** - simplest to implement correctly.
 
 ## Filtering, Sorting, and Field Selection
 
@@ -191,7 +191,7 @@ GET /orders?sort=total&order=asc
 GET /orders?sort=status,created_at&order=asc,desc
 ```
 
-**Field selection** (sparse fieldsets — avoids over-fetching):
+**Field selection** (sparse fieldsets - avoids over-fetching):
 ```
 GET /orders?fields=id,status,total
 ```
@@ -228,9 +228,9 @@ Content-Type: application/json; charset=utf-8
 Accept: application/vnd.myapi.v2+json
 ```
 
-Vs. URI versioning (`/v2/orders`) — both are valid; URI versioning is more common because it's simpler to route, log, and cache.
+Vs. URI versioning (`/v2/orders`) - both are valid; URI versioning is more common because it's simpler to route, log, and cache.
 
-## HATEOAS — Hypermedia as the Engine of Application State
+## HATEOAS: Hypermedia as the Engine of Application State
 
 The most ambitious REST constraint. Responses include links to related resources and available actions:
 
@@ -292,11 +292,11 @@ OpenAPI enables:
 A useful framework for assessing how "RESTful" an API is:
 
 | Level | Name | Description | Example |
-|---|---|---|---|
+| - | - | - | - |
 | 0 | The Swamp of POX | Single URI, POST for everything | `POST /api {"action":"getOrder","id":42}` |
 | 1 | Resources | Multiple URIs, but methods used wrong | `POST /orders/42/get` |
 | 2 | HTTP Verbs | Proper use of methods + status codes | `GET /orders/42 → 200` |
-| 3 | Hypermedia Controls | HATEOAS — links in responses | Level 2 + `_links` |
+| 3 | Hypermedia Controls | HATEOAS - links in responses | Level 2 + `_links` |
 
 Most production APIs are level 2. Level 3 is academically interesting but rarely implemented.
 
@@ -323,10 +323,10 @@ Consistent error responses are as important as success responses. Clients must p
 }
 ```
 
-- `code` — machine-readable error identifier. Clients switch on this.
-- `message` — human-readable description. For developers, not end users.
-- `details` — per-field validation errors. Enables form-level error display.
-- `trace_id` — ties the error to a server-side log entry. Essential for debugging.
+- `code` - machine-readable error identifier. Clients switch on this.
+- `message` - human-readable description. For developers, not end users.
+- `details` - per-field validation errors. Enables form-level error display.
+- `trace_id` - ties the error to a server-side log entry. Essential for debugging.
 
 ### Validation error example
 
@@ -343,7 +343,7 @@ Consistent error responses are as important as success responses. Clients must p
 }
 ```
 
-## CORS — Cross-Origin Resource Sharing
+## CORS: Cross-Origin Resource Sharing
 
 Browsers enforce the **Same-Origin Policy**: JavaScript on `app.example.com` cannot make `fetch()` calls to `api.other.com` without explicit permission.
 
@@ -370,7 +370,7 @@ sequenceDiagram
 ## Common REST API Mistakes
 
 **Mistake 1: Using GET for state-changing operations**
-`GET /orders/42/cancel` — GET must be safe (no side effects). Use `POST /orders/42/cancel`.
+`GET /orders/42/cancel` - GET must be safe (no side effects). Use `POST /orders/42/cancel`.
 
 **Mistake 2: 200 OK for errors**
 ```json

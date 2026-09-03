@@ -8,7 +8,7 @@
 - Approximate values:
 
 | Operation | Latency | Anchor |
-|---|---|---|
+| - | - | - |
 | L1 cache reference | ~1 ns | baseline |
 | Branch mispredict | ~3 ns | |
 | L2 cache reference | ~4 ns | |
@@ -18,9 +18,9 @@
 | Read 1 MB sequentially from RAM | ~3 µs | |
 | SSD random read | ~16 µs | |
 | Round trip in same datacenter | ~500 µs | |
-| Read 1 MB sequentially from SSD | ~50 µs–1 ms | |
-| Disk (HDD) seek | ~2–10 ms | |
-| Read 1 MB from disk | ~5–20 ms | |
+| Read 1 MB sequentially from SSD | ~50 µs - 1 ms | |
+| Disk (HDD) seek | ~2-10 ms | |
+| Read 1 MB from disk | ~5-20 ms | |
 | Round trip CA ↔ Netherlands | ~150 ms | |
 
 - Rules of thumb:
@@ -31,13 +31,13 @@
 
 ```mermaid
 flowchart TD
-    subgraph Fast["⚡ nanoseconds — on-chip / RAM"]
+    subgraph Fast["⚡ nanoseconds  -  on-chip / RAM"]
         L1["L1 cache ~1ns"] --> RAM["RAM ~100ns"]
     end
-    subgraph Mid["microseconds — storage / local net"]
+    subgraph Mid["microseconds  -  storage / local net"]
         SSD["SSD read ~16µs"] --> DC["Same-DC round trip ~500µs"]
     end
-    subgraph Slow["milliseconds — disk / wide net"]
+    subgraph Slow["milliseconds  -  disk / wide net"]
         DISK["Disk seek ~10ms"] --> NET["Cross-continent ~150ms"]
     end
     RAM -->|"~100×"| SSD
@@ -55,10 +55,10 @@ flowchart TD
 
 ## Trade-offs
 
-- **Memorisation vs. understanding** — the *ratios* (RAM ≫ SSD ≫ disk ≫ network) matter more than exact figures.
-- **Latency vs. throughput** — batching helps throughput but adds latency; weigh against your goal.
-- **Locality vs. consistency** — serving from a nearby cache/region cuts latency but risks staleness.
-- **Precision vs. era** — classic numbers predate NVMe and faster networks; use for relative reasoning, not exact SLAs.
+- **Memorisation vs. understanding**: the *ratios* (RAM ≫ SSD ≫ disk ≫ network) matter more than exact figures.
+- **Latency vs. throughput**: batching helps throughput but adds latency; weigh against your goal.
+- **Locality vs. consistency**: serving from a nearby cache/region cuts latency but risks staleness.
+- **Precision vs. era**: classic numbers predate NVMe and faster networks; use for relative reasoning, not exact SLAs.
 
 ## Examples
 
@@ -67,7 +67,7 @@ flowchart TD
   - The gap is the entire argument for an in-memory cache.
 - **Avoiding chatty calls**
   - 100 sequential same-DC round trips ≈ 100 × 500 µs = 50 ms.
-  - Batched into one call ≈ 500 µs — why you batch.
+  - Batched into one call ≈ 500 µs - why you batch.
 - **Region placement**
   - 200 ms budget can't fit a 150 ms transatlantic round trip + DB work.
   - Replicate data into the user's region or use a CDN edge.

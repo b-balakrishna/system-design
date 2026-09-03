@@ -4,23 +4,23 @@
 
 - A database is a structured store for **persistent data** with mechanisms for concurrent access, failure recovery, and efficient querying.
 - Two foundational concepts underpin everything in database theory:
-  - **ACID** — the four properties that guarantee correctness of transactions.
-  - **Indexes** — data structures that make queries fast.
-- Understanding these isn't optional background knowledge — they directly determine system behaviour under load, failure, and concurrent access. Every "should we use a database for X?" question in system design requires this foundation.
+  - **ACID**: the four properties that guarantee correctness of transactions.
+  - **Indexes**: data structures that make queries fast.
+- Understanding these isn't optional background knowledge - they directly determine system behaviour under load, failure, and concurrent access. Every "should we use a database for X?" question in system design requires this foundation.
 
 **What a database must solve**:
 
 | Problem | Solution |
-|---|---|
+| - | - |
 | Multiple users modifying the same data simultaneously | Transactions + isolation |
 | Process crashes mid-operation, leaving data half-written | Write-ahead log + atomicity |
 | Hardware failures (disk, power) | Durability (fsync, replication) |
 | Finding one row in 100 million rows in milliseconds | Indexes |
 | Preventing logically invalid data | Constraints (FK, UNIQUE, CHECK) |
 
-## ACID Properties — Explained Deeply
+## ACID Properties: Explained Deeply
 
-### A — Atomicity
+### A: Atomicity
 
 A transaction is all-or-nothing. If it contains 10 statements and the 7th fails (or the server crashes), **all 10 are rolled back** as if none of them happened.
 
@@ -48,7 +48,7 @@ sequenceDiagram
     App->>DB: UPDATE accounts WHERE id=2
     DB->>WAL: log: "update accounts id=2 balance 300→400"
     App->>DB: COMMIT
-    DB->>WAL: log: "COMMIT txn_42" [fsync — flush to disk]
+    DB->>WAL: log: "COMMIT txn_42" [fsync  -  flush to disk]
     WAL-->>DB: flushed
     DB-->>App: OK
     Note over Pages: Data pages updated asynchronously later (buffered writes)
@@ -59,21 +59,21 @@ sequenceDiagram
 - If no `COMMIT`: roll back any partial changes (undo).
 - Result: committed data survives; uncommitted data is never partially visible.
 
-### C — Consistency
+### C: Consistency
 
 A transaction brings the database from one **valid state** to another valid state. It never leaves the database in a state that violates defined constraints.
 
 Constraints include:
-- `NOT NULL` — required fields must have values.
-- `UNIQUE` — no duplicate values for indexed columns.
-- `FOREIGN KEY` — referenced rows must exist (e.g., order must reference a valid user_id).
-- `CHECK` — domain constraints (`balance >= 0`, `age BETWEEN 0 AND 150`).
+- `NOT NULL` - required fields must have values.
+- `UNIQUE` - no duplicate values for indexed columns.
+- `FOREIGN KEY` - referenced rows must exist (e.g., order must reference a valid user_id).
+- `CHECK` - domain constraints (`balance >= 0`, `age BETWEEN 0 AND 150`).
 
-If a transaction would violate any constraint, the database rejects the entire transaction — not just the violating statement.
+If a transaction would violate any constraint, the database rejects the entire transaction - not just the violating statement.
 
 **Important distinction**: Consistency in ACID is about application-defined constraints. The C in CAP Theorem (phase 4) is about distributed read consistency. Different concepts.
 
-### I — Isolation
+### I: Isolation
 
 Concurrent transactions should not see each other's intermediate (uncommitted) state. Each transaction executes as if it runs alone, even if many are executing concurrently.
 
@@ -83,13 +83,13 @@ T1:  BEGIN; SELECT balance FROM accounts WHERE id=1;  -- reads 500
                          T2: BEGIN; UPDATE accounts SET balance = 200 WHERE id=1; COMMIT;
 T1:  UPDATE accounts SET balance = balance + 100 WHERE id=1;  -- based on stale 500, sets to 600
 T1:  COMMIT;
--- Bob's balance is now 600, not 300 (200 + 100 correct) — consistency violated!
+-- Bob's balance is now 600, not 300 (200 + 100 correct)  -  consistency violated!
 ```
 
 ### Isolation anomalies
 
 | Anomaly | Description |
-|---|---|
+| - | - |
 | Dirty read | Reading uncommitted data from another transaction (that may roll back) |
 | Non-repeatable read | Same row read twice gives different results because another transaction committed between the reads |
 | Phantom read | Same query run twice returns different rows because another transaction inserted/deleted between the reads |
@@ -98,17 +98,17 @@ T1:  COMMIT;
 ### Isolation levels
 
 | Level | Dirty Read | Non-repeatable Read | Phantom Read | Lost Update | Notes |
-|---|---|---|---|---|---|
-| Read Uncommitted | Possible | Possible | Possible | Possible | Never use — reads uncommitted garbage |
+| - | - | - | - | - | - |
+| Read Uncommitted | Possible | Possible | Possible | Possible | Never use - reads uncommitted garbage |
 | Read Committed | Prevented | Possible | Possible | Possible | PostgreSQL/Oracle default |
 | Repeatable Read | Prevented | Prevented | Possible | Prevented | MySQL InnoDB default |
 | Serializable | Prevented | Prevented | Prevented | Prevented | Highest isolation, lowest concurrency |
 
-**PostgreSQL's Repeatable Read also prevents phantoms** (using SSI — Serializable Snapshot Isolation). MySQL InnoDB uses next-key locking to prevent phantoms at Repeatable Read.
+**PostgreSQL's Repeatable Read also prevents phantoms** (using SSI - Serializable Snapshot Isolation). MySQL InnoDB uses next-key locking to prevent phantoms at Repeatable Read.
 
-**Choosing isolation level**: most applications use Read Committed. Financial transactions that must be precise use Repeatable Read or Serializable. Serializable reduces concurrency — use it only when the anomaly would cause real business damage.
+**Choosing isolation level**: most applications use Read Committed. Financial transactions that must be precise use Repeatable Read or Serializable. Serializable reduces concurrency - use it only when the anomaly would cause real business damage.
 
-### D — Durability
+### D: Durability
 
 Once a transaction is committed, it **survives crashes**. Even if the server loses power 1 millisecond after the COMMIT acknowledgement, the data will be there after restart.
 
@@ -117,11 +117,11 @@ Once a transaction is committed, it **survives crashes**. Even if the server los
 2. `fsync` is a system call that waits until the OS confirms the data has left OS buffers and reached the storage medium.
 3. The OS can lie if the disk has a volatile write cache. Enterprise databases use hardware with battery-backed write caches, or use storage with `fsync` guarantees.
 
-**Disabling durability for speed**: some databases/configurations skip `fsync` for faster writes. This sacrifices durability — a crash can lose the last N seconds of committed transactions. Acceptable for caches and test data; unacceptable for financial or medical records.
+**Disabling durability for speed**: some databases/configurations skip `fsync` for faster writes. This sacrifices durability - a crash can lose the last N seconds of committed transactions. Acceptable for caches and test data; unacceptable for financial or medical records.
 
 **Replication as additional durability**: writing to 2 or 3 replicas before acknowledging COMMIT is stronger than a single fsync. Even if the primary's disk fails, the data survives on replicas. This is synchronous replication.
 
-## Indexes — The Database's Performance Lever
+## Indexes: The Database's Performance Lever
 
 An index is a separate data structure that allows the database to find rows quickly without scanning every row in the table.
 
@@ -141,7 +141,7 @@ SELECT * FROM orders WHERE user_id = 42;
 -- Execution time: ~2 milliseconds
 ```
 
-### B+ Tree — The Standard Index
+### B+ Tree: The Standard Index
 
 All major relational databases (PostgreSQL, MySQL InnoDB, SQLite, Oracle) use B+ trees as the primary index structure.
 
@@ -156,12 +156,12 @@ All major relational databases (PostgreSQL, MySQL InnoDB, SQLite, Oracle) use B+
 
 - **Internal nodes** contain keys used for navigation.
 - **Leaf nodes** contain (key, row_pointer) pairs, and are linked in a doubly-linked list.
-- The linked leaf list enables **range scans** efficiently — once you find the start, follow the links.
+- The linked leaf list enables **range scans** efficiently - once you find the start, follow the links.
 
-**Why B+ tree over binary tree?** Databases use disk I/O, which reads in blocks (typically 8KB–16KB pages). A B+ tree node is sized to fill one page (~200–1000 keys per node). This means O(log_200(N)) page reads instead of O(log_2(N)) binary tree comparisons. For 100 million rows: B+ tree ≈ 3–4 page reads; binary tree ≈ 27.
+**Why B+ tree over binary tree?** Databases use disk I/O, which reads in blocks (typically 8KB - 16KB pages). A B+ tree node is sized to fill one page (~200-1000 keys per node). This means O(log_200(N)) page reads instead of O(log_2(N)) binary tree comparisons. For 100 million rows: B+ tree ≈ 3-4 page reads; binary tree ≈ 27.
 
 **B+ tree operations**:
-- **Lookup by key** (`WHERE id = 42`): ~3–4 page reads, O(log N).
+- **Lookup by key** (`WHERE id = 42`): ~3-4 page reads, O(log N).
 - **Range scan** (`WHERE id BETWEEN 100 AND 200`): find start key, follow leaf links, O(log N + k) where k = matching rows.
 - **Sorted output** (`ORDER BY indexed_column`): traverse leaves in order, no sort needed.
 - **Insert**: find leaf, insert in sorted position, split if full, O(log N).
@@ -181,7 +181,7 @@ SELECT * FROM sessions WHERE token = 'abc123';  -- O(1) lookup
 - Sorting (`ORDER BY`)
 - Prefix matching (`WHERE name LIKE 'Al%'`)
 
-PostgreSQL supports explicit hash indexes. MySQL InnoDB has an adaptive hash index (internal — automatically caches hot B+ tree paths as a hash).
+PostgreSQL supports explicit hash indexes. MySQL InnoDB has an adaptive hash index (internal - automatically caches hot B+ tree paths as a hash).
 
 ### Composite (Multi-Column) Index
 
@@ -194,7 +194,7 @@ CREATE INDEX idx_orders_user_status ON orders (user_id, status);
 **Leftmost prefix rule**: the index can serve queries that use the columns in prefix order:
 - `WHERE user_id = 42` ✓ (uses leftmost column)
 - `WHERE user_id = 42 AND status = 'SHIPPED'` ✓ (uses both columns)
-- `WHERE status = 'SHIPPED'` ✗ (doesn't start with user_id — cannot use this index)
+- `WHERE status = 'SHIPPED'` ✗ (doesn't start with user_id - cannot use this index)
 
 **Column order matters**:
 - Put **equality condition columns first** (`user_id = 42`).
@@ -210,7 +210,7 @@ CREATE INDEX idx_orders_user_total ON orders (user_id, total);
 
 SELECT total FROM orders WHERE user_id = 42;
 -- Index contains user_id and total → no need to read the main table
--- This is an index-only scan — fastest possible
+-- This is an index-only scan  -  fastest possible
 ```
 
 ### Partial Index
@@ -235,7 +235,7 @@ CREATE INDEX idx_users_lower_email ON users (LOWER(email));
 SELECT * FROM users WHERE LOWER(email) = 'alice@example.com';
 ```
 
-## MVCC — Multi-Version Concurrency Control
+## MVCC: Multi-Version Concurrency Control
 
 MVCC is how modern databases achieve high concurrency without excessive locking.
 
@@ -259,7 +259,7 @@ sequenceDiagram
 
 **Vacuum** (PostgreSQL): a background process that removes old row versions no longer needed by any active transaction. Bloat builds up if vacuum can't keep up (very long-running transactions prevent old versions from being cleaned).
 
-**Undo log** (MySQL InnoDB): similar concept — old row versions are stored in a separate undo log segment.
+**Undo log** (MySQL InnoDB): similar concept - old row versions are stored in a separate undo log segment.
 
 ## Locking Strategies
 
@@ -291,7 +291,7 @@ No database locks. Each row has a version number. On update, check the version h
 SELECT id, name, balance, version FROM accounts WHERE id = 1;
 -- Returns: (1, "Alice", 500, 3)
 
--- Update — only if version hasn't changed
+-- Update  -  only if version hasn't changed
 UPDATE accounts SET balance = 400, version = 4 WHERE id = 1 AND version = 3;
 -- Returns 0 rows updated if another transaction already incremented version
 -- Application detects 0 rows, retries with fresh data
@@ -336,12 +336,12 @@ Execution time: 45.678 ms
 ```
 
 **Reading EXPLAIN output**:
-- `cost=` — estimated cost (arbitrary units: first value = startup cost, second = total cost).
-- `actual time=` — real execution time in ms (requires ANALYZE).
-- `rows=` — estimated vs. actual row count. Large discrepancy → stale statistics → consider `ANALYZE`.
-- `Seq Scan` — full table scan. On a large table, this is the red flag to investigate.
-- `Index Scan` — using an index. Good.
-- `Hash Join` vs `Nested Loop` — hash join is efficient for large tables, nested loop for small inner tables.
+- `cost=` - estimated cost (arbitrary units: first value = startup cost, second = total cost).
+- `actual time=` - real execution time in ms (requires ANALYZE).
+- `rows=` - estimated vs. actual row count. Large discrepancy → stale statistics → consider `ANALYZE`.
+- `Seq Scan` - full table scan. On a large table, this is the red flag to investigate.
+- `Index Scan` - using an index. Good.
+- `Hash Join` vs `Nested Loop` - hash join is efficient for large tables, nested loop for small inner tables.
 
 ## Transactions Best Practices
 
@@ -362,8 +362,8 @@ with db.transaction():
     db.execute("UPDATE orders SET status = 'paid', payment_id = %s WHERE id = %s AND status = 'pending'",
                result.payment_id, order.id)
     if db.rowcount == 0:
-        # Order was already paid or cancelled — handle idempotency
+        # Order was already paid or cancelled  -  handle idempotency
         db.rollback()
 ```
 
-**Idempotency in transactions**: include an `idempotency_key` column with a UNIQUE constraint. If the same operation is retried, the INSERT will fail with a duplicate key error — the application catches it and returns the existing result.
+**Idempotency in transactions**: include an `idempotency_key` column with a UNIQUE constraint. If the same operation is retried, the INSERT will fail with a duplicate key error - the application catches it and returns the existing result.

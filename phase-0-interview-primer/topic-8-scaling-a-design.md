@@ -5,13 +5,13 @@
 - Evolving a simple working architecture into one that handles far more load.
 - Done by systematically removing bottlenecks, one layer at a time.
 - The standard progression:
-  - **Vertical scaling** — a bigger machine; simple, but capped and a single point of failure.
-  - **Horizontal scaling** — many machines behind a load balancer; needs stateless services.
-  - **Caching** — keep hot data in memory (client, CDN, Redis) to cut read load and latency.
-  - **Database replication** — read replicas absorb reads; primary handles writes.
-  - **Sharding/partitioning** — split data across nodes by a key when one machine can't cope.
-  - **Asynchronous processing** — queues + workers move slow/spiky work off the request path.
-  - **CDN and edge** — push static/cacheable content close to users.
+  - **Vertical scaling**: a bigger machine; simple, but capped and a single point of failure.
+  - **Horizontal scaling**: many machines behind a load balancer; needs stateless services.
+  - **Caching**: keep hot data in memory (client, CDN, Redis) to cut read load and latency.
+  - **Database replication**: read replicas absorb reads; primary handles writes.
+  - **Sharding/partitioning**: split data across nodes by a key when one machine can't cope.
+  - **Asynchronous processing**: queues + workers move slow/spiky work off the request path.
+  - **CDN and edge**: push static/cacheable content close to users.
 - The art: apply each lever in response to a *specific* bottleneck, not all at once.
 
 ```mermaid
@@ -38,12 +38,12 @@ flowchart LR
 
 ## Trade-offs
 
-- **Vertical vs. horizontal** — vertical is simple but capped with no redundancy; horizontal scales without limit but adds statelessness and coordination complexity.
-- **Caching vs. consistency** — caches cut latency but introduce staleness and invalidation problems.
-- **Replication vs. consistency** — replicas multiply reads but lag the primary; sync replication fixes lag at write-latency cost.
-- **Sharding vs. complexity** — removes data/write limits but breaks cross-shard joins/transactions; shard-key is hard to change later.
-- **Async vs. simplicity** — queues smooth spikes but add eventual consistency, ordering, and ops overhead (DLQs, retries, monitoring).
-- **Scale now vs. later** — over-engineering wastes effort and adds failure modes; under-engineering forces painful migrations. Scale the bottleneck the numbers predict.
+- **Vertical vs. horizontal**: vertical is simple but capped with no redundancy; horizontal scales without limit but adds statelessness and coordination complexity.
+- **Caching vs. consistency**: caches cut latency but introduce staleness and invalidation problems.
+- **Replication vs. consistency**: replicas multiply reads but lag the primary; sync replication fixes lag at write-latency cost.
+- **Sharding vs. complexity**: removes data/write limits but breaks cross-shard joins/transactions; shard-key is hard to change later.
+- **Async vs. simplicity**: queues smooth spikes but add eventual consistency, ordering, and ops overhead (DLQs, retries, monitoring).
+- **Scale now vs. later**: over-engineering wastes effort and adds failure modes; under-engineering forces painful migrations. Scale the bottleneck the numbers predict.
 
 ## Examples
 

@@ -2,13 +2,13 @@
 
 ## Concept
 
-- **DNS** (Domain Name System) is the internet's phone book — it translates human-readable domain names (`api.example.com`) into machine-readable IP addresses (`93.184.216.34`) that routers can forward packets to.
+- **DNS** (Domain Name System) is the internet's phone book - it translates human-readable domain names (`api.example.com`) into machine-readable IP addresses (`93.184.216.34`) that routers can forward packets to.
 - Every network connection starts with a DNS lookup. Before a browser can open a TCP connection to `api.example.com`, it must resolve the hostname to an IP address.
-- DNS is a **distributed, hierarchical, cached** system — no single server holds all records. The hierarchy mirrors domain ownership: `com` delegates to `example.com` which delegates to `api.example.com`.
+- DNS is a **distributed, hierarchical, cached** system - no single server holds all records. The hierarchy mirrors domain ownership: `com` delegates to `example.com` which delegates to `api.example.com`.
 - DNS runs over **UDP port 53** by default (fast, no connection overhead). Large responses fall back to **TCP port 53**. Encrypted variants (DoH, DoT) use TCP 443 or TCP 853.
 
 **Why DNS adds latency (and why it usually doesn't matter)**:
-- An uncached DNS lookup can take 20–120 ms depending on the recursive resolver and geographic distance.
+- An uncached DNS lookup can take 20-120 ms depending on the recursive resolver and geographic distance.
 - After the first lookup, the answer is cached at multiple layers (OS, browser, resolver). Subsequent visits to the same domain incur ~0 ms DNS cost.
 - This is why the first load of a page after clearing your browser cache feels slower.
 
@@ -36,19 +36,19 @@ sequenceDiagram
     Note over App: TCP connection to 93.184.216.34:443
 ```
 
-## DNS Record Types — Complete Reference
+## DNS Record Types: Complete Reference
 
 | Record | Full Name | Purpose | Example |
-|---|---|---|---|
+| - | - | - | - |
 | A | Address | IPv4 address for a hostname | `api.example.com → 93.184.216.34` |
 | AAAA | IPv6 Address | IPv6 address for a hostname | `api.example.com → 2606:2800::1` |
-| CNAME | Canonical Name | Alias — points to another hostname | `www.example.com → example.com` |
+| CNAME | Canonical Name | Alias - points to another hostname | `www.example.com → example.com` |
 | MX | Mail Exchanger | Mail server for the domain, with priority | `example.com → 10 mail.example.com` |
-| TXT | Text | Arbitrary text — used for SPF, DKIM, domain ownership | `example.com → "v=spf1 include:_spf.google.com ~all"` |
+| TXT | Text | Arbitrary text - used for SPF, DKIM, domain ownership | `example.com → "v=spf1 include:_spf.google.com ~all"` |
 | NS | Name Server | Authoritative name servers for the domain | `example.com → ns1.cloudflare.com` |
 | SOA | Start of Authority | Primary NS, contact, serial number, refresh intervals | One per zone |
-| PTR | Pointer | Reverse DNS — IP address to hostname | `34.216.184.93.in-addr.arpa → api.example.com` |
-| SRV | Service | Service location — protocol, port, hostname | `_https._tcp.example.com → 0 5 443 api.example.com` |
+| PTR | Pointer | Reverse DNS - IP address to hostname | `34.216.184.93.in-addr.arpa → api.example.com` |
+| SRV | Service | Service location - protocol, port, hostname | `_https._tcp.example.com → 0 5 443 api.example.com` |
 | CAA | Certificate Authority Authorization | Which CAs may issue certs for this domain | `example.com → 0 issue "letsencrypt.org"` |
 
 ### CNAME rules and gotchas
@@ -60,16 +60,16 @@ example.com  MX     mail.example.com   ← MX would be ignored
 ```
 
 This is the "CNAME at apex" problem. Solutions:
-- Use **ALIAS** or **ANAME** records (Cloudflare, Route53) — these resolve like CNAME but are implemented as A/AAAA at the DNS level.
+- Use **ALIAS** or **ANAME** records (Cloudflare, Route53) - these resolve like CNAME but are implemented as A/AAAA at the DNS level.
 - Use your CDN's apex domain support.
 
-### TTL — The Freshness Timer
+### TTL: The Freshness Timer
 
 Each DNS record has a TTL (Time To Live) in seconds. After the TTL expires, resolvers must re-query the authoritative server.
 
 **Choosing TTL**:
-- **Long TTL (3600–86400s)**: fewer queries, lower authoritative server load, cached longer in resolvers worldwide. Changes take hours to propagate.
-- **Short TTL (30–300s)**: changes propagate in minutes. More queries. Use for records that change frequently or before planned migrations.
+- **Long TTL (3600-86400s)**: fewer queries, lower authoritative server load, cached longer in resolvers worldwide. Changes take hours to propagate.
+- **Short TTL (30-300s)**: changes propagate in minutes. More queries. Use for records that change frequently or before planned migrations.
 
 **TTL migration strategy**:
 1. One week before the change, lower the TTL to 300 seconds.
@@ -78,7 +78,7 @@ Each DNS record has a TTL (Time To Live) in seconds. After the TTL expires, reso
 4. The new record propagates globally within 5 minutes.
 5. After the change is stable, raise the TTL back.
 
-## How DNS Resolution Works — The Full Hierarchy
+## How DNS Resolution Works: The Full Hierarchy
 
 ### The 13 root name servers
 
@@ -87,7 +87,7 @@ The DNS hierarchy starts at 13 root name server **clusters** (not individual mac
 a.root-servers.net through m.root-servers.net
 ```
 
-Each "server" is actually hundreds of machines worldwide reached via **Anycast** routing. You reach the geographically nearest instance automatically. The root servers don't know every domain — they only know which servers are authoritative for each TLD.
+Each "server" is actually hundreds of machines worldwide reached via **Anycast** routing. You reach the geographically nearest instance automatically. The root servers don't know every domain - they only know which servers are authoritative for each TLD.
 
 ### Recursive vs. iterative resolution
 
@@ -110,7 +110,7 @@ The resolver caches each step: if you next resolve `www.example.com`, the resolv
 ### Caching layers
 
 1. **Browser DNS cache**: Chrome caches for 1 minute (or TTL, whichever is less). View at `chrome://net-internals/#dns`.
-2. **OS stub resolver**: caches with the record's TTL. Clear with `ipconfig /flushdns` (Windows), `sudo systemd-resolve --flush-caches` (Linux), `sudo dscacheutil -flushcache` (macOS).
+2. **OS stub resolver**: caches with the record's TTL. Clear with `ipconfig /flushdns` (Windows), `sudo systemd-resolve - flush-caches` (Linux), `sudo dscacheutil -flushcache` (macOS).
 3. **Recursive resolver** (ISP's or 8.8.8.8): shared across millions of users. Popular domains have near-100% hit rate.
 4. **Authoritative server**: the source of truth. Only queried on full cache misses.
 
@@ -124,7 +124,7 @@ EU user → dns.example.com → returns 54.93.1.1 (AWS eu-west-1)
 AP user → dns.example.com → returns 13.250.1.1 (AWS ap-southeast-1)
 ```
 
-The authoritative server uses the **recursive resolver's IP** (not the end user's IP) to infer location. This is approximate — a user in Paris using Google's 8.8.8.8 appears to be in the US. **EDNS Client Subnet (ECS)** extension allows resolvers to pass the client's /24 subnet to the authoritative server for more accurate geolocation.
+The authoritative server uses the **recursive resolver's IP** (not the end user's IP) to infer location. This is approximate - a user in Paris using Google's 8.8.8.8 appears to be in the US. **EDNS Client Subnet (ECS)** extension allows resolvers to pass the client's /24 subnet to the authoritative server for more accurate geolocation.
 
 ### Health-check-based failover
 
@@ -147,7 +147,7 @@ flowchart LR
     EU_POP & US_POP & AS_POP --> |same IP, different servers| Anycast["Anycast Network"]
 ```
 
-Cloudflare's 1.1.1.1 resolves in ~14 ms worldwide using Anycast. Authoritative servers also use Anycast for DDoS resilience — an attack floods the nearest PoP, while other PoPs continue serving normally.
+Cloudflare's 1.1.1.1 resolves in ~14 ms worldwide using Anycast. Authoritative servers also use Anycast for DDoS resilience - an attack floods the nearest PoP, while other PoPs continue serving normally.
 
 ## DNS Security
 
@@ -157,7 +157,7 @@ An attacker sends forged DNS responses to a resolver, poisoning its cache with a
 
 **DNSSEC** (DNS Security Extensions) prevents this by signing all DNS records with asymmetric cryptography. The resolver verifies the signature chain from the root to the queried record. If any signature is invalid, the response is rejected.
 
-DNSSEC does **not** encrypt queries — it only provides integrity and authenticity. A network observer can still see which domains you're resolving.
+DNSSEC does **not** encrypt queries - it only provides integrity and authenticity. A network observer can still see which domains you're resolving.
 
 ### DNS over HTTPS (DoH) and DNS over TLS (DoT)
 
@@ -165,13 +165,13 @@ Standard DNS is plaintext UDP. Network intermediaries (ISPs, government filters,
 
 **DoT** (RFC 7858): DNS over TCP/853 with TLS. Encrypted and authenticated. ISPs can't read the domain you're looking up.
 
-**DoH** (RFC 8484): DNS queries embedded in HTTPS over port 443. Indistinguishable from regular HTTPS traffic — even an ISP monitoring all DNS traffic can't block it without blocking all HTTPS. Used by default in Firefox (Cloudflare's 1.1.1.1 by default), Chrome, and Windows 11.
+**DoH** (RFC 8484): DNS queries embedded in HTTPS over port 443. Indistinguishable from regular HTTPS traffic - even an ISP monitoring all DNS traffic can't block it without blocking all HTTPS. Used by default in Firefox (Cloudflare's 1.1.1.1 by default), Chrome, and Windows 11.
 
 **Trade-off**: ISPs use DNS queries for content filtering, parental controls, and network diagnostics. DoH bypasses these by moving resolution to a third-party resolver. Organisations that need to enforce DNS-based policies (corporate networks) must configure DoH with their own resolver.
 
 ### DNS amplification attacks
 
-DNS is a common amplification vector for DDoS. A spoofed UDP query (40 bytes) can elicit a DNS response of 3000+ bytes — a 75x amplification factor. The attacker sends queries from spoofed source IPs; the DNS server sends large responses to the victim.
+DNS is a common amplification vector for DDoS. A spoofed UDP query (40 bytes) can elicit a DNS response of 3000+ bytes - a 75x amplification factor. The attacker sends queries from spoofed source IPs; the DNS server sends large responses to the victim.
 
 Mitigation: DNS servers should implement **Response Rate Limiting (RRL)** and use **Anycast** to spread attack traffic across PoPs.
 
@@ -191,12 +191,12 @@ Implementation: run an internal DNS resolver that has authoritative records for 
 ### Latency contribution
 
 | DNS state | Latency added |
-|---|---|
+| - | - |
 | OS cache hit | ~0 ms |
 | Browser cache hit | ~0 ms |
-| Recursive resolver cache hit | ~1–5 ms |
-| Full recursive resolution (same continent) | ~20–50 ms |
-| Full recursive resolution (cross-continent) | ~50–150 ms |
+| Recursive resolver cache hit | ~1-5 ms |
+| Full recursive resolution (same continent) | ~20-50 ms |
+| Full recursive resolution (cross-continent) | ~50-150 ms |
 
 ### DNS pre-fetching (browser optimization)
 
@@ -213,5 +213,5 @@ Implementation: run an internal DNS resolver that has authoritative records for 
 When designing a globally distributed system, DNS is how you direct users to the right region:
 1. **GeoDNS** with health checks: Route53, Cloudflare, Akamai.
 2. **Anycast** for stateless services (DNS, CDN edge nodes).
-3. **Low TTL** (60–300s) on records that participate in failover.
-4. **High TTL** (3600–86400s) on stable records to reduce resolver load.
+3. **Low TTL** (60-300s) on records that participate in failover.
+4. **High TTL** (3600-86400s) on stable records to reduce resolver load.

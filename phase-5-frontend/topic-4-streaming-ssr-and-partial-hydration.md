@@ -37,7 +37,7 @@ sequenceDiagram
 
 ## Problem It Solves
 
-- Eliminates the **"uncanny valley"** of web apps — where a page looks fully loaded and rendered, but user taps and clicks are completely unresponsive because the browser's main thread is locked in full-page hydration.
+- Eliminates the **"uncanny valley"** of web apps - where a page looks fully loaded and rendered, but user taps and clicks are completely unresponsive because the browser's main thread is locked in full-page hydration.
 - Prevents slow backend microservices or third-party APIs from blocking TTFB for the rest of the application.
 
 ## Trade-offs

@@ -5,11 +5,11 @@
 - SOLID is a set of five object-oriented design principles for keeping classes small, replaceable, and easier to change.
 - It helps turn requirements into class boundaries instead of one large object that does everything.
 - The five principles:
-  - **Single Responsibility Principle (SRP)** — a class should have one reason to change.
-  - **Open/Closed Principle (OCP)** — open for extension, closed for modification.
-  - **Liskov Substitution Principle (LSP)** — a subtype must be usable wherever its parent type is expected.
-  - **Interface Segregation Principle (ISP)** — clients should not depend on methods they do not use.
-  - **Dependency Inversion Principle (DIP)** — high-level policy should depend on abstractions, not concrete details.
+  - **Single Responsibility Principle (SRP)**: a class should have one reason to change.
+  - **Open/Closed Principle (OCP)**: open for extension, closed for modification.
+  - **Liskov Substitution Principle (LSP)**: a subtype must be usable wherever its parent type is expected.
+  - **Interface Segregation Principle (ISP)**: clients should not depend on methods they do not use.
+  - **Dependency Inversion Principle (DIP)**: high-level policy should depend on abstractions, not concrete details.
 - SOLID does not mean "more classes everywhere." It means responsibilities and dependencies should be shaped around likely change.
 - In LLD interviews, SOLID gives vocabulary for explaining why a class exists and why it owns a specific behavior.
 
@@ -49,18 +49,18 @@ classDiagram
 
 ## Trade-offs
 
-- **Simplicity vs. flexibility** — a tiny program may not need separate interfaces for every role.
-- **Fewer classes vs. clear boundaries** — fewer files are easier to scan, but mixed responsibilities become painful as requirements grow.
-- **Inheritance vs. composition** — inheritance can express shared identity, but composition is usually safer for optional behavior.
-- **Abstractions vs. over-design** — interfaces help when behavior varies; they add noise when there is only one stable implementation.
-- **Strictness vs. pragmatism** — SOLID guides design, but forcing every principle mechanically can make a small problem look inflated.
+- **Simplicity vs. flexibility**: a tiny program may not need separate interfaces for every role.
+- **Fewer classes vs. clear boundaries**: fewer files are easier to scan, but mixed responsibilities become painful as requirements grow.
+- **Inheritance vs. composition**: inheritance can express shared identity, but composition is usually safer for optional behavior.
+- **Abstractions vs. over-design**: interfaces help when behavior varies; they add noise when there is only one stable implementation.
+- **Strictness vs. pragmatism**: SOLID guides design, but forcing every principle mechanically can make a small problem look inflated.
 
 ## Examples
 
 ### SRP: invoice generation
 
 - Requirement: create an invoice, compute totals, format a printable version, and send it to a customer.
-- Weak design: `Invoice` stores data, calculates tax, formats text, and sends the invoice — all in one class.
+- Weak design: `Invoice` stores data, calculates tax, formats text, and sends the invoice - all in one class.
 - Problem: tax-rule changes, formatting changes, and delivery changes all touch the same file.
 - Better design:
 
@@ -130,7 +130,7 @@ classDiagram
     PricingService --> DiscountPolicy
 ```
 
-- Adding `ClearanceDiscount` adds one class and one mapping to the list — the `PricingService` is never edited.
+- Adding `ClearanceDiscount` adds one class and one mapping to the list - the `PricingService` is never edited.
 
 ### LSP: shapes
 

@@ -7,10 +7,10 @@
 - Use round powers of ten so the arithmetic stays in your head.
 - Core quantities:
   - **QPS** = daily active users × actions per user ÷ 86,400 seconds.
-  - **Peak QPS** ≈ 2–3 × average QPS.
+  - **Peak QPS** ≈ 2-3 × average QPS.
   - **Storage** = objects/day × size/object × retention period.
   - **Bandwidth** = QPS × payload size.
-  - **Cache memory** = apply 80/20 — cache the ~20% of data serving ~80% of requests.
+  - **Cache memory** = apply 80/20 - cache the ~20% of data serving ~80% of requests.
 - Useful anchors:
   - 1 day ≈ 100K seconds (86,400 rounded).
   - 1 million seconds ≈ 12 days.
@@ -21,7 +21,7 @@
 flowchart LR
     U["Daily Active<br/>Users"] --> A["× actions<br/>per user"]
     A --> Q["÷ 86,400s<br/>= avg QPS"]
-    Q --> P["× 2–3<br/>= peak QPS"]
+    Q --> P["× 2-3<br/>= peak QPS"]
     U --> S["× size/object<br/>× retention"]
     S --> ST["= Storage"]
     Q --> BW["× payload size<br/>= Bandwidth"]
@@ -41,14 +41,14 @@ flowchart LR
 - Reveal the read/write ratio, which dictates architecture:
   - Read-heavy → caching and replicas.
   - Write-heavy → partitioning and queues.
-- Demonstrate engineering judgment — you reason about scale instead of asserting it.
+- Demonstrate engineering judgment - you reason about scale instead of asserting it.
 
 ## Trade-offs
 
-- **Precision vs. speed** — round aggressively (300M → "say 100M DAU"); order of magnitude drives decisions.
-- **Detail vs. relevance** — compute only numbers that change a design choice (usually peak QPS and 5-year storage).
-- **Average vs. peak** — designing for average is cheaper but fails on spikes; state your peak multiplier.
-- **Assumptions vs. accuracy** — state assumptions aloud so they can be corrected and the math stays defensible.
+- **Precision vs. speed**: round aggressively (300M → "say 100M DAU"); order of magnitude drives decisions.
+- **Detail vs. relevance**: compute only numbers that change a design choice (usually peak QPS and 5-year storage).
+- **Average vs. peak**: designing for average is cheaper but fails on spikes; state your peak multiplier.
+- **Assumptions vs. accuracy**: state assumptions aloud so they can be corrected and the math stays defensible.
 
 ## Examples
 

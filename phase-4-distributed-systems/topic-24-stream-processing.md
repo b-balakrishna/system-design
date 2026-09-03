@@ -2,12 +2,12 @@
 
 ## Concept
 
-- **Stream processing** computes over **unbounded, continuous** data in near-real-time — transforming, aggregating, joining, and enriching events as they arrive, rather than running a batch job over data at rest.
-- It's the compute layer on top of an event streaming log (Kafka, topic 26): consume events, do work (filter, map, aggregate, join), and emit derived streams or update state/sinks — continuously, with low latency.
+- **Stream processing** computes over **unbounded, continuous** data in near-real-time - transforming, aggregating, joining, and enriching events as they arrive, rather than running a batch job over data at rest.
+- It's the compute layer on top of an event streaming log (Kafka, topic 26): consume events, do work (filter, map, aggregate, join), and emit derived streams or update state/sinks - continuously, with low latency.
 - Core concepts that make streaming hard and distinctive:
-  - **Windowing** — since the stream never ends, aggregations are computed over **windows** of time (tumbling, sliding, session windows): "count clicks per 1-minute window."
-  - **Event time vs. processing time** — events arrive late and out of order; computing by *event* time (when it happened) needs **watermarks** to decide when a window is "complete enough" to emit.
-  - **Stateful processing** — joins and aggregations keep state (in a fault-tolerant state store) that must survive failures via checkpointing.
+  - **Windowing**: since the stream never ends, aggregations are computed over **windows** of time (tumbling, sliding, session windows): "count clicks per 1-minute window."
+  - **Event time vs. processing time**: events arrive late and out of order; computing by *event* time (when it happened) needs **watermarks** to decide when a window is "complete enough" to emit.
+  - **Stateful processing**: joins and aggregations keep state (in a fault-tolerant state store) that must survive failures via checkpointing.
 
 ```mermaid
 flowchart LR
@@ -18,17 +18,17 @@ flowchart LR
 
 ## Problem It Solves
 
-- **Real-time insight and reaction** — fraud detection, live dashboards, trending/heavy-hitters (with sketches, topics 20–21), real-time recommendations, alerting — within seconds of events occurring, not hours later in a batch.
-- **Continuous ETL** — enrich and reshape events on the fly into materialized views, search indexes, or feature stores (Phase 7).
+- **Real-time insight and reaction**: fraud detection, live dashboards, trending/heavy-hitters (with sketches, topics 20-21), real-time recommendations, alerting - within seconds of events occurring, not hours later in a batch.
+- **Continuous ETL**: enrich and reshape events on the fly into materialized views, search indexes, or feature stores (Phase 7).
 - Handles the reality that data is **late, out-of-order, and never-ending**, which batch tooling isn't built for.
 
 ## Trade-offs
 
-- **Latency vs. completeness (watermarks)** — emit a window early and you risk missing late events; wait longer for completeness and you add latency. Watermarks + allowed-lateness tune this; some frameworks emit early results and *update* them later.
-- **Exactly-once is costly** — exactly-once stream semantics (Kafka transactions, Flink checkpoints) add overhead and only cover the streaming boundary, not arbitrary external side effects (topic on delivery semantics).
-- **Stateful = fault-tolerance complexity** — large keyed state needs checkpointing/snapshotting and careful recovery; state can grow unbounded without TTLs.
-- **Operational heaviness** — Flink/streaming clusters are complex to run, tune (parallelism, backpressure), and reason about compared to a batch job.
-- **Batch vs. stream** — not everything needs real time; batch is simpler and cheaper when hourly/daily latency is fine (the basis of the Lambda/Kappa architecture debate).
+- **Latency vs. completeness (watermarks)**: emit a window early and you risk missing late events; wait longer for completeness and you add latency. Watermarks + allowed-lateness tune this; some frameworks emit early results and *update* them later.
+- **Exactly-once is costly**: exactly-once stream semantics (Kafka transactions, Flink checkpoints) add overhead and only cover the streaming boundary, not arbitrary external side effects (topic on delivery semantics).
+- **Stateful = fault-tolerance complexity**: large keyed state needs checkpointing/snapshotting and careful recovery; state can grow unbounded without TTLs.
+- **Operational heaviness**: Flink/streaming clusters are complex to run, tune (parallelism, backpressure), and reason about compared to a batch job.
+- **Batch vs. stream**: not everything needs real time; batch is simpler and cheaper when hourly/daily latency is fine (the basis of the Lambda/Kappa architecture debate).
 
 ## Examples
 

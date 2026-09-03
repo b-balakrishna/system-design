@@ -2,10 +2,10 @@
 
 ## Concept
 
-- A **CDN** (Content Delivery Network) is a globally distributed network of servers — called **edge nodes** or **Points of Presence (PoPs)** — that cache and serve content close to end users.
+- A **CDN** (Content Delivery Network) is a globally distributed network of servers - called **edge nodes** or **Points of Presence (PoPs)** - that cache and serve content close to end users.
 - The core insight: most web content is **read-heavy and identical across users**. A JavaScript bundle, a product image, or a public API response is the same for every user. There's no reason every request should travel to a single origin server in Virginia when the user is in Tokyo.
 - Without CDN: user in Tokyo fetching assets hosted in Virginia → ~150 ms round-trip latency per resource, every load, forever.
-- With CDN: user in Tokyo fetching from Tokyo PoP → ~5–20 ms round-trip. The PoP fetches from origin once and serves the cached copy to millions of users.
+- With CDN: user in Tokyo fetching from Tokyo PoP → ~5-20 ms round-trip. The PoP fetches from origin once and serves the cached copy to millions of users.
 - CDNs are not just for static assets. They handle TLS termination, DDoS mitigation, Web Application Firewalls (WAF), edge compute, load balancing, and bot management.
 
 **Analogy**: a CDN is like a chain of local warehouses for an e-commerce company. Instead of shipping every order from one central warehouse in another country, you pre-stock popular items in warehouses near your customers. Local delivery is fast; the central warehouse only ships when a local one runs out.
@@ -50,16 +50,16 @@ https://cdn.example.com/api/products?category=clothing     →  different cache 
 Vary: Accept-Encoding
 ```
 
-This tells the CDN to store separate cached copies for each encoding — a gzip response and a Brotli response won't be served interchangeably. A CDN will see `Accept-Encoding: gzip` and `Accept-Encoding: br` as different cache keys.
+This tells the CDN to store separate cached copies for each encoding - a gzip response and a Brotli response won't be served interchangeably. A CDN will see `Accept-Encoding: gzip` and `Accept-Encoding: br` as different cache keys.
 
-**Gotcha**: `Vary: Cookie` or `Vary: Authorization` effectively disables CDN caching — every user has different cookies/tokens → every user gets their own cache entry → 0% hit rate. For auth-protected content, set `Cache-Control: private` to prevent CDN caching entirely.
+**Gotcha**: `Vary: Cookie` or `Vary: Authorization` effectively disables CDN caching - every user has different cookies/tokens → every user gets their own cache entry → 0% hit rate. For auth-protected content, set `Cache-Control: private` to prevent CDN caching entirely.
 
 ### Cache-Control directives
 
 HTTP `Cache-Control` (topic 2) controls both browser and CDN caching:
 
 | Directive | Browser | CDN | Notes |
-|---|---|---|---|
+| - | - | - | - |
 | `max-age=N` | Cache N seconds | Cache N seconds | Both browser and shared caches |
 | `s-maxage=N` | Ignored | Cache N seconds | CDN-only override; takes priority over max-age for CDNs |
 | `public` | Cacheable | Cacheable | Explicit (default for 200 responses with max-age) |
@@ -67,7 +67,7 @@ HTTP `Cache-Control` (topic 2) controls both browser and CDN caching:
 | `no-cache` | Cache but revalidate | Cache but revalidate | Must check ETag/Last-Modified before serving |
 | `no-store` | Do NOT cache | Do NOT cache | Sensitive data (auth tokens, medical records) |
 | `immutable` | Never revalidate during max-age | Honour same | Used with fingerprinted URLs |
-| `stale-while-revalidate=N` | Serve stale for N sec while refreshing | Same | Great UX pattern — no wait on refresh |
+| `stale-while-revalidate=N` | Serve stale for N sec while refreshing | Same | Great UX pattern - no wait on refresh |
 | `stale-if-error=N` | Serve stale for N sec if origin errors | Same | Resilience during origin outages |
 
 ### Cache-Control in practice
@@ -114,7 +114,7 @@ sequenceDiagram
     B->>CDN: GET /data.json\nIf-None-Match: "abc123"
     alt content unchanged
         CDN-->>B: 304 Not Modified (no body)
-        Note over B: Use cached copy — saved bandwidth
+        Note over B: Use cached copy  -  saved bandwidth
     else content changed
         CDN-->>B: 200 OK\nETag: "xyz789"\n\n{new data: ...}
     end
@@ -176,7 +176,7 @@ CDNs aren't just for static files. Apply them to APIs:
 
 ### Public, cacheable API responses
 
-Product listings, public event schedules, exchange rates — same for all users:
+Product listings, public event schedules, exchange rates - same for all users:
 ```
 GET /api/v1/products
 Cache-Control: public, s-maxage=60, stale-while-revalidate=300
@@ -196,7 +196,7 @@ flowchart LR
     Origin --> User3["200 OK (personalized)"]
 ```
 
-The edge worker validates the JWT (cryptographic verification, no database needed), adds user context as a header, and forwards only authenticated requests to origin. Invalid requests are rejected at the edge — reducing origin load and improving security.
+The edge worker validates the JWT (cryptographic verification, no database needed), adds user context as a header, and forwards only authenticated requests to origin. Invalid requests are rejected at the edge - reducing origin load and improving security.
 
 ## Cache Invalidation
 
@@ -210,7 +210,7 @@ POST https://api.cloudflare.com/client/v4/zones/{zone}/purge_cache
 {"files": ["https://cdn.example.com/api/products?id=42"]}
 ```
 
-Propagation: 1–30 seconds to reach all edge nodes worldwide.
+Propagation: 1-30 seconds to reach all edge nodes worldwide.
 
 ### Purge by tag (surrogate keys)
 
@@ -225,7 +225,7 @@ POST /purge_cache
 {"tags": ["product-42"]}
 ```
 
-This purges every cached URL tagged `product-42` — the product page, any listing that includes it, any API response that contains it.
+This purges every cached URL tagged `product-42` - the product page, any listing that includes it, any API response that contains it.
 
 ### Versioned URLs (best strategy)
 

@@ -3,13 +3,13 @@
 ## Concept
 
 - **gRPC** (gRPC Remote Procedure Calls) is a high-performance, open-source RPC framework developed by Google (~2015). It lets a client call a method on a remote server as if it were a local function call.
-- **Protocol Buffers** (protobuf) is gRPC's default serialisation format — a strongly typed, binary, compact encoding defined by a `.proto` schema file.
+- **Protocol Buffers** (protobuf) is gRPC's default serialisation format - a strongly typed, binary, compact encoding defined by a `.proto` schema file.
 - gRPC is built on **HTTP/2** (topic 3), inheriting multiplexing, header compression, and streaming.
 - It is the dominant protocol for **internal microservice communication** in companies that need performance, strong contracts, and polyglot service meshes (services written in Go, Java, Python, Node.js all calling each other via generated stubs).
 
 **Why not just REST?** REST with JSON is flexible and universally understood. But:
-- JSON parsing is CPU-intensive; protobuf parsing is 3–10× faster.
-- JSON fields are strings; protobuf is strongly typed at the schema level — mistakes are caught at compile time, not runtime.
+- JSON parsing is CPU-intensive; protobuf parsing is 3-10× faster.
+- JSON fields are strings; protobuf is strongly typed at the schema level - mistakes are caught at compile time, not runtime.
 - REST has no built-in streaming; gRPC has four streaming modes.
 - REST leaves each team to define their own API conventions; gRPC's `.proto` schema enforces a shared contract.
 
@@ -30,7 +30,7 @@ sequenceDiagram
     Note over C: OrderResponse{orderId: "42", status: "PENDING"}
 ```
 
-## Protocol Buffers — Deep Dive
+## Protocol Buffers: Deep Dive
 
 ### Why binary encoding?
 
@@ -48,9 +48,9 @@ field 3 (int32) + 9999         = 3 bytes
 Total: ~9 bytes (varint encoding)
 ```
 
-5–10× smaller. Faster to encode and decode. But not human-readable — you need tooling (`protoc`, `grpcurl`) to inspect it.
+5-10× smaller. Faster to encode and decode. But not human-readable - you need tooling (`protoc`, `grpcurl`) to inspect it.
 
-### Proto file — the contract
+### Proto file: the contract
 
 ```proto
 syntax = "proto3";
@@ -60,7 +60,7 @@ package order.v1;
 option go_package = "github.com/example/proto/order/v1;orderv1";
 option java_package = "com.example.proto.order.v1";
 
-// Service definition — the RPC interface
+// Service definition  -  the RPC interface
 service OrderService {
   // Unary: one request, one response
   rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderResponse);
@@ -85,7 +85,7 @@ message PlaceOrderRequest {
 message OrderItem {
   string product_id = 1;
   int32  quantity   = 2;
-  // Field 3 was removed — reserved to prevent reuse
+  // Field 3 was removed  -  reserved to prevent reuse
   reserved 3;
 }
 
@@ -96,7 +96,7 @@ message PlaceOrderResponse {
 }
 
 enum OrderStatus {
-  ORDER_STATUS_UNSPECIFIED = 0;  // default value — always define 0
+  ORDER_STATUS_UNSPECIFIED = 0;  // default value  -  always define 0
   ORDER_STATUS_PENDING     = 1;
   ORDER_STATUS_CONFIRMED   = 2;
   ORDER_STATUS_SHIPPED     = 3;
@@ -113,7 +113,7 @@ message OrderEvent {
 }
 ```
 
-### Wire encoding — how protobuf serialises
+### Wire encoding: how protobuf serialises
 
 Each field in a protobuf message is encoded as a **(tag, value)** pair. The tag encodes the **field number** and **wire type**:
 
@@ -123,7 +123,7 @@ tag = (field_number << 3) | wire_type
 
 Wire types:
 | Wire Type | Value | Used for |
-|---|---|---|
+| - | - | - |
 | VARINT | 0 | int32, int64, bool, enum |
 | 64-BIT | 1 | fixed64, double |
 | LENGTH_DELIMITED | 2 | string, bytes, nested messages, repeated fields |
@@ -139,18 +139,18 @@ data: 75 75 69 64 2d 31 32 33
 Total: 10 bytes
 ```
 
-### Schema evolution — the critical rules
+### Schema evolution: the critical rules
 
 Field numbers (not names) identify fields on the wire. Renaming a field is safe. Changing a field number is breaking.
 
 | Change | Safe for old clients? | Safe for new clients reading old data? |
-|---|---|---|
-| Add new optional field | Yes — old clients ignore unknown fields | Yes — missing field gets default value |
-| Remove a field | Yes — mark as `reserved` | Yes — gets default value |
-| Rename a field | Yes — wire uses field number | Yes |
-| Change field type (compatible) | Partial — int32→int64 safe | Partial |
-| Change field type (incompatible) | No — corrupts data | No |
-| Change field number | No — breaks all existing clients | No |
+| - | - | - |
+| Add new optional field | Yes - old clients ignore unknown fields | Yes - missing field gets default value |
+| Remove a field | Yes - mark as `reserved` | Yes - gets default value |
+| Rename a field | Yes - wire uses field number | Yes |
+| Change field type (compatible) | Partial - int32→int64 safe | Partial |
+| Change field type (incompatible) | No - corrupts data | No |
+| Change field number | No - breaks all existing clients | No |
 | Change from optional to repeated | Partial | Partial |
 
 **`reserved` keyword**: prevents reusing a removed field number or name:
@@ -217,14 +217,14 @@ sequenceDiagram
     C->>S: SyncRequest #2
     S-->>C: SyncResponse #2
     C->>S: SyncRequest #3
-    S-->>C: SyncResponse #3 (out of order with request #3 — independent streams)
+    S-->>C: SyncResponse #3 (out of order with request #3  -  independent streams)
 ```
 
 Use for: real-time collaboration, game state sync, IoT sensor + command channels.
 
 ## Deadlines and Cancellation
 
-One of gRPC's best features — and one often overlooked in REST-based systems.
+One of gRPC's best features - and one often overlooked in REST-based systems.
 
 ### Deadline propagation
 
@@ -241,26 +241,26 @@ sequenceDiagram
     Note over PaymentSvc: Takes 4.6 seconds
     PaymentSvc-->>OrderSvc: DEADLINE_EXCEEDED
     OrderSvc-->>Client: DEADLINE_EXCEEDED
-    Note over InventorySvc: Also cancelled — no point continuing
+    Note over InventorySvc: Also cancelled  -  no point continuing
 ```
 
-When a client gives up (deadline exceeded), the cancellation propagates through the entire call chain. Services downstream don't waste time processing requests the client will never receive. In REST, there's no standardised mechanism for this — each team implements timeouts independently.
+When a client gives up (deadline exceeded), the cancellation propagates through the entire call chain. Services downstream don't waste time processing requests the client will never receive. In REST, there's no standardised mechanism for this - each team implements timeouts independently.
 
 ### gRPC status codes
 
 gRPC has its own status code system (separate from HTTP status codes, though they're mapped to HTTP when using gRPC-Web):
 
 | Code | Name | HTTP equivalent | When |
-|---|---|---|---|
+| - | - | - | - |
 | 0 | OK | 200 | Success |
-| 1 | CANCELLED | — | Client cancelled |
+| 1 | CANCELLED | - | Client cancelled |
 | 2 | UNKNOWN | 500 | Unknown error |
 | 3 | INVALID_ARGUMENT | 400 | Bad input |
 | 4 | DEADLINE_EXCEEDED | 504 | Timeout |
 | 5 | NOT_FOUND | 404 | Resource missing |
 | 7 | PERMISSION_DENIED | 403 | Not permitted |
 | 8 | RESOURCE_EXHAUSTED | 429 | Rate limited or quota exceeded |
-| 14 | UNAVAILABLE | 503 | Service temporarily unavailable — safe to retry |
+| 14 | UNAVAILABLE | 503 | Service temporarily unavailable - safe to retry |
 | 16 | UNAUTHENTICATED | 401 | Not authenticated |
 
 ## Interceptors (Middleware)
@@ -295,14 +295,14 @@ Common interceptor use cases:
 
 Standard HTTP load balancers (L7 proxies) work with gRPC because gRPC runs over HTTP/2. However, there's a gotcha:
 
-**Problem**: HTTP/2 multiplexes many requests over one long-lived TCP connection. A simple L4 load balancer distributes TCP connections — but if you have 3 servers and all 100 clients open one connection each to server 1 (due to DNS resolution), all traffic goes to server 1.
+**Problem**: HTTP/2 multiplexes many requests over one long-lived TCP connection. A simple L4 load balancer distributes TCP connections - but if you have 3 servers and all 100 clients open one connection each to server 1 (due to DNS resolution), all traffic goes to server 1.
 
 **Solutions**:
 1. **L7 proxy (Envoy, nginx)**: understands gRPC streams and can load balance individual RPCs across a pool, not just TCP connections.
 2. **Client-side load balancing**: the client resolves multiple server IPs and picks one per RPC (round-robin). Used in Kubernetes with headless services.
 3. **Service mesh** (Istio, Linkerd): injects sidecar proxies that handle gRPC load balancing transparently.
 
-## gRPC-Web — Browser Support
+## gRPC-Web: Browser Support
 
 Browsers can't use gRPC natively because:
 1. Browser fetch/XMLHttpRequest doesn't expose HTTP/2 frames.
@@ -318,20 +318,20 @@ gRPC-Web supports unary and server-streaming. Client-streaming and bidirectional
 
 **In practice**: for browser-facing APIs, REST or GraphQL is simpler. Use gRPC for server-to-server communication, expose REST or GraphQL to browsers.
 
-## gRPC vs. REST vs. GraphQL — Decision Guide
+## gRPC vs. REST vs. GraphQL: Decision Guide
 
 | Factor | gRPC | REST | GraphQL |
-|---|---|---|---|
+| - | - | - | - |
 | Primary use | Internal microservices | Public APIs, browser clients | Client-driven queries |
 | Transport | HTTP/2 | HTTP/1.1 or HTTP/2 | HTTP/1.1 or HTTP/2 |
-| Payload | Binary (protobuf) — compact, fast | JSON — readable, flexible | JSON — flexible |
+| Payload | Binary (protobuf) - compact, fast | JSON - readable, flexible | JSON - flexible |
 | Browser support | Via proxy (gRPC-Web) | Native | Native |
 | Streaming | All 4 modes built-in | SSE / WebSocket (external) | Subscriptions (WebSocket) |
 | Schema contract | .proto (required, compiled) | OpenAPI (optional) | GraphQL schema (required) |
 | Type safety | Compile-time | Runtime (or OpenAPI) | Runtime (or tooling) |
 | Code generation | First-class (part of the workflow) | Optional (openapi-generator) | Optional (graphql-codegen) |
 | Debugging | Requires tools (grpcurl, Postman) | curl / browser DevTools | GraphiQL / browser |
-| Performance (serialisation) | 3–10× faster than JSON | Baseline | Same as REST |
+| Performance (serialisation) | 3-10× faster than JSON | Baseline | Same as REST |
 | Deadline propagation | Built-in | Manual (timeout headers) | Manual |
 
 **Decision rule**:

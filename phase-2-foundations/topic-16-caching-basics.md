@@ -2,11 +2,11 @@
 
 ## Concept
 
-- A **cache** is a fast, temporary storage layer that holds copies of expensive data — whether expensive to compute, expensive to fetch, or expensive to transfer — so future requests can be served faster.
+- A **cache** is a fast, temporary storage layer that holds copies of expensive data - whether expensive to compute, expensive to fetch, or expensive to transfer - so future requests can be served faster.
 - The fundamental principle: **serve from cache when the data is still valid; go to the source only when the cache is empty or stale**.
 - Caching is the single most impactful latency optimisation in most systems. A database query that takes 50ms takes 0.1ms from an in-process cache.
 
-**Why caching works**: most real-world data access is highly skewed. A small fraction of items account for the vast majority of reads — the **hot set**. A cache that holds the hot set serves almost all requests.
+**Why caching works**: most real-world data access is highly skewed. A small fraction of items account for the vast majority of reads - the **hot set**. A cache that holds the hot set serves almost all requests.
 
 **The cache hierarchy**: from closest to the user to furthest:
 
@@ -26,7 +26,7 @@ Each layer serves requests that the previous layer couldn't. The goal: serve as 
 
 ## Cache Patterns
 
-### Cache-aside (lazy loading) — the most common
+### Cache-aside (lazy loading): the most common
 
 ```mermaid
 sequenceDiagram
@@ -59,7 +59,7 @@ def get_product(product_id: str) -> Product:
 ```
 
 **Characteristics**:
-- Only requested data is cached — the cache fills with hot data naturally.
+- Only requested data is cached - the cache fills with hot data naturally.
 - First request always hits the database (cold start).
 - Cache and database can be inconsistent during the TTL window.
 - Simple and works with any data store.
@@ -102,7 +102,7 @@ sequenceDiagram
     participant DB
 
     App->>Cache: SET order:42 {status: SHIPPED}
-    Cache-->>App: ok (fast — no DB round trip)
+    Cache-->>App: ok (fast  -  no DB round trip)
     Note over Cache: Mark as dirty
     Worker->>Cache: poll for dirty entries
     Cache-->>Worker: order:42 is dirty
@@ -111,7 +111,7 @@ sequenceDiagram
 ```
 
 **Characteristics**:
-- Very fast writes — database is not in the critical path.
+- Very fast writes - database is not in the critical path.
 - Cache absorbs write bursts (smooths traffic to DB).
 - **Risk**: if the cache node fails before the write is persisted, data is lost.
 - Good for: view counters, analytics events, logging, non-critical update-heavy data.
@@ -122,7 +122,7 @@ sequenceDiagram
 The application always reads from the cache. The cache library transparently fetches from the database on a miss:
 
 ```python
-# Application code — only talks to cache, never directly to DB
+# Application code  -  only talks to cache, never directly to DB
 product = cache.get("product:42")  # cache handles the miss internally
 ```
 
@@ -134,7 +134,7 @@ When the cache is full, the eviction policy decides which entries to remove:
 
 ### LRU (Least Recently Used)
 
-Remove the entry that was accessed longest ago. Approximates the working set — entries that haven't been used recently are less likely to be needed soon.
+Remove the entry that was accessed longest ago. Approximates the working set - entries that haven't been used recently are less likely to be needed soon.
 
 ```
 Cache (capacity 3):
@@ -155,7 +155,7 @@ Better than LRU for workloads where access patterns are stable over long periods
 
 ### TTL-Based Expiry
 
-Remove entries after a fixed time, regardless of access frequency. Not really an eviction policy — it's a freshness mechanism. Combined with LRU: when the cache is full and all TTLs are future, evict LRU.
+Remove entries after a fixed time, regardless of access frequency. Not really an eviction policy - it's a freshness mechanism. Combined with LRU: when the cache is full and all TTLs are future, evict LRU.
 
 ### Random Replacement
 
@@ -166,7 +166,7 @@ Evict a random entry. Simpler than LRU, surprisingly competitive in practice. Go
 Configure in `redis.conf` or via `CONFIG SET maxmemory-policy`:
 
 | Policy | Description | Use when |
-|---|---|---|
+| - | - | - |
 | `noeviction` | Return error when full | You can't tolerate data loss |
 | `allkeys-lru` | Evict any key by LRU | General-purpose cache |
 | `volatile-lru` | Evict only TTL-set keys by LRU | Cache mixed with persistent data |
@@ -187,7 +187,7 @@ sequenceDiagram
     Note over Cache: Popular entry expires at T=0
     Many->>Cache: GET popular_entry (all miss simultaneously)
     Many->>DB: 10,000 simultaneous queries!
-    Note over DB: Overloaded — latency spikes, may crash
+    Note over DB: Overloaded  -  latency spikes, may crash
 ```
 
 ### Solution 1: Mutex locking (single-filler)
@@ -232,7 +232,7 @@ def get_with_early_expiry(key, fill_fn, ttl=300, beta=1.0):
         # Decide whether to recompute early
         # Higher beta = more aggressive early expiry
         if stored_ttl > 0 and random.random() < beta * math.exp(-stored_ttl / ttl):
-            # Stale but acceptable — recompute in background
+            # Stale but acceptable  -  recompute in background
             threading.Thread(target=lambda: refresh(key, fill_fn, ttl)).start()
         return value
 
@@ -251,21 +251,21 @@ The cache serves the stale response to all pending requests while one background
 
 ## Cache Invalidation
 
-"There are only two hard problems in computer science: cache invalidation and naming things." — Phil Karlton
+"There are only two hard problems in computer science: cache invalidation and naming things." - Phil Karlton
 
 ### Time-based expiry (TTL)
 
 Simplest strategy: cached entries expire after N seconds. The question is what TTL to choose:
 
 | Data type | Recommended TTL | Reasoning |
-|---|---|---|
-| User profile | 60–300 seconds | Changes infrequently; slight staleness OK |
-| Product catalog | 60–600 seconds | Public, changes slowly |
-| Inventory/stock levels | 10–30 seconds | Changes quickly; overselling is costly |
+| - | - | - |
+| User profile | 60-300 seconds | Changes infrequently; slight staleness OK |
+| Product catalog | 60-600 seconds | Public, changes slowly |
+| Inventory/stock levels | 10-30 seconds | Changes quickly; overselling is costly |
 | Session data | Same as session timeout | Must be accurate |
 | Static assets (fingerprinted) | 31536000 seconds (1 year) | Content hash in URL guarantees freshness |
 | Rate limit counters | Same as rate window | Must be accurate |
-| Search results | 30–300 seconds | Fresh enough for UX |
+| Search results | 30-300 seconds | Fresh enough for UX |
 
 ### Event-driven invalidation
 
@@ -320,9 +320,9 @@ All servers share one cache cluster.
 
 - Consistent: one source of truth.
 - ~1 ms network overhead per operation (LAN).
-- Redis is single-threaded (per slot) — throughput is bounded.
+- Redis is single-threaded (per slot) - throughput is bounded.
 - Redis cluster scales horizontally via sharding.
-- Memcached is multi-threaded and simpler — better for very high throughput pure caching.
+- Memcached is multi-threaded and simpler - better for very high throughput pure caching.
 
 ### Two-tier: local + remote
 
@@ -367,14 +367,14 @@ tenant:{tenant_id}:config                    → per-tenant configuration
 
 **Key prefixes**: use consistent prefixes to namespace keys. Makes debugging easier and allows bulk deletion of a namespace.
 
-**Key length**: Redis stores keys as strings. Long keys waste memory. For frequently accessed keys, shorter is better. `p:42` vs `product:42` — the difference is small at 1000 keys, meaningful at 100 million keys.
+**Key length**: Redis stores keys as strings. Long keys waste memory. For frequently accessed keys, shorter is better. `p:42` vs `product:42` - the difference is small at 1000 keys, meaningful at 100 million keys.
 
 **Namespace collisions**: if two different types of data share a key pattern, they'll overwrite each other. Always namespace: `order:42` and `product:42` are different keys.
 
 ## Redis vs. Memcached
 
 | Factor | Redis | Memcached |
-|---|---|---|
+| - | - | - |
 | Data structures | Strings, hashes, lists, sets, sorted sets, bitmaps, streams | Strings only |
 | Persistence | Optional (RDB snapshots, AOF log) | None |
 | Replication | Master-replica + cluster mode | None built-in |

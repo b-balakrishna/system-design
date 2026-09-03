@@ -16,16 +16,16 @@ flowchart LR
 
 ## Problem It Solves
 
-- **Declarative UI** — you describe the target UI for each state and let the framework handle updates, instead of manually tracking and mutating DOM nodes (imperative, bug-prone).
-- **Batched, minimal updates** — multiple state changes are batched and reconciled into the fewest real-DOM operations, avoiding redundant layouts/paints.
+- **Declarative UI**: you describe the target UI for each state and let the framework handle updates, instead of manually tracking and mutating DOM nodes (imperative, bug-prone).
+- **Batched, minimal updates**: multiple state changes are batched and reconciled into the fewest real-DOM operations, avoiding redundant layouts/paints.
 - Makes complex, frequently-updating UIs maintainable and reasonably performant by default.
 
 ## Trade-offs
 
-- **Not actually "fast" — it's "fast enough" + ergonomic** — the VDOM adds diffing overhead; raw hand-tuned DOM updates can be faster. Its value is developer productivity and consistent updates, not peak performance.
-- **Re-render cost** — a state change can re-render a large subtree (recomputing virtual nodes) even if little changes; you optimize with memoization (`React.memo`, `useMemo`), keys, and avoiding unnecessary re-renders.
-- **Alternatives challenge the premise** — **fine-grained reactivity** frameworks (Solid, Svelte, Vue's reactivity) skip the VDOM and update only the exact DOM nodes bound to changed state, often faster with less overhead. Svelte compiles away the framework entirely.
-- **Keys matter** — wrong/missing list keys cause incorrect or inefficient reconciliation (re-creating DOM nodes, losing state).
+- **Not actually "fast" - it's "fast enough" + ergonomic**: the VDOM adds diffing overhead; raw hand-tuned DOM updates can be faster. Its value is developer productivity and consistent updates, not peak performance.
+- **Re-render cost**: a state change can re-render a large subtree (recomputing virtual nodes) even if little changes; you optimize with memoization (`React.memo`, `useMemo`), keys, and avoiding unnecessary re-renders.
+- **Alternatives challenge the premise**: **fine-grained reactivity** frameworks (Solid, Svelte, Vue's reactivity) skip the VDOM and update only the exact DOM nodes bound to changed state, often faster with less overhead. Svelte compiles away the framework entirely.
+- **Keys matter**: wrong/missing list keys cause incorrect or inefficient reconciliation (re-creating DOM nodes, losing state).
 
 ## Examples
 
@@ -34,6 +34,6 @@ flowchart LR
 - **Avoiding wasted renders**
   - Wrapping a pure child in `React.memo` and memoizing callbacks prevents it from re-rendering when unrelated parent state changes.
 - **Fine-grained alternative**
-  - In Solid/Svelte, updating a signal/variable patches exactly the bound text node — no diffing a tree — which can outperform VDOM for update-heavy UIs.
+  - In Solid/Svelte, updating a signal/variable patches exactly the bound text node - no diffing a tree - which can outperform VDOM for update-heavy UIs.
 - **Interview framing**
-  - Explain the VDOM as a declarative-programming and batched-minimal-update mechanism, not a magic speed boost — and note fine-grained reactivity (Solid/Svelte) as the modern alternative that avoids diffing. Knowing keys and memoization as the practical performance levers shows hands-on depth.
+  - Explain the VDOM as a declarative-programming and batched-minimal-update mechanism, not a magic speed boost - and note fine-grained reactivity (Solid/Svelte) as the modern alternative that avoids diffing. Knowing keys and memoization as the practical performance levers shows hands-on depth.

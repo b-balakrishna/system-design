@@ -2,9 +2,9 @@
 
 ## Concept
 
-- The **bulkhead pattern** isolates resources so that a failure or overload in one part of a system **cannot drain the resources** the rest of the system needs — named after the watertight compartments in a ship's hull that keep a single breach from sinking the whole vessel.
+- The **bulkhead pattern** isolates resources so that a failure or overload in one part of a system **cannot drain the resources** the rest of the system needs - named after the watertight compartments in a ship's hull that keep a single breach from sinking the whole vessel.
 - The core mechanism: **partition shared resources** (thread pools, connection pools, queues, compute) into separate compartments per dependency, tenant, or workload, each with its own bounded capacity. When one compartment is exhausted, the others are unaffected.
-- It directly counters the failure mode where one slow dependency consumes *all* of a caller's threads/connections, starving every other request — turning a localized problem into a total outage.
+- It directly counters the failure mode where one slow dependency consumes *all* of a caller's threads/connections, starving every other request - turning a localized problem into a total outage.
 
 ```mermaid
 flowchart TB
@@ -13,7 +13,7 @@ flowchart TB
     end
     subgraph Bulkhead["Bulkheads (isolated pools)"]
         PA[Pool for A] --> SA[A healthy]
-        PB[Pool for B] --> SB[B slow — only B affected]
+        PB[Pool for B] --> SB[B slow  -  only B affected]
     end
 ```
 
@@ -25,10 +25,10 @@ flowchart TB
 
 ## Trade-offs
 
-- **Isolation vs. utilization** — partitioning resources into fixed compartments means each is smaller; a compartment can be saturated while another sits idle, lowering overall utilization compared to one shared pool. You trade some efficiency for safety.
-- **Sizing complexity** — you must size each compartment for its workload; too small throttles a healthy dependency, too large weakens the isolation.
-- **More moving parts** — multiple pools/queues to configure and monitor instead of one.
-- **Granularity choice** — isolate per *dependency* (so a slow third-party API can't starve DB calls), per *tenant* (noisy-neighbor protection, Phase 3 topic 28), or per *workload class* (interactive vs batch) — each has different overhead.
+- **Isolation vs. utilization**: partitioning resources into fixed compartments means each is smaller; a compartment can be saturated while another sits idle, lowering overall utilization compared to one shared pool. You trade some efficiency for safety.
+- **Sizing complexity**: you must size each compartment for its workload; too small throttles a healthy dependency, too large weakens the isolation.
+- **More moving parts**: multiple pools/queues to configure and monitor instead of one.
+- **Granularity choice**: isolate per *dependency* (so a slow third-party API can't starve DB calls), per *tenant* (noisy-neighbor protection, Phase 3 topic 28), or per *workload class* (interactive vs batch) - each has different overhead.
 
 ## Examples
 

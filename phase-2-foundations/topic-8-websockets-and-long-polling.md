@@ -7,7 +7,7 @@
   - Chat messages arriving in a conversation
   - Live score updates in a sports app
   - Stock price changes in a trading dashboard
-  - Collaborative editing — seeing another user's cursor move
+  - Collaborative editing - seeing another user's cursor move
   - Live notifications ("Your order shipped")
   - Real-time metrics and monitoring dashboards
 - Three practical techniques exist, ordered by efficiency: **short polling** → **long polling** → **WebSocket**. A fourth, **Server-Sent Events (SSE)**, covers the server-to-client-only case.
@@ -23,7 +23,7 @@ flowchart TD
     Q3 -->|Simple is fine| LP[Long Polling]
 ```
 
-## Short Polling — The Naive Approach
+## Short Polling: The Naive Approach
 
 Client sends a request every N seconds, regardless of whether new data exists:
 
@@ -34,7 +34,7 @@ sequenceDiagram
 
     loop every 5 seconds
         C->>S: GET /notifications
-        S-->>C: 200 [] (empty — no new data)
+        S-->>C: 200 [] (empty  -  no new data)
     end
     Note over S: New notification arrives
     C->>S: GET /notifications (5s later)
@@ -48,7 +48,7 @@ sequenceDiagram
 
 Short polling is only acceptable for very low-frequency updates (e.g., a dashboard refreshed every 30 minutes) where exact real-time delivery doesn't matter.
 
-## Long Polling — Efficient HTTP Push
+## Long Polling: Efficient HTTP Push
 
 The client sends a request; the server **holds it open** until data is available, then responds immediately:
 
@@ -58,13 +58,13 @@ sequenceDiagram
     participant S as Server
 
     C->>S: GET /events (hold open, timeout=30s)
-    Note over S: No data yet — connection held open
+    Note over S: No data yet  -  connection held open
     Note over S: 28 seconds later: new event!
     S-->>C: 200 OK {event: "order_shipped", orderId: 42}
     C->>S: GET /events (immediately reconnects)
     Note over S: Holds open again...
     Note over S: Timeout reached (30s)
-    S-->>C: 200 OK [] (empty — no events in 30s)
+    S-->>C: 200 OK [] (empty  -  no events in 30s)
     C->>S: GET /events (reconnects again)
 ```
 
@@ -77,12 +77,12 @@ sequenceDiagram
 **Disadvantages**:
 - Each "held" request consumes a server thread/coroutine until it resolves.
 - With 10,000 concurrent users all holding connections open, a server with 10,000 threads needs significant memory.
-- Solution: use async I/O (Node.js, Go, async Python, Netty) — a held connection costs only a few KB of memory in an async runtime, not a full thread.
-- Each message delivery requires a full new HTTP request (headers, auth token, etc.) — wasted overhead vs. WebSocket.
+- Solution: use async I/O (Node.js, Go, async Python, Netty) - a held connection costs only a few KB of memory in an async runtime, not a full thread.
+- Each message delivery requires a full new HTTP request (headers, auth token, etc.) - wasted overhead vs. WebSocket.
 
 Long polling is used by: Firebase Realtime Database (fallback), many chat applications (fallback for old browsers), Comet web applications.
 
-## WebSocket — Full-Duplex Communication
+## WebSocket: Full-Duplex Communication
 
 WebSocket provides a **persistent, bidirectional, full-duplex** channel over a single TCP connection.
 
@@ -134,13 +134,13 @@ WebSocket messages are wrapped in lightweight frames:
 - **FIN**: final fragment of a message.
 - **Opcode**: `0x0` continuation, `0x1` text (UTF-8), `0x2` binary, `0x8` close, `0x9` ping, `0xA` pong.
 - **MASK**: client → server frames must be masked (4-byte XOR key follows). Server → client frames are not masked. Masking prevents cache-poisoning attacks on proxies.
-- **Payload length**: 7 bits (0–125), or 16-bit (126), or 64-bit (127) extension.
+- **Payload length**: 7 bits (0-125), or 16-bit (126), or 64-bit (127) extension.
 
 Compare overhead:
-- HTTP request: 400–1000 bytes of headers per message.
-- WebSocket frame: **2–14 bytes** per message overhead.
+- HTTP request: 400-1000 bytes of headers per message.
+- WebSocket frame: **2-14 bytes** per message overhead.
 
-For a chat message of 50 bytes, WebSocket overhead is 2.8–22% vs. HTTP's 800–2000%.
+For a chat message of 50 bytes, WebSocket overhead is 2.8-22% vs. HTTP's 800-2000%.
 
 ```mermaid
 sequenceDiagram
@@ -159,14 +159,14 @@ sequenceDiagram
 ### Message types and subprotocols
 
 `Sec-WebSocket-Protocol` negotiates an application-level protocol on top of WebSocket:
-- `chat` — custom JSON messaging protocol
-- `graphql-ws` — GraphQL subscriptions over WebSocket
-- `stomp` — STOMP messaging protocol (used with RabbitMQ)
-- `ocpp` — Open Charge Point Protocol (EV charging stations)
+- `chat` - custom JSON messaging protocol
+- `graphql-ws` - GraphQL subscriptions over WebSocket
+- `stomp` - STOMP messaging protocol (used with RabbitMQ)
+- `ocpp` - Open Charge Point Protocol (EV charging stations)
 
 Without a subprotocol, the application defines its own message format (usually JSON).
 
-## Server-Sent Events (SSE) — Simple Server Push
+## Server-Sent Events (SSE): Simple Server Push
 
 SSE is a standardised HTTP API for **one-directional, server-to-client streaming**. The client opens one HTTP connection; the server streams events indefinitely:
 
@@ -191,15 +191,15 @@ id: 2
 event: notification
 data: {"type":"order_shipped","orderId":42}
 
-: this is a comment — keeps the connection alive
+: this is a comment  -  keeps the connection alive
 
 ```
 
 SSE event format:
-- `id:` — event ID; browser resends `Last-Event-ID` header on reconnect to get missed events.
-- `event:` — event type (custom); defaults to `message`.
-- `data:` — the payload (can be multiple lines, each prefixed with `data:`).
-- `: comment` — ignored; often used as a keepalive heartbeat.
+- `id:` - event ID; browser resends `Last-Event-ID` header on reconnect to get missed events.
+- `event:` - event type (custom); defaults to `message`.
+- `data:` - the payload (can be multiple lines, each prefixed with `data:`).
+- `: comment` - ignored; often used as a keepalive heartbeat.
 - Blank line separates events.
 
 **Browser API** (EventSource):
@@ -208,7 +208,7 @@ const source = new EventSource('/events');
 source.onmessage = (e) => console.log(JSON.parse(e.data));
 source.addEventListener('notification', (e) => showNotification(e.data));
 
-// Automatic reconnect built-in — no code needed
+// Automatic reconnect built-in  -  no code needed
 // If the server closes the connection, EventSource reconnects after ~3 seconds
 // Sends Last-Event-ID header to resume from last received event
 ```
@@ -216,23 +216,23 @@ source.addEventListener('notification', (e) => showNotification(e.data));
 SSE vs WebSocket:
 
 | | SSE | WebSocket |
-|---|---|---|
+| - | - | - |
 | Direction | Server → Client only | Bidirectional |
 | Protocol | Plain HTTP/2 | Upgraded to WebSocket |
 | Browser API | EventSource (simple) | WebSocket (slightly more complex) |
 | Proxy support | Works through all HTTP proxies | Requires WebSocket-aware proxy |
 | CDN support | Can be cached/streamed | Requires WebSocket pass-through |
 | Reconnect | Automatic, built-in | Must implement manually |
-| HTTP/2 multiplexing | Yes — multiple SSE streams share one connection | One connection per WebSocket |
+| HTTP/2 multiplexing | Yes - multiple SSE streams share one connection | One connection per WebSocket |
 | Binary support | No (text only) | Yes |
 
-**Use SSE for**: notifications, live dashboards, activity feeds, AI streaming responses (like ChatGPT's token-by-token output — that's SSE), log tailing.
+**Use SSE for**: notifications, live dashboards, activity feeds, AI streaming responses (like ChatGPT's token-by-token output - that's SSE), log tailing.
 
 **Use WebSocket for**: chat, multiplayer games, collaborative editing, anything where the client also sends frequent messages.
 
 ## Scaling WebSocket Servers
 
-WebSocket servers are **stateful** — a connected client is tied to a specific server process. This breaks the stateless horizontal-scaling model.
+WebSocket servers are **stateful** - a connected client is tied to a specific server process. This breaks the stateless horizontal-scaling model.
 
 ### The problem
 
@@ -273,14 +273,14 @@ sequenceDiagram
 
 ### Sticky sessions
 
-Alternative: configure the load balancer to route the same client (by IP or cookie) to the same server (sticky sessions / session affinity). Simpler but has failure handling problems — when the server restarts, all connections on it must reconnect and the new server may not be the sticky target.
+Alternative: configure the load balancer to route the same client (by IP or cookie) to the same server (sticky sessions / session affinity). Simpler but has failure handling problems - when the server restarts, all connections on it must reconnect and the new server may not be the sticky target.
 
-## Connection Health — Heartbeats
+## Connection Health: Heartbeats
 
-WebSocket connections can go "half-open" — the underlying TCP connection is dead (lost packet, NAT timeout, etc.) but neither side has detected it. Without heartbeats, both sides wait forever for data from a dead connection.
+WebSocket connections can go "half-open" - the underlying TCP connection is dead (lost packet, NAT timeout, etc.) but neither side has detected it. Without heartbeats, both sides wait forever for data from a dead connection.
 
 **Server-sent ping frames** (WebSocket protocol level):
-- Server sends a `PING` frame every 30–60 seconds.
+- Server sends a `PING` frame every 30-60 seconds.
 - Client must respond with a `PONG` frame.
 - If no pong arrives within a timeout, the server closes and the client reconnects.
 
@@ -315,7 +315,7 @@ delay = Math.min(delay * 2, maxDelay) * (0.5 + Math.random() * 0.5);
 ## Real-World Examples
 
 | Feature | Company | Technique |
-|---|---|---|
+| - | - | - |
 | Chat | Slack, Discord | WebSocket |
 | Live scores | ESPN, BBC Sport | SSE or WebSocket |
 | Collaborative editing | Figma, Google Docs | WebSocket (CRDT/OT over WS) |

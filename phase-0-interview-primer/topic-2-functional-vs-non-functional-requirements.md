@@ -37,15 +37,15 @@ flowchart TD
 - Forces the constraints that drive hard decisions to the surface:
   - Strong consistency rules out certain databases.
   - 99.99% availability mandates redundancy and multi-region.
-- Prevents over-engineering — if eventual consistency is acceptable, you skip distributed transactions.
+- Prevents over-engineering - if eventual consistency is acceptable, you skip distributed transactions.
 - Turns vague prompts into concrete, defensible engineering targets.
 
 ## Trade-offs
 
-- **Consistency vs. availability** — the central tension (CAP); a bank ledger picks consistency, a social feed picks availability.
-- **Latency vs. durability/consistency** — synchronous replication is durable but slow; async is fast but risks data loss.
-- **Completeness vs. time** — don't list every non-functional; pick the 3–4 that shape the design and quantify them.
-- **Stated vs. assumed** — clarify the load-bearing requirements, assume the rest aloud.
+- **Consistency vs. availability**: the central tension (CAP); a bank ledger picks consistency, a social feed picks availability.
+- **Latency vs. durability/consistency**: synchronous replication is durable but slow; async is fast but risks data loss.
+- **Completeness vs. time**: don't list every non-functional; pick the 3-4 that shape the design and quantify them.
+- **Stated vs. assumed**: clarify the load-bearing requirements, assume the rest aloud.
 
 ## Examples
 

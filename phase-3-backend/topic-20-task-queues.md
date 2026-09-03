@@ -3,7 +3,7 @@
 ## Concept
 
 - A **task queue** is a higher-level abstraction built on a message queue, purpose-built for running **background jobs**: it adds workers, scheduling, retries, prioritization, and result tracking around the raw enqueue/consume primitive.
-- Where a message queue moves opaque messages between services, a task queue runs **your functions** asynchronously — "send this email," "generate this PDF," "recompute this report" — with operational features baked in.
+- Where a message queue moves opaque messages between services, a task queue runs **your functions** asynchronously - "send this email," "generate this PDF," "recompute this report" - with operational features baked in.
 - Typical features: delayed/scheduled execution, periodic (cron) jobs, retry with backoff, priority lanes, concurrency limits, and a dashboard of job status.
 - Examples: Celery (Python), Sidekiq (Ruby), BullMQ (Node), Temporal/Airflow (workflow-oriented), AWS Step Functions.
 
@@ -25,11 +25,11 @@ flowchart LR
 
 ## Trade-offs
 
-- **Convenience vs. another moving part** — a broker, worker fleet, and result store to operate and monitor.
-- **Retries vs. idempotency** — automatic retries mean a task can run more than once; tasks must be idempotent or guard against duplicate side effects (topic 22).
-- **At-least-once execution** — like message queues, exactly-once is not free; design for re-execution.
-- **Result backend cost** — storing every job result (e.g., in Redis) consumes memory; set TTLs.
-- **Long/stateful workflows** — simple task queues handle one-shot jobs well but get awkward for multi-step, long-running, stateful workflows; that's where workflow engines (Temporal, Step Functions) and the orchestration vs choreography topic (topic 38) come in.
+- **Convenience vs. another moving part**: a broker, worker fleet, and result store to operate and monitor.
+- **Retries vs. idempotency**: automatic retries mean a task can run more than once; tasks must be idempotent or guard against duplicate side effects (topic 22).
+- **At-least-once execution**: like message queues, exactly-once is not free; design for re-execution.
+- **Result backend cost**: storing every job result (e.g., in Redis) consumes memory; set TTLs.
+- **Long/stateful workflows**: simple task queues handle one-shot jobs well but get awkward for multi-step, long-running, stateful workflows; that's where workflow engines (Temporal, Step Functions) and the orchestration vs choreography topic (topic 38) come in.
 
 ## Examples
 

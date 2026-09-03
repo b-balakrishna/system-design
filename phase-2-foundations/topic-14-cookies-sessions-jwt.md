@@ -2,17 +2,17 @@
 
 ## Concept
 
-- HTTP (topic 2) is **stateless** — every request is independent. The server has no memory of who you are between requests.
+- HTTP (topic 2) is **stateless** - every request is independent. The server has no memory of who you are between requests.
 - For a "logged-in" experience, the application layers **state** on top of HTTP. The mechanism for this is called **session management**.
 - Two broad strategies:
-  - **Server-side sessions** — the server stores the session state; the client holds only a session ID (opaque reference).
-  - **Client-side tokens** — the session state is encoded in a token that the client holds and sends with every request; the server validates the token without looking anything up.
+  - **Server-side sessions**: the server stores the session state; the client holds only a session ID (opaque reference).
+  - **Client-side tokens**: the session state is encoded in a token that the client holds and sends with every request; the server validates the token without looking anything up.
 - **JWT** (JSON Web Token) is the dominant format for client-side tokens.
 - **Cookies** are the primary mechanism for carrying both session IDs and tokens in browser-based applications.
 
 **Why this matters**: the choice between session cookies and JWTs affects scalability, security, revocability, and operational complexity. It's one of the most debated backend architecture decisions.
 
-## Cookies — The Transport Mechanism
+## Cookies: The Transport Mechanism
 
 A cookie is a small piece of data that a server sends to a browser, and the browser automatically includes in subsequent requests to the same origin.
 
@@ -30,21 +30,21 @@ Host: api.example.com
 Cookie: session_id=abc123
 ```
 
-### Cookie attributes — the security-critical ones
+### Cookie attributes: the security-critical ones
 
-**HttpOnly**: the cookie cannot be read by JavaScript (`document.cookie`). The cookie is only sent by the browser on HTTP requests. This is the most important security attribute — it prevents XSS attacks from stealing the cookie.
+**HttpOnly**: the cookie cannot be read by JavaScript (`document.cookie`). The cookie is only sent by the browser on HTTP requests. This is the most important security attribute - it prevents XSS attacks from stealing the cookie.
 
 **Secure**: the cookie is only sent over HTTPS connections. Prevents transmission over plain HTTP where it could be intercepted.
 
 **SameSite**: controls when cookies are sent with cross-site requests. This is the primary CSRF defence:
 
 | SameSite | When cookie is sent | CSRF protection | Cross-site auth |
-|---|---|---|---|
+| - | - | - | - |
 | `Strict` | Same-site requests only | Full | Breaks OAuth flows (auth server is a different site) |
-| `Lax` | Same-site + top-level navigations (GET) | Partial — blocks cross-site POST | Works with most SSO flows |
+| `Lax` | Same-site + top-level navigations (GET) | Partial - blocks cross-site POST | Works with most SSO flows |
 | `None` | All requests (cross-site too) | None | Required if you need full cross-site cookie access |
 
-`SameSite=None` requires `Secure` — otherwise Chrome rejects it. Use it only for legitimate third-party cookie scenarios (embedded widgets, cross-site auth).
+`SameSite=None` requires `Secure` - otherwise Chrome rejects it. Use it only for legitimate third-party cookie scenarios (embedded widgets, cross-site auth).
 
 **Domain**: specifies which domains receive the cookie. `Domain=.example.com` sends to all subdomains (`api.example.com`, `app.example.com`). Omitting Domain restricts it to the exact host that set it.
 
@@ -117,7 +117,7 @@ Use **Redis** as a distributed session store:
 - Sticky sessions: load balancer routes each user to the same server. If that server restarts, all sessions on it are lost and users must re-login. Wasteful and fragile.
 - Redis sessions: any server can handle any request. Resilient to server restarts.
 
-## JWT — JSON Web Tokens
+## JWT: JSON Web Tokens
 
 JWT (RFC 7519) is the standard format for **self-contained, signed tokens**. The server encodes the session state into the token itself; the client holds the token; the server validates the signature without any database lookup.
 
@@ -162,14 +162,14 @@ HS256: HMAC_SHA256(base64url(header) + "." + base64url(payload), sharedSecret)
 ### RS256 vs. HS256
 
 | Algorithm | Key type | Verify with | Use when |
-|---|---|---|---|
+| - | - | - | - |
 | RS256 | RSA public/private key pair | Public key (can be published) | Multiple services verify; keys are public |
 | HS256 | Shared secret | Same secret | Single service; secret must be kept shared |
 | ES256 | ECDSA (smaller keys) | Public key | Same as RS256 but smaller key size |
 
 **Prefer RS256 for production**: the signing private key stays only with the auth server. Any service can verify tokens using the public key (published at `/jwks.json`). No shared secret to leak.
 
-### JWT validation — every step matters
+### JWT validation: every step matters
 
 A server receiving a JWT must:
 
@@ -191,15 +191,15 @@ flowchart TD
 
 **The HS256 confusion attack**: if your library accepts both RS256 and HS256, an attacker can take the RS256 public key (which is public!) and use it as the HS256 shared secret. The library would then verify the forged token successfully. Always pin the expected algorithm.
 
-## JWT vs. Sessions — The Real Trade-offs
+## JWT vs. Sessions: The Real Trade-offs
 
 | Factor | JWT (stateless) | Server-side session |
-|---|---|---|
+| - | - | - |
 | Database lookup per request | None (cryptographic verification) | Yes (Redis lookup) |
 | Horizontal scalability | Any server validates independently | All servers share Redis |
-| Immediate revocation | Not possible without blocklist | Yes — delete from Redis |
+| Immediate revocation | Not possible without blocklist | Yes - delete from Redis |
 | Token invalidation on logout | Must wait for expiry or use blocklist | Instant |
-| Token size | 300–1000 bytes per request | ~20 bytes (session ID) |
+| Token size | 300-1000 bytes per request | ~20 bytes (session ID) |
 | Payload visibility | Payload is Base64-decoded (not encrypted!) | Server-side only |
 | Secret rotation | Must re-issue all tokens | Change session store keys |
 
@@ -208,13 +208,13 @@ flowchart TD
 A JWT is valid until its `exp` claim. If a user logs out, changes their password, or is banned, their existing JWT remains valid until expiry. You cannot "un-issue" a JWT.
 
 **Solutions** (each with a trade-off):
-1. **Short expiry** (5–15 min) + **refresh tokens**: the attack window is small. The most common solution.
+1. **Short expiry** (5-15 min) + **refresh tokens**: the attack window is small. The most common solution.
 2. **JWT blocklist** (Redis SET): store invalidated JWT IDs (`jti` claim) in Redis. Check the blocklist on every request. Defeats the "no database lookup" benefit.
 3. **Versioning**: include a `token_version` claim. Store the current version in the user record. If `token.token_version != db.user.token_version`, reject the token. Requires one DB lookup per request but is selective.
 
 **For high-security scenarios** (banking, admin actions): use short-lived JWTs (5 minutes) + refresh tokens. Force re-authentication for sensitive actions regardless of token validity.
 
-## CSRF — Cross-Site Request Forgery
+## CSRF: Cross-Site Request Forgery
 
 CSRF exploits the fact that browsers automatically send cookies with every request, including cross-site requests.
 
@@ -233,11 +233,11 @@ sequenceDiagram
     B-->>U: 200 OK (transfer executed)
 ```
 
-The bank can't distinguish this from a legitimate request — the cookie is valid.
+The bank can't distinguish this from a legitimate request - the cookie is valid.
 
 ### CSRF defences
 
-**SameSite=Lax or Strict** (the best defence — use it): `SameSite=Lax` prevents cookies from being sent on cross-site `POST`, `PUT`, `DELETE` requests. The image tag above (`GET`) is still sent, but banking operations should never be GET. For `SameSite=Strict`, even `GET` cross-site requests don't include cookies.
+**SameSite=Lax or Strict** (the best defence - use it): `SameSite=Lax` prevents cookies from being sent on cross-site `POST`, `PUT`, `DELETE` requests. The image tag above (`GET`) is still sent, but banking operations should never be GET. For `SameSite=Strict`, even `GET` cross-site requests don't include cookies.
 
 **CSRF token** (traditional defence):
 ```html
@@ -275,7 +275,7 @@ sequenceDiagram
     Auth-->>B: 200 OK {access_token: "eyJ..."}\nSet-Cookie: rt=refresh_token_value; HttpOnly; Secure; SameSite=Lax; Path=/auth/refresh; Max-Age=2592000
 
     B->>API: GET /orders\nAuthorization: Bearer eyJ...
-    API->>API: verify JWT (RS256) — no DB call
+    API->>API: verify JWT (RS256)  -  no DB call
     API-->>B: 200 OK orders
 
     Note over B,API: Access token expires after 15 minutes
@@ -292,8 +292,8 @@ sequenceDiagram
 ```
 
 Key design decisions:
-- Access token in memory/Authorization header — short-lived, no storage vulnerability.
-- Refresh token in HttpOnly cookie — JS can't steal it, SameSite blocks CSRF.
-- Refresh token hashed in Redis — server never stores the raw token; hash prevents breached Redis from yielding usable tokens.
-- Rotation on every refresh — theft detection.
-- Logout deletes refresh token from Redis — immediate revocation.
+- Access token in memory/Authorization header - short-lived, no storage vulnerability.
+- Refresh token in HttpOnly cookie - JS can't steal it, SameSite blocks CSRF.
+- Refresh token hashed in Redis - server never stores the raw token; hash prevents breached Redis from yielding usable tokens.
+- Rotation on every refresh - theft detection.
+- Logout deletes refresh token from Redis - immediate revocation.

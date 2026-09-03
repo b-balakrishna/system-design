@@ -4,8 +4,8 @@
 
 - UML gives a shared notation for describing classes, relationships, and object interactions.
 - In LLD, the most useful diagrams are:
-  - **Class diagrams** — show types, fields, methods, and relationships between classes.
-  - **Sequence diagrams** — show how objects collaborate over time for one specific use case.
+  - **Class diagrams**: show types, fields, methods, and relationships between classes.
+  - **Sequence diagrams**: show how objects collaborate over time for one specific use case.
 - Class diagrams help answer:
   - What are the main entities?
   - Which responsibilities belong to which class?
@@ -63,18 +63,18 @@ classDiagram
 
 ## Trade-offs
 
-- **Completeness vs. readability** — include important classes and methods; omit trivial getters, setters, and every field.
-- **Class diagram vs. sequence diagram** — class diagrams show structure; sequence diagrams show one flow through that structure. Use both, but draw the class diagram first.
-- **Inheritance vs. interface realization** — inheritance (`--|>`) means "is a"; realization (`..|>`) means "implements this contract."
-- **Association vs. composition** — association (`-->`) means one object uses another; composition (`*--`) means strong ownership and shared lifecycle.
-- **Precision vs. speed** — perfect UML notation matters less in interviews than a clear design that can be discussed.
+- **Completeness vs. readability**: include important classes and methods; omit trivial getters, setters, and every field.
+- **Class diagram vs. sequence diagram**: class diagrams show structure; sequence diagrams show one flow through that structure. Use both, but draw the class diagram first.
+- **Inheritance vs. interface realization**: inheritance (` - |>`) means "is a"; realization (`..|>`) means "implements this contract."
+- **Association vs. composition**: association (` - >`) means one object uses another; composition (`* - `) means strong ownership and shared lifecycle.
+- **Precision vs. speed**: perfect UML notation matters less in interviews than a clear design that can be discussed.
 
 ## Examples
 
 ### Class box notation
 
 - A class box has the class name, important fields, and important methods.
-- Example — `ItemSlot`:
+- Example - `ItemSlot`:
   - Fields: `code`, `price`, `quantity`.
   - Methods: `isAvailable()`, `dispenseOne()`.
 - Omit trivial getters and setters unless they communicate a rule (for example, `setQuantity(n)` that validates non-negative).
@@ -82,7 +82,7 @@ classDiagram
 
 ### Inheritance
 
-- Use inheritance (`--|>`) when a subtype truly "is a" parent type and honors its full contract (LSP from topic 1).
+- Use inheritance (` - |>`) when a subtype truly "is a" parent type and honors its full contract (LSP from topic 1).
 - Example: `Car`, `Bike`, and `Truck` extend `Vehicle`.
 - LLD rule: put only shared behavior in `Vehicle`, such as `getLicensePlate()`. Do not force every vehicle to support behavior only some vehicles have (ISP from topic 1).
 
@@ -94,30 +94,30 @@ classDiagram
 
 ### Association
 
-- Association (`-->`) means one class uses or knows about another class.
+- Association (` - >`) means one class uses or knows about another class.
 - Example: `CheckoutService` uses a `PaymentProcessor`.
 - The payment object does not have to be owned forever by checkout; it may be supplied for one operation only.
 
 ### Aggregation
 
-- Aggregation (`o--`) is a weak whole-part relationship where the child has an independent lifecycle.
+- Aggregation (`o - `) is a weak whole-part relationship where the child has an independent lifecycle.
 - Example: `Team` has many `Player` objects, but a `Player` can exist after leaving the team.
 
 ### Composition
 
-- Composition (`*--`) is strong ownership. The child's lifecycle is tied to the parent.
+- Composition (`* - `) is strong ownership. The child's lifecycle is tied to the parent.
 - Example: `ParkingLot` owns `ParkingFloor`; `ParkingFloor` owns `ParkingSpot`. Deleting the lot means deleting its floors and spots.
 
 ### Multiplicity
 
-- `ParkingLot "1" --> "many" ParkingFloor`.
-- `ParkingFloor "1" --> "many" ParkingSpot`.
-- `Ticket "1" --> "1" ParkingSpot` while the vehicle is parked.
+- `ParkingLot "1" - > "many" ParkingFloor`.
+- `ParkingFloor "1" - > "many" ParkingSpot`.
+- `Ticket "1" - > "1" ParkingSpot` while the vehicle is parked.
 - Multiplicity clarifies whether a field holds a single object, an optional object, or a collection.
 
 ### When to draw a sequence diagram
 
-- After the class diagram — once the entities are established, pick the single most important flow.
+- After the class diagram - once the entities are established, pick the single most important flow.
 - Good candidates: the core action (park a vehicle, place an order, dispense an item), and the undo/error path if it crosses many objects.
 - Keep the diagram to one scenario. Multiple scenarios become multiple small diagrams, not one big one.
 
@@ -166,14 +166,14 @@ sequenceDiagram
 
 ### What to omit in an interview diagram
 
-- Every enum value, minor helper, or validation method — unless it affects the structural design.
+- Every enum value, minor helper, or validation method - unless it affects the structural design.
 - Getters and setters that add no rule.
 - Internal implementation fields that do not shape relationships.
 - Prefer one readable diagram and verbal explanation over a dense wall of boxes.
-- Start with 5–8 core classes; add helpers only when the interviewer asks for more detail.
+- Start with 5-8 core classes; add helpers only when the interviewer asks for more detail.
 
 ### Common LLD correction
 
 - Weak: `ParkingLot` directly contains all `Vehicle` objects and all parking logic in one class.
-- Better: `ParkingLot` coordinates, `ParkingFloor` groups spots, `ParkingSpot` owns occupancy, `Ticket` records the assignment, and `SpotSelectionStrategy` (from topic 4 — behavioral patterns) decides which spot to pick.
+- Better: `ParkingLot` coordinates, `ParkingFloor` groups spots, `ParkingSpot` owns occupancy, `Ticket` records the assignment, and `SpotSelectionStrategy` (from topic 4 - behavioral patterns) decides which spot to pick.
 - Why it matters: each class shows exactly one reason to change, and the sequence diagram proves the collaboration works end to end.

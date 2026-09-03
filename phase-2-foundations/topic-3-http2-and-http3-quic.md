@@ -2,16 +2,16 @@
 
 ## Concept
 
-HTTP has evolved through three versions, each addressing the performance limits of its predecessor. The semantics (methods, status codes, headers from topic 2) stay the same across all three. Only the **wire format** — how bytes are encoded and sent — changes.
+HTTP has evolved through three versions, each addressing the performance limits of its predecessor. The semantics (methods, status codes, headers from topic 2) stay the same across all three. Only the **wire format** - how bytes are encoded and sent - changes.
 
 | Version | Transport | Released | Key change |
-|---|---|---|---|
+| - | - | - | - |
 | HTTP/1.0 | TCP | 1996 | One request per connection |
 | HTTP/1.1 | TCP | 1997 | Persistent connections, pipelining (broken in practice) |
 | HTTP/2 | TCP | 2015 | Binary framing, multiplexing, header compression, server push |
 | HTTP/3 | QUIC (UDP) | 2022 | Eliminates TCP HOL blocking, 0-RTT, connection migration |
 
-**Analogy for multiplexing**: HTTP/1.1 is a single-lane road — one car at a time, in order. HTTP/2 is a multi-lane highway — many cars travel simultaneously on different lanes. HTTP/3 is the same highway but each lane is completely independent — a crash in lane 3 doesn't slow down lane 1 (fixing the HOL blocking that still existed in HTTP/2).
+**Analogy for multiplexing**: HTTP/1.1 is a single-lane road - one car at a time, in order. HTTP/2 is a multi-lane highway - many cars travel simultaneously on different lanes. HTTP/3 is the same highway but each lane is completely independent - a crash in lane 3 doesn't slow down lane 1 (fixing the HOL blocking that still existed in HTTP/2).
 
 ## The Problem HTTP/1.1 Created
 
@@ -23,7 +23,7 @@ In HTTP/1.1, one TCP connection can process **one request at a time**:
 Connection 1: GET /page.html ──► (wait) ──► GET /style.css ──► (wait) ──► GET /app.js
 ```
 
-The browser opens 6–8 parallel TCP connections as a workaround. Each connection still has HOL blocking within it, and 6+ TCP connections waste sockets, memory, and bandwidth.
+The browser opens 6-8 parallel TCP connections as a workaround. Each connection still has HOL blocking within it, and 6+ TCP connections waste sockets, memory, and bandwidth.
 
 ### Header redundancy
 
@@ -34,12 +34,12 @@ Request 1:  User-Agent: Mozilla/5.0 ... (87 bytes)
             Cookie: session=abc; theme=dark; lang=en (52 bytes)
             Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9... (312 bytes)
 
-Request 2:  User-Agent: Mozilla/5.0 ... (87 bytes again — identical!)
+Request 2:  User-Agent: Mozilla/5.0 ... (87 bytes again  -  identical!)
             Cookie: session=abc; theme=dark; lang=en (52 bytes again!)
             ...
 ```
 
-A typical API request has 400–800 bytes of headers. On a page loading 100 resources, that's 40–80 KB of redundant header data.
+A typical API request has 400-800 bytes of headers. On a page loading 100 resources, that's 40-80 KB of redundant header data.
 
 ## HTTP/2
 
@@ -64,15 +64,15 @@ HTTP/2 frame (binary):
 ```
 
 Frame types:
-- `HEADERS` — carries compressed request/response headers
-- `DATA` — carries the request/response body
-- `WINDOW_UPDATE` — flow control
-- `SETTINGS` — exchange connection parameters
-- `PING` — keepalive and RTT measurement
-- `RST_STREAM` — cancel a stream
-- `GOAWAY` — gracefully shut down a connection
+- `HEADERS` - carries compressed request/response headers
+- `DATA` - carries the request/response body
+- `WINDOW_UPDATE` - flow control
+- `SETTINGS` - exchange connection parameters
+- `PING` - keepalive and RTT measurement
+- `RST_STREAM` - cancel a stream
+- `GOAWAY` - gracefully shut down a connection
 
-### Multiplexing — the core innovation
+### Multiplexing: the core innovation
 
 A single TCP connection carries multiple independent **streams** simultaneously:
 
@@ -81,7 +81,7 @@ sequenceDiagram
     participant C as Client
     participant S as Server
 
-    Note over C,S: HTTP/1.1 — sequential requests (3 RTTs for 3 resources)
+    Note over C,S: HTTP/1.1  -  sequential requests (3 RTTs for 3 resources)
     C->>S: GET /style.css
     S-->>C: 200 CSS
     C->>S: GET /app.js
@@ -89,7 +89,7 @@ sequenceDiagram
     C->>S: GET /logo.png
     S-->>C: 200 PNG
 
-    Note over C,S: HTTP/2 — multiplexed (1 RTT for all resources)
+    Note over C,S: HTTP/2  -  multiplexed (1 RTT for all resources)
     C->>S: stream 1: HEADERS GET /style.css
     C->>S: stream 3: HEADERS GET /app.js
     C->>S: stream 5: HEADERS GET /logo.png
@@ -98,9 +98,9 @@ sequenceDiagram
     S-->>C: stream 5: DATA PNG (interleaved)
 ```
 
-Streams are identified by integer IDs (odd for client-initiated, even for server push). Frames from different streams are **interleaved** on the wire and reassembled independently. A slow stream does not block other streams — at the HTTP layer.
+Streams are identified by integer IDs (odd for client-initiated, even for server push). Frames from different streams are **interleaved** on the wire and reassembled independently. A slow stream does not block other streams - at the HTTP layer.
 
-### HPACK — Header Compression
+### HPACK: Header Compression
 
 HPACK (RFC 7541) compresses headers using two tables:
 
@@ -120,7 +120,7 @@ First request:  Authorization: Bearer eyJ... → sent in full → added as index
 Second request: :62  (1 byte instead of 312 bytes)
 ```
 
-Typical compression ratio: **85–95%** reduction in header size for API-heavy workloads. A 400-byte header block becomes 20–60 bytes.
+Typical compression ratio: **85-95%** reduction in header size for API-heavy workloads. A 400-byte header block becomes 20-60 bytes.
 
 ### Server Push
 
@@ -137,12 +137,12 @@ sequenceDiagram
     S-->>C: 200 index.html (stream 1)
     S-->>C: 200 critical.css (stream 2)
     S-->>C: 200 above-fold.js (stream 4)
-    Note over C: HTML parsed — browser needs /critical.css
+    Note over C: HTML parsed  -  browser needs /critical.css
     Note over C: Already in push cache! No request needed.
 ```
 
 **Reality check**: Server push has been largely abandoned. Chrome removed support for it in 2022. Problems:
-- The server doesn't know what's already in the browser cache — may push resources the browser already has.
+- The server doesn't know what's already in the browser cache - may push resources the browser already has.
 - The browser can cancel a pushed stream but already paid for the data sent before the cancel.
 
 **Modern replacement**: `Link: </critical.css>; rel=preload` header. The server hints "you'll need this"; the browser decides whether to fetch (checking its cache first).
@@ -151,7 +151,7 @@ sequenceDiagram
 
 HTTP/2 streams can declare **dependencies** and **weights**, letting the browser tell the server "render-blocking CSS is more urgent than below-fold images." In practice, prioritisation implementations vary across servers and browsers and is being simplified in HTTP/3.
 
-## HTTP/2 Limitations — TCP HOL Blocking
+## HTTP/2 Limitations: TCP HOL Blocking
 
 HTTP/2 solved HTTP-level HOL blocking but introduced a new form: **TCP-level HOL blocking**.
 
@@ -167,19 +167,19 @@ sequenceDiagram
     S->>N: stream2 frame B (packet 6)
     S->>N: stream3 frame C (packet 7)
     Note over N: Packet 5 lost!
-    N-->>C: packet 6 (stream2 frame B) — held in buffer
-    N-->>C: packet 7 (stream3 frame C) — held in buffer
+    N-->>C: packet 6 (stream2 frame B)  -  held in buffer
+    N-->>C: packet 7 (stream3 frame C)  -  held in buffer
     Note over C: TCP holds all data until packet 5 is retransmitted
     S->>N: retransmit packet 5
     N-->>C: packet 5, 6, 7 delivered in order
     Note over C: All 3 streams unblock simultaneously
 ```
 
-On high-packet-loss networks (mobile, satellite), this makes HTTP/2 slower than HTTP/1.1 with multiple connections — each HTTP/1.1 connection has independent TCP state, so only the affected connection stalls.
+On high-packet-loss networks (mobile, satellite), this makes HTTP/2 slower than HTTP/1.1 with multiple connections - each HTTP/1.1 connection has independent TCP state, so only the affected connection stalls.
 
 ## HTTP/3 and QUIC
 
-### QUIC — UDP + reliability reimplemented
+### QUIC: UDP + reliability reimplemented
 
 QUIC (Quick UDP Internet Connections) was developed by Google (~2012), standardised by IETF as RFC 9000 (2021). It reimplements the reliable features of TCP on top of UDP, while fixing its design mistakes:
 
@@ -206,7 +206,7 @@ flowchart TD
     HTTP2 --> TLS --> TCP --> IP
 ```
 
-### Stream isolation — solving TCP HOL blocking
+### Stream isolation: solving TCP HOL blocking
 
 In QUIC, each stream has **independent flow control and delivery**. A lost UDP packet stalls only the stream whose data it carried:
 
@@ -215,7 +215,7 @@ sequenceDiagram
     participant C as Client
     participant N as Network
 
-    Note over C,N: QUIC — stream-level isolation
+    Note over C,N: QUIC  -  stream-level isolation
     N-->>C: stream 1 data A ✓
     N-->>C: stream 2 data B ✓
     Note over N: stream 3 data C (lost!)
@@ -225,7 +225,7 @@ sequenceDiagram
     N-->>C: stream 3 data C ✓  (only stream 3 was stalled)
 ```
 
-### Connection establishment — 0 vs 1 RTT
+### Connection establishment: 0 vs 1 RTT
 
 HTTP/2 requires:
 1. TCP SYN/SYN-ACK/ACK: 1 RTT
@@ -261,7 +261,7 @@ sequenceDiagram
 
 TCP connections are identified by a 4-tuple: (src IP, src port, dst IP, dst port). If your phone switches from Wi-Fi to cellular, your IP address changes → the TCP connection breaks → everything must reconnect.
 
-QUIC connections are identified by a **Connection ID** — a random value chosen by the endpoints. The Connection ID doesn't change when the network path changes:
+QUIC connections are identified by a **Connection ID** - a random value chosen by the endpoints. The Connection ID doesn't change when the network path changes:
 
 ```mermaid
 sequenceDiagram
@@ -276,9 +276,9 @@ sequenceDiagram
     Note over C: Switches to LTE (IP: 10.0.0.42)
     C->>LTE: QUIC data [CID: abc123] (src: 10.0.0.42)
     LTE->>S: QUIC data [CID: abc123]
-    Note over S: Same CID — same connection, new path
+    Note over S: Same CID  -  same connection, new path
     S-->>C: QUIC data [CID: abc123]
-    Note over C,S: Zero-downtime migration — video call continues uninterrupted
+    Note over C,S: Zero-downtime migration  -  video call continues uninterrupted
 ```
 
 This is transformative for mobile: video calls, streaming, and downloads survive network handoffs without reconnecting.
@@ -289,7 +289,7 @@ QUIC encrypts packet headers (not just payload). This prevents middleboxes from 
 
 ## How Browsers Negotiate Protocol Versions
 
-### ALPN — Application Layer Protocol Negotiation
+### ALPN: Application Layer Protocol Negotiation
 
 During TLS handshake, the client advertises supported protocols via ALPN extension:
 
@@ -304,9 +304,9 @@ TLS ServerHello:
   ALPN: "h2"
 ```
 
-ALPN is how HTTP/2 is negotiated — no separate round trip needed.
+ALPN is how HTTP/2 is negotiated - no separate round trip needed.
 
-### Alt-Svc — HTTP/3 Discovery
+### Alt-Svc: HTTP/3 Discovery
 
 HTTP/3 (QUIC, UDP) can't be negotiated in a TLS handshake for the first connection because you start with TCP. The server advertises HTTP/3 support via the `Alt-Svc` header:
 
@@ -322,13 +322,13 @@ The browser caches this and uses HTTP/3 (QUIC/UDP) for subsequent connections to
 Real-world benchmarks (varies by network conditions):
 
 | Metric | HTTP/1.1 | HTTP/2 | HTTP/3 |
-|---|---|---|---|
-| Page load (50+ assets, good network) | Baseline | 20–40% faster | 20–40% faster |
-| Page load (packet loss 2%) | Baseline | Similar to H1 | 30–50% faster |
-| Header overhead per request | 400–800 bytes | 20–60 bytes | 20–60 bytes |
+| - | - | - | - |
+| Page load (50+ assets, good network) | Baseline | 20-40% faster | 20-40% faster |
+| Page load (packet loss 2%) | Baseline | Similar to H1 | 30-50% faster |
+| Header overhead per request | 400-800 bytes | 20-60 bytes | 20-60 bytes |
 | Connection establishment (new) | 2 RTTs | 2 RTTs | 1 RTT |
 | Connection establishment (resume) | 2 RTTs | 2 RTTs | 0 RTTs |
-| Mobile network handoff downtime | ~1–3 seconds | ~1–3 seconds | ~0 seconds |
+| Mobile network handoff downtime | ~1-3 seconds | ~1-3 seconds | ~0 seconds |
 
 HTTP/2 and HTTP/3 show the biggest gains when:
 - Pages load many small resources (JS bundles, CSS, API calls)
@@ -342,20 +342,20 @@ HTTP/2 and HTTP/3 show minimal gains for:
 ## Trade-offs and When to Use Each
 
 | Scenario | Recommended |
-|---|---|
+| - | - |
 | Modern browser serving a web app | HTTP/2 or HTTP/3 (both, let ALPN + Alt-Svc decide) |
 | Internal microservice calls | HTTP/2 (gRPC runs on HTTP/2) or HTTP/3 if high packet loss |
 | Mobile-heavy user base | HTTP/3 (connection migration + packet loss resilience) |
 | Corporate proxy environment | HTTP/2 (some firewalls block UDP 443) |
-| Single large file download | Any — difference is minimal |
+| Single large file download | Any - difference is minimal |
 | Legacy clients | HTTP/1.1 fallback (always maintain) |
 
-**Deployment reality**: enable HTTP/2 and HTTP/3 on your CDN and servers. Both fall back to HTTP/1.1 gracefully for unsupported clients. No application code changes are needed — the performance improvement is free.
+**Deployment reality**: enable HTTP/2 and HTTP/3 on your CDN and servers. Both fall back to HTTP/1.1 gracefully for unsupported clients. No application code changes are needed - the performance improvement is free.
 
 ## Common Interview Questions
 
 **Q: Does HTTP/2 multiplexing eliminate the need for domain sharding?**
-A: Yes. HTTP/1.1 used domain sharding (serving assets from cdn1.example.com, cdn2.example.com) to bypass the 6-connection limit. HTTP/2 makes this counter-productive — multiple domains mean multiple TCP connections and multiple TLS handshakes, losing multiplexing benefits.
+A: Yes. HTTP/1.1 used domain sharding (serving assets from cdn1.example.com, cdn2.example.com) to bypass the 6-connection limit. HTTP/2 makes this counter-productive - multiple domains mean multiple TCP connections and multiple TLS handshakes, losing multiplexing benefits.
 
 **Q: Can HTTP/2 be used without TLS?**
 A: Technically yes (h2c = cleartext). In practice, all major browsers only support HTTP/2 over TLS. Treat HTTP/2 as requiring HTTPS.

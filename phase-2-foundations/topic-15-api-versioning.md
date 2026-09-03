@@ -7,7 +7,7 @@
 - The core tension: developers want to improve their APIs freely; clients want stability and predictability. Versioning creates a contract.
 - Good versioning strategy is especially critical for **public APIs** (third-party developers, mobile apps you can't force-update). For internal APIs with coordinated deployments, you have more flexibility.
 
-**Why does this matter?** Mobile apps are a perfect example. A user running an 18-month-old version of your app is still a paying customer. If you change your API and break that client, they get errors — not a prompt to update. Google Play and App Store data show ~15% of users are always 2+ major versions behind.
+**Why does this matter?** Mobile apps are a perfect example. A user running an 18-month-old version of your app is still a paying customer. If you change your API and break that client, they get errors - not a prompt to update. Google Play and App Store data show ~15% of users are always 2+ major versions behind.
 
 ```mermaid
 sequenceDiagram
@@ -32,7 +32,7 @@ Understanding what constitutes a breaking change is the foundation of versioning
 Clients written against the old API continue to work without any code changes:
 
 | Change | Safe? | Why |
-|---|---|---|
+| - | - | - |
 | Add a new optional response field | Yes | Clients that ignore unknown fields are unaffected |
 | Add a new optional request parameter | Yes | Old clients don't send it; server uses default |
 | Add a new endpoint | Yes | Old clients don't call it |
@@ -46,14 +46,14 @@ Clients written against the old API continue to work without any code changes:
 ### Breaking changes (require a new API version)
 
 | Change | Why it's breaking |
-|---|---|
-| Remove a response field | Clients reading it get null/missing — may crash |
+| - | - |
+| Remove a response field | Clients reading it get null/missing - may crash |
 | Rename a response field | Client code using the old name gets null |
 | Change a field's type (string → integer) | Deserialization fails |
 | Change a URL path | Old clients still call the old path |
 | Change authentication mechanism | Old clients can't authenticate |
 | Change required to optional (sometimes) | Client validation logic may break |
-| Add a required request field | Old clients don't send it — requests fail |
+| Add a required request field | Old clients don't send it - requests fail |
 | Change response status codes | Client error handling breaks |
 | Change pagination mechanism | Client can't navigate correctly |
 
@@ -81,7 +81,7 @@ GET /api/v2/orders/42
 
 **Best practice for URI versioning**:
 - Only increment major version on breaking changes: `/v1` → `/v2`.
-- Don't version minor additions — just add them.
+- Don't version minor additions - just add them.
 - Keep version in the path, not the domain (`api-v2.example.com` is bad).
 
 ### 2. Header versioning (Content negotiation)
@@ -98,7 +98,7 @@ API-Version: 2024-01-15
 ```
 
 **Advantages**:
-- Clean URIs — the path doesn't encode the version.
+- Clean URIs - the path doesn't encode the version.
 - Follows HTTP content negotiation principles.
 
 **Disadvantages**:
@@ -114,7 +114,7 @@ GET /api/orders/42
 Stripe-Version: 2024-11-20
 ```
 
-Stripe's API is versioned by date. Each date represents a snapshot of all API changes up to that point. A client pins to a date and gets consistent behaviour for years — Stripe guarantees backward compatibility to the pinned date.
+Stripe's API is versioned by date. Each date represents a snapshot of all API changes up to that point. A client pins to a date and gets consistent behaviour for years - Stripe guarantees backward compatibility to the pinned date.
 
 **How it works**:
 - API code applies a series of "transforms" based on the client's pinned version.
@@ -164,7 +164,7 @@ Simple for small additions. Becomes unmaintainable with many version differences
 
 Changing the database schema without breaking API v1:
 - Add new columns (non-breaking to the DB, may be breaking to v1 API if v1 now returns unexpected data).
-- Never rename columns that v1 reads from directly — use views or aliases.
+- Never rename columns that v1 reads from directly - use views or aliases.
 - For major changes (e.g., splitting one table into two), keep the v1 query working via a compatibility view.
 
 ## Deprecation Lifecycle
@@ -177,7 +177,7 @@ flowchart LR
     DEP["Deprecated\n(works, but flagged)"]
     EOL["End of Life\n(410 Gone)"]
 
-    GA -->|"announce v2 + set sunset date (6–12 months)"| DEP
+    GA -->|"announce v2 + set sunset date (6-12 months)"| DEP
     DEP -->|"sunset date reached"| EOL
 ```
 
@@ -228,7 +228,7 @@ Content-Type: application/json
 }
 ```
 
-Use `410 Gone` (not `404 Not Found`) — it explicitly signals permanent removal, which robots and clients understand as "stop trying."
+Use `410 Gone` (not `404 Not Found`) - it explicitly signals permanent removal, which robots and clients understand as "stop trying."
 
 ## gRPC Schema Evolution (Different Approach)
 
@@ -236,7 +236,7 @@ gRPC (topic 11) uses protobuf field numbers for wire compatibility. Versioning w
 
 - **No explicit version in the service name** for minor changes: just add new fields.
 - **New service name for breaking changes**: `OrderService` → `OrderServiceV2`.
-- **Never change field numbers** — they identify fields on the wire.
+- **Never change field numbers**: they identify fields on the wire.
 - **`reserved` fields**: mark removed field numbers as reserved to prevent reuse.
 
 ```proto
@@ -245,9 +245,9 @@ message Order {
   string id      = 1;
   string status  = 2;
   float  total   = 3;
-  // Added in v2 — old clients ignore this field
+  // Added in v2  -  old clients ignore this field
   string estimated_delivery = 4;
-  reserved 5, 6; // removed fields — can never be reused
+  reserved 5, 6; // removed fields  -  can never be reused
 }
 ```
 
@@ -260,7 +260,7 @@ type Order {
   id: ID!
   total: Float!
   status: OrderStatus!
-  # New fields — safe to add
+  # New fields  -  safe to add
   estimatedDelivery: DateTime
   trackingUrl: String
   # Old field being deprecated
@@ -268,7 +268,7 @@ type Order {
 }
 ```
 
-- Never remove a field — mark it `@deprecated` and keep it.
+- Never remove a field - mark it `@deprecated` and keep it.
 - Wait for all client queries to stop using the deprecated field (monitor via query analytics).
 - Only after confirmed zero usage: remove the field in a coordinated client migration.
 

@@ -14,18 +14,18 @@
 
 ```mermaid
 flowchart TD
-    A7["Layer 7: Application\nHTTP, DNS, SMTP, FTP\n— protocols users interact with"]
-    A6["Layer 6: Presentation\nTLS/SSL, gzip, JSON serialization\n— encoding, encryption, compression"]
-    A5["Layer 5: Session\nWebSocket sessions, RPC sessions\n— connection lifecycle management"]
-    A4["Layer 4: Transport\nTCP, UDP\n— end-to-end delivery, ports, reliability"]
-    A3["Layer 3: Network\nIP, ICMP, routing\n— addressing, routing across networks"]
-    A2["Layer 2: Data Link\nEthernet, Wi-Fi (802.11), ARP\n— node-to-node delivery on same network"]
-    A1["Layer 1: Physical\nCables, fiber, radio waves\n— raw bit transmission"]
+    A7["Layer 7: Application\nHTTP, DNS, SMTP, FTP\n -  protocols users interact with"]
+    A6["Layer 6: Presentation\nTLS/SSL, gzip, JSON serialization\n -  encoding, encryption, compression"]
+    A5["Layer 5: Session\nWebSocket sessions, RPC sessions\n -  connection lifecycle management"]
+    A4["Layer 4: Transport\nTCP, UDP\n -  end-to-end delivery, ports, reliability"]
+    A3["Layer 3: Network\nIP, ICMP, routing\n -  addressing, routing across networks"]
+    A2["Layer 2: Data Link\nEthernet, Wi-Fi (802.11), ARP\n -  node-to-node delivery on same network"]
+    A1["Layer 1: Physical\nCables, fiber, radio waves\n -  raw bit transmission"]
 
     A7 --> A6 --> A5 --> A4 --> A3 --> A2 --> A1
 ```
 
-## Layer by Layer — Real Protocols and What They Do
+## Layer by Layer: Real Protocols and What They Do
 
 ### Layer 1: Physical
 
@@ -65,7 +65,7 @@ Two dominant protocols: **TCP** and **UDP**.
 
 The protocol the application uses. HTTP (topic 2), DNS (topic 4), SMTP (email), FTP (file transfer), etc. This is the only layer most application developers care about day-to-day.
 
-## TCP — The Reliable Transport
+## TCP: The Reliable Transport
 
 ### Three-way handshake
 
@@ -88,7 +88,7 @@ SYN stands for "synchronise sequence numbers." Both sides pick random initial se
 
 ### Four-way termination
 
-TCP closes gracefully — both sides signal they're done:
+TCP closes gracefully - both sides signal they're done:
 
 ```mermaid
 sequenceDiagram
@@ -103,7 +103,7 @@ sequenceDiagram
     Note over C: Wait 2*MSL (Maximum Segment Lifetime) then close
 ```
 
-**TIME_WAIT state**: after sending the final ACK, the client waits 2 × MSL (typically 60–120 seconds) to handle delayed duplicates. A server with thousands of connections closing per second can exhaust ephemeral ports waiting in TIME_WAIT. Solution: enable `SO_REUSEADDR` or `SO_REUSEPORT`.
+**TIME_WAIT state**: after sending the final ACK, the client waits 2 × MSL (typically 60-120 seconds) to handle delayed duplicates. A server with thousands of connections closing per second can exhaust ephemeral ports waiting in TIME_WAIT. Solution: enable `SO_REUSEADDR` or `SO_REUSEPORT`.
 
 ### TCP reliability mechanisms
 
@@ -115,7 +115,7 @@ sequenceDiagram
 
 ### Flow control
 
-TCP prevents a fast sender from overwhelming a slow receiver. The receiver advertises a **receive window** (rwnd) — how many bytes it can buffer. The sender must not have more unacknowledged bytes in flight than the window:
+TCP prevents a fast sender from overwhelming a slow receiver. The receiver advertises a **receive window** (rwnd) - how many bytes it can buffer. The sender must not have more unacknowledged bytes in flight than the window:
 
 ```
 Bytes in flight ≤ min(cwnd, rwnd)
@@ -131,7 +131,7 @@ Flow control prevents overwhelming the receiver. Congestion control prevents ove
 
 **Congestion avoidance**: after reaching a threshold (ssthresh), increase cwnd by 1 MSS per RTT (linear) instead of doubling.
 
-**Congestion detection**: traditionally, packet loss signals congestion (TCP Reno, CUBIC). Modern BBR (Bottleneck Bandwidth and RTT) uses bandwidth measurements instead — better for long-distance, high-bandwidth links.
+**Congestion detection**: traditionally, packet loss signals congestion (TCP Reno, CUBIC). Modern BBR (Bottleneck Bandwidth and RTT) uses bandwidth measurements instead - better for long-distance, high-bandwidth links.
 
 ```mermaid
 flowchart LR
@@ -155,12 +155,12 @@ A TCP connection stays open even if no data is sent. HTTP/1.1 `Connection: keep-
 
 TCP keep-alive probes (separate from HTTP keep-alive) detect and close dead connections at the OS level, freeing sockets.
 
-## UDP — The Fast Transport
+## UDP: The Fast Transport
 
 UDP has no connection state, no handshake, no retransmits, no ordering:
 
 | | TCP | UDP |
-|---|---|---|
+| - | - | - |
 | Connection | Established (3-way handshake) | Connectionless |
 | Reliability | Guaranteed delivery | Best-effort |
 | Ordering | Strict in-order delivery | No ordering guarantee |
@@ -168,9 +168,9 @@ UDP has no connection state, no handshake, no retransmits, no ordering:
 | Latency | +1 RTT for handshake, +RTT for retransmits | Zero overhead |
 | Use cases | HTTP, databases, SSH, email | DNS, gaming, VoIP, QUIC |
 
-**Why UDP for games and VoIP?** A retransmitted packet from 200ms ago is useless in a real-time game — you want the current position, not a stale one. Applications implement their own error handling: games interpolate missing positions; VoIP codecs handle packet loss with concealment.
+**Why UDP for games and VoIP?** A retransmitted packet from 200ms ago is useless in a real-time game - you want the current position, not a stale one. Applications implement their own error handling: games interpolate missing positions; VoIP codecs handle packet loss with concealment.
 
-## IP Addressing — Deep Dive
+## IP Addressing: Deep Dive
 
 ### IPv4 address structure
 
@@ -189,7 +189,7 @@ A **subnet mask** (or CIDR prefix) determines which bits identify the network vs
 ```
 
 | CIDR | Subnet Mask | Hosts Available |
-|---|---|---|
+| - | - | - |
 | /8 | 255.0.0.0 | ~16.7 million |
 | /16 | 255.255.0.0 | ~65,534 |
 | /24 | 255.255.255.0 | 254 |
@@ -198,12 +198,12 @@ A **subnet mask** (or CIDR prefix) determines which bits identify the network vs
 
 ### Private address ranges (RFC 1918)
 
-Not routable on the public internet — only within private networks:
-- `10.0.0.0/8` — 10.x.x.x (used by large organisations)
-- `172.16.0.0/12` — 172.16.x.x to 172.31.x.x (used by Docker)
-- `192.168.0.0/16` — 192.168.x.x (home networks)
+Not routable on the public internet - only within private networks:
+- `10.0.0.0/8` - 10.x.x.x (used by large organisations)
+- `172.16.0.0/12` - 172.16.x.x to 172.31.x.x (used by Docker)
+- `192.168.0.0/16` - 192.168.x.x (home networks)
 
-### NAT — Network Address Translation
+### NAT: Network Address Translation
 
 NAT allows many devices on a private network to share one public IP address:
 
@@ -225,11 +225,11 @@ sequenceDiagram
 ```
 
 **NAT limitations**:
-- Inbound connections are impossible without port forwarding — NAT doesn't know which internal host to deliver to.
+- Inbound connections are impossible without port forwarding - NAT doesn't know which internal host to deliver to.
 - This is why P2P applications (WebRTC, online games) need **STUN/TURN servers** for NAT traversal (hole punching).
 - QUIC (topic 3) uses Connection IDs to survive NAT rebinding (your public port changing when the NAT table entry expires).
 
-## Load Balancers — Layer 4 vs Layer 7
+## Load Balancers: Layer 4 vs Layer 7
 
 Understanding OSI layers directly informs how load balancers work:
 
@@ -251,9 +251,9 @@ sequenceDiagram
     L4->>S1: TLS ClientHello [encrypted, not decoded]
 ```
 
-- **Does not terminate TLS** — the encrypted payload passes through unchanged.
-- **Cannot route by URL** — doesn't inspect HTTP layer.
-- **Very fast** — minimal processing, often implemented in kernel (Linux IPVS, eBPF XDP).
+- **Does not terminate TLS**: the encrypted payload passes through unchanged.
+- **Cannot route by URL**: doesn't inspect HTTP layer.
+- **Very fast**: minimal processing, often implemented in kernel (Linux IPVS, eBPF XDP).
 - **Use case**: routing TCP traffic, database connection routing, non-HTTP protocols.
 
 ### Layer 7 load balancer (Application)
@@ -275,21 +275,21 @@ sequenceDiagram
     L7->>S2: GET /static/logo.png (forwarded to static server)
 ```
 
-- **Terminates TLS** — decrypts traffic to read headers.
+- **Terminates TLS**: decrypts traffic to read headers.
 - **Content-based routing**: route `/api/*` to API servers, `/static/*` to CDN origin.
 - **Header manipulation**: inject `X-Forwarded-For`, `X-Request-ID`, strip internal headers.
 - **Rate limiting, WAF**: applies rules before reaching application servers.
 - **Health checks**: inspects HTTP responses, not just TCP connections.
 - **Examples**: AWS ALB, nginx, HAProxy, Envoy, Caddy.
 
-**Cost**: more CPU than L4 (decrypts every request). Still very fast — Envoy handles millions of requests/second on commodity hardware.
+**Cost**: more CPU than L4 (decrypts every request). Still very fast - Envoy handles millions of requests/second on commodity hardware.
 
-## Ports — Quick Reference
+## Ports: Quick Reference
 
 Well-known ports (IANA assigned, requires root/admin to bind):
 
 | Port | Protocol | Service |
-|---|---|---|
+| - | - | - |
 | 22 | TCP | SSH |
 | 25 | TCP | SMTP (email submission) |
 | 53 | TCP/UDP | DNS |
@@ -302,12 +302,12 @@ Well-known ports (IANA assigned, requires root/admin to bind):
 | 2181 | TCP | ZooKeeper |
 | 9092 | TCP | Kafka |
 
-Ephemeral ports (49152–65535): dynamically assigned by the OS for outbound client connections.
+Ephemeral ports (49152-65535): dynamically assigned by the OS for outbound client connections.
 
 ## Common Networking Problems and Diagnostics
 
 | Problem | Layer | Tool |
-|---|---|---|
+| - | - | - |
 | Physical link down | L1 | `ping`, `ethtool` |
 | Wrong MAC, ARP failure | L2 | `arp -a`, `arping` |
 | Can't reach IP, routing issue | L3 | `traceroute`, `ip route` |

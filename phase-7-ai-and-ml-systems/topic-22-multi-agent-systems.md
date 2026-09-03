@@ -41,13 +41,13 @@ flowchart TD
 ## Trade-offs
 
 - **Cost & Latency Multiplication**:
-  - Every agent handoff requires an LLM inference call. A multi-agent loop can easily execute 15–50 round-trips for a single user prompt, drastically increasing token costs and response times (often 30s–2 minutes).
+  - Every agent handoff requires an LLM inference call. A multi-agent loop can easily execute 15-50 round-trips for a single user prompt, drastically increasing token costs and response times (often 30s - 2 minutes).
 - **Runaway Loops & Deadlocks**:
   - Agents can get stuck in infinite clarification loops (e.g., Agent A asks Agent B for details, Agent B requests clarification from Agent A). Systems must enforce hard iteration caps, timeout budgets, and supervisor overrides.
 - **State Management & Synchronization**:
   - Deciding what state to pass during handoffs is challenging. Passing full transcripts defeats context isolation; passing sparse summaries risks omitting critical facts.
 - **Overkill for Deterministic Tasks**:
-  - Using autonomous multi-agent handoffs for standard business processes (e.g., payment processing or ETL) is anti-pattern; traditional deterministic workflow orchestrators (Temporal, Airflow, Step Functions — Phase 3 topic 38) are far more reliable and cost-effective.
+  - Using autonomous multi-agent handoffs for standard business processes (e.g., payment processing or ETL) is anti-pattern; traditional deterministic workflow orchestrators (Temporal, Airflow, Step Functions - Phase 3 topic 38) are far more reliable and cost-effective.
 
 ## Examples
 

@@ -43,7 +43,7 @@ flowchart LR
 - **Process Overhead & IPC Latency**:
   - Running multiple local MCP servers introduces subprocess management overhead, memory footprint per server runtime (Node.js/Python), and inter-process communication (IPC) latency for tool calls.
 - **Tool Selection Saturation**:
-  - Connecting many MCP servers can expose dozens of tools to the LLM. Exceeding 30–50 tools degrades model selection accuracy and consumes significant context tokens on tool schemas. Hosts must implement dynamic tool filtering or routing.
+  - Connecting many MCP servers can expose dozens of tools to the LLM. Exceeding 30-50 tools degrades model selection accuracy and consumes significant context tokens on tool schemas. Hosts must implement dynamic tool filtering or routing.
 - **Security in Remote Deployments**:
   - Local `stdio` servers inherit the host user's permissions, but remote HTTP/SSE MCP servers require robust authentication (OAuth 2.0, mTLS), tenant isolation, and strict egress filtering.
 

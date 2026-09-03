@@ -3,8 +3,8 @@
 ## Concept
 
 - **SQL databases** (relational) store data in tables with defined schemas. Rows reference rows in other tables via foreign keys. The query language (SQL) is declarative and standardised. ACID transactions (topic 18) are the default.
-- **NoSQL databases** is an umbrella term for databases that don't use the relational model. This includes five major categories — document stores, key-value stores, wide-column stores, graph databases, and time-series databases — each optimised for a specific data model and access pattern.
-- The choice between SQL and NoSQL is **not a religious debate** — it's an engineering decision based on data shape, access patterns, consistency requirements, team familiarity, and operational constraints.
+- **NoSQL databases** is an umbrella term for databases that don't use the relational model. This includes five major categories - document stores, key-value stores, wide-column stores, graph databases, and time-series databases - each optimised for a specific data model and access pattern.
+- The choice between SQL and NoSQL is **not a religious debate** - it's an engineering decision based on data shape, access patterns, consistency requirements, team familiarity, and operational constraints.
 
 **The most important rule**: use the database that matches your **access pattern**, not the one that's trendy. A document store used for relational data is painful. A relational database used for a social graph is painful.
 
@@ -19,14 +19,14 @@ flowchart TD
     Q -->|"Time-ordered events,\nmetrics, monitoring"| TS[Time-Series\nInfluxDB, TimescaleDB]
 ```
 
-## ACID vs. BASE — The Foundational Trade-off
+## ACID vs. BASE: The Foundational Trade-off
 
-SQL and NoSQL databases are not just different data models — they make fundamentally different promises about consistency and availability. Understanding this contrast is essential before choosing between them.
+SQL and NoSQL databases are not just different data models - they make fundamentally different promises about consistency and availability. Understanding this contrast is essential before choosing between them.
 
-### ACID (SQL default — topic 18)
+### ACID (SQL default: topic 18)
 
 | Property | Guarantee |
-|---|---|
+| - | - |
 | **A**tomicity | All operations in a transaction succeed or all are rolled back |
 | **C**onsistency | Every transaction brings the DB from one valid state to another |
 | **I**solation | Concurrent transactions don't see each other's partial state |
@@ -39,10 +39,10 @@ ACID prioritises **correctness** over availability and performance. If a transac
 BASE is the contrasting model used by most NoSQL systems, especially distributed ones:
 
 | Property | What it means |
-|---|---|
-| **B**asically **A**vailable | The system remains available (returns a response) even during partial failures — the response may be stale or incomplete, but it won't fail entirely |
-| **S**oft State | The system's state may change over time even without new input — replicas are allowed to be temporarily inconsistent and converge gradually |
-| **E**ventually Consistent | All replicas will converge to the same value — but not instantly. A read immediately after a write may return the old value for a brief window (milliseconds to seconds) |
+| - | - |
+| **B**asically **A**vailable | The system remains available (returns a response) even during partial failures - the response may be stale or incomplete, but it won't fail entirely |
+| **S**oft State | The system's state may change over time even without new input - replicas are allowed to be temporarily inconsistent and converge gradually |
+| **E**ventually Consistent | All replicas will converge to the same value - but not instantly. A read immediately after a write may return the old value for a brief window (milliseconds to seconds) |
 
 ```mermaid
 sequenceDiagram
@@ -55,11 +55,11 @@ sequenceDiagram
     Note over Node1: Replicating asynchronously...
 
     Client->>Node2: READ user:42 (milliseconds later)
-    Node2-->>Client: "Alice" (stale — replica not yet updated)
+    Node2-->>Client: "Alice" (stale  -  replica not yet updated)
     Note over Node1,Node2: Replication arrives
 
     Client->>Node2: READ user:42 (seconds later)
-    Node2-->>Client: "Alicia" (eventually consistent — replica converged)
+    Node2-->>Client: "Alicia" (eventually consistent  -  replica converged)
 ```
 
 ### Why BASE exists
@@ -74,13 +74,13 @@ BASE trades that guarantee for:
 ### The real question: what can your application tolerate?
 
 | Scenario | Stale reads OK? | Recommended |
-|---|---|---|
-| Bank account balance | No — customer would see wrong balance | ACID (PostgreSQL) |
-| Shopping cart item count | Yes — briefly showing wrong count is harmless | BASE (Cassandra, DynamoDB) |
-| Order placed confirmation | No — must be durable | ACID |
-| User's "followers" count on social media | Yes — showing 10,241 vs 10,243 briefly is fine | BASE |
-| Payment deduction | No — partial writes cause financial loss | ACID |
-| User's last-seen timestamp | Yes — a few seconds of staleness doesn't matter | BASE |
+| - | - | - |
+| Bank account balance | No - customer would see wrong balance | ACID (PostgreSQL) |
+| Shopping cart item count | Yes - briefly showing wrong count is harmless | BASE (Cassandra, DynamoDB) |
+| Order placed confirmation | No - must be durable | ACID |
+| User's "followers" count on social media | Yes - showing 10,241 vs 10,243 briefly is fine | BASE |
+| Payment deduction | No - partial writes cause financial loss | ACID |
+| User's last-seen timestamp | Yes - a few seconds of staleness doesn't matter | BASE |
 
 **The key insight**: BASE is not "less correct." It's a deliberate engineering choice when consistency is less important than availability and throughput. Using BASE for data that requires strong consistency (like account balances) causes real bugs. Using ACID for data where eventual consistency is fine wastes performance.
 
@@ -90,9 +90,9 @@ Some databases (Cassandra, DynamoDB) let you choose consistency per operation:
 
 ```
 Cassandra write/read consistency levels:
-- ONE:           Fast — write/read 1 replica. Eventual consistency.
-- QUORUM:        Balanced — write/read majority. Stronger consistency.
-- ALL:           Slow — write/read all replicas. ACID-like but reduces availability.
+- ONE:           Fast  -  write/read 1 replica. Eventual consistency.
+- QUORUM:        Balanced  -  write/read majority. Stronger consistency.
+- ALL:           Slow  -  write/read all replicas. ACID-like but reduces availability.
 - LOCAL_QUORUM:  Quorum within the local data center. Multi-region safe.
 ```
 
@@ -107,7 +107,7 @@ This gives you ACID-like guarantees for critical operations and BASE performance
 ### When SQL is the right choice
 
 - **Structured, relational data**: your entities have clear relationships (orders have items, items have products, products have categories). JOINs are efficient.
-- **ACID transactions are required**: financial operations, order management, medical records — partial updates must be impossible.
+- **ACID transactions are required**: financial operations, order management, medical records - partial updates must be impossible.
 - **Complex ad-hoc queries**: SQL is the most expressive query language. Arbitrary combinations of filters, aggregations, window functions, subqueries.
 - **Data integrity enforcement**: foreign keys, unique constraints, check constraints guarantee the database is always in a valid state.
 - **Normalised data**: store data once, reference it many times. Avoids update anomalies (update a product name in one place, not in thousands of order records).
@@ -139,9 +139,9 @@ This runs efficiently in PostgreSQL with proper indexes. In a document store, yo
 ### PostgreSQL feature highlights
 
 PostgreSQL is the recommended default SQL database for new projects:
-- JSONB columns — store semi-structured data with full JSON operators and indexing.
+- JSONB columns - store semi-structured data with full JSON operators and indexing.
 - Full-text search (`tsvector`, `tsquery`).
-- Geographic data (PostGIS extension — spatial queries, distance calculations).
+- Geographic data (PostGIS extension - spatial queries, distance calculations).
 - Range types (`daterange`, `tsrange`, `int4range`).
 - Window functions, CTEs, lateral joins.
 - Partial indexes, expression indexes.
@@ -219,7 +219,7 @@ One document read retrieves the complete order. In SQL, the equivalent requires 
 ### The denormalisation trade-off
 
 Documents embed related data (denormalisation). The `items[].name` field duplicates product names:
-- **Read performance**: single document read — fast.
+- **Read performance**: single document read - fast.
 - **Write consistency**: if a product is renamed, you must update every order that embedded it. In SQL, you update the products table once; JOIN returns the new name.
 
 Rule of thumb: **embed data that changes together and is accessed together**. Reference (foreign key in document) data that changes independently.
@@ -229,7 +229,7 @@ Rule of thumb: **embed data that changes together and is accessed together**. Re
 ```
 Q: "What are all orders that contain product prod_42?"
 SQL: SELECT o.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE oi.product_id = 'prod_42';
-MongoDB: db.orders.find({"items.productId": "prod_42"}) — works with an index, but...
+MongoDB: db.orders.find({"items.productId": "prod_42"})  -  works with an index, but...
 ```
 
 What if you need: "Total revenue per product, by month, for all products in category 'electronics'"?
@@ -247,12 +247,12 @@ MongoDB can do it with aggregation pipelines, but it becomes complex and slow co
 
 ### Redis data structures
 
-Redis is not just a key-value store — it supports rich data structures:
+Redis is not just a key-value store - it supports rich data structures:
 
 | Structure | Use case |
-|---|---|
+| - | - |
 | String | Session tokens, cached JSON, counters (`INCR`) |
-| Hash | Object with fields (`HGET user:42 name`) — like a row |
+| Hash | Object with fields (`HGET user:42 name`) - like a row |
 | List | Activity feed, job queue (`LPUSH`/`RPOP`) |
 | Set | Unique members, tags (`SADD`, `SISMEMBER`) |
 | Sorted Set | Leaderboard (score+member), rate limiting, pagination |
@@ -277,7 +277,7 @@ Query: "Get all orders for user 42 in the last 30 days" → efficient (same part
 Query: "Get all orders with status SHIPPED" → requires GSI on (status, createdAt) or full scan
 ```
 
-DynamoDB is serverless — no cluster to manage. Auto-scales, charges per request. Strong choice for serverless applications and extremely variable traffic.
+DynamoDB is serverless - no cluster to manage. Auto-scales, charges per request. Strong choice for serverless applications and extremely variable traffic.
 
 ## Wide-Column Stores (Cassandra, ScyllaDB, HBase)
 
@@ -324,7 +324,7 @@ All data for one device_id is on the same node (or replica set). Queries that st
 Cassandra offers **tunable consistency** per operation:
 
 | Consistency Level | Write | Read | Notes |
-|---|---|---|---|
+| - | - | - | - |
 | ONE | Write to 1 node | Read from 1 node | Fastest, lowest consistency |
 | QUORUM | Write to majority | Read from majority | Balanced (default) |
 | LOCAL_QUORUM | Quorum in local DC | Quorum in local DC | Multi-DC: local consistency |
@@ -372,11 +372,11 @@ AND (fof)-[:FRIENDS_WITH]->(:User)-[:WATCHED]->(:Movie {id: 100})
 RETURN fof.name
 ```
 
-Clearer, and more performant — graph traversal is O(1) per hop, not O(N) per join.
+Clearer, and more performant - graph traversal is O(1) per hop, not O(N) per join.
 
 ### Graph database performance
 
-- Each edge traversal in Neo4j is O(1) — pointers between nodes, not table scans.
+- Each edge traversal in Neo4j is O(1) - pointers between nodes, not table scans.
 - In SQL, each JOIN is O(log N) with an index or O(N) without. For 5-hop traversals: O(log N)^5 vs O(1)^5.
 - Graph DBs shine at depth ≥ 3 traversals where SQL's join overhead compounds.
 
@@ -407,7 +407,7 @@ TimescaleDB is PostgreSQL + automatic time partitioning + compression + continuo
 - Data is automatically partitioned by time (chunks) for fast range queries and efficient deletion.
 - Columnar compression for old chunks: 90% size reduction.
 - Continuous aggregates: materialised views that update incrementally.
-- Full SQL, all PostgreSQL extensions, ACID — just faster for time-series.
+- Full SQL, all PostgreSQL extensions, ACID - just faster for time-series.
 
 ### InfluxDB
 
@@ -421,7 +421,7 @@ Better compression and higher ingest rate than TimescaleDB, but sacrifices SQL e
 
 ## Polyglot Persistence
 
-Production systems commonly use multiple database types — each for what it does best:
+Production systems commonly use multiple database types - each for what it does best:
 
 ```mermaid
 flowchart TD
@@ -454,7 +454,7 @@ Work through these questions in order:
 ### Quick reference
 
 | Scenario | Database |
-|---|---|
+| - | - |
 | Default new project (no special requirements) | PostgreSQL |
 | Sessions, caching, rate limiting, pub-sub | Redis |
 | Product catalog with variable attributes | PostgreSQL + JSONB, or MongoDB |

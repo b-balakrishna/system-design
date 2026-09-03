@@ -6,7 +6,7 @@
 - CRDTs form the foundation of active-active multi-region databases and collaborative editing systems.
 - There are two primary types of CRDTs:
 
-### 1. State-Based CRDTs (CvRDTs — Convergent Replicated Data Types)
+### 1. State-Based CRDTs (CvRDTs: Convergent Replicated Data Types)
 
 - Nodes send their entire local state to other nodes.
 - Replicas merge incoming states using a **merge operator** ($\sqcup$).
@@ -32,7 +32,7 @@ flowchart LR
     MergeOp -->|Converged State| SuccessB[Final State: A=2, B=3]
 ```
 
-### 2. Operation-Based CRDTs (CmRDTs — Commutative Replicated Data Types)
+### 2. Operation-Based CRDTs (CmRDTs: Commutative Replicated Data Types)
 
 - Nodes do not transmit state; they transmit individual execution operations (e.g., `add('item')`, `increment(5)`).
 - CmRDTs require that concurrent operations commute (the order in which operations are applied doesn't matter: `add(x)` then `add(y)` results in the same state as `add(y)` then `add(x)`).

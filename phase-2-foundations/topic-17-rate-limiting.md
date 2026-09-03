@@ -4,7 +4,7 @@
 
 - **Rate limiting** restricts the number of requests a client can make within a given time window.
 - Without rate limiting, one misbehaving or malicious client can exhaust your server's resources, degrading or denying service to all other clients.
-- Rate limiting is enforced at the **entry point** of your system — typically an API gateway, reverse proxy, or load balancer — before requests reach application servers.
+- Rate limiting is enforced at the **entry point** of your system - typically an API gateway, reverse proxy, or load balancer - before requests reach application servers.
 - It is one of the first lines of defence against:
   - **Accidental abuse**: a bug in a client retry loop floods your API.
   - **Intentional abuse**: scrapers, credential stuffing bots, DDoS.
@@ -43,8 +43,8 @@ sequenceDiagram
 Divide time into fixed windows (e.g., each minute). Each client gets a counter per window. Reject when counter exceeds the limit.
 
 ```
-Window: 00:00–01:00 → counter for client_42: 0, 1, 2 ... 100 (reject at 101)
-Window: 01:00–02:00 → counter resets to 0
+Window: 00:00-01:00 → counter for client_42: 0, 1, 2 ... 100 (reject at 101)
+Window: 01:00-02:00 → counter resets to 0
 ```
 
 **Implementation** (Redis INCR with EXPIRE):
@@ -64,7 +64,7 @@ flowchart LR
     T --> W1 --> W2
 ```
 
-**The boundary vulnerability**: a client can send 100 requests at `00:59:59` and 100 requests at `01:00:01`. That's 200 requests in 2 seconds — exactly 2× the nominal rate. This is the "double-spending" attack at window boundaries.
+**The boundary vulnerability**: a client can send 100 requests at `00:59:59` and 100 requests at `01:00:01`. That's 200 requests in 2 seconds - exactly 2× the nominal rate. This is the "double-spending" attack at window boundaries.
 
 **When to use**: simple implementation, good enough for light rate limiting where exact enforcement isn't critical (e.g., internal APIs).
 
@@ -96,11 +96,11 @@ sequenceDiagram
     RL-->>C: 200 OK
 ```
 
-**Accurate** — no boundary vulnerability. Each request is evaluated against exactly the last N seconds of history.
+**Accurate** - no boundary vulnerability. Each request is evaluated against exactly the last N seconds of history.
 
 **Memory cost**: O(requests_per_client_per_window). At 100 req/min and 10,000 active clients, that's 1 million entries in Redis. Manageable for moderate scale; concerning for very high-scale APIs.
 
-### 3. Sliding Window Counter (hybrid — recommended)
+### 3. Sliding Window Counter (hybrid: recommended)
 
 Approximates the sliding window using only two counters (current and previous window). Memory-efficient with good accuracy:
 
@@ -160,7 +160,7 @@ flowchart LR
     Bucket -->|"if tokens == 0"| Reject
 ```
 
-**Allows bursts**: a client that hasn't made requests for 10 seconds has accumulated tokens. They can burst 100 requests in 100ms and then only 10/second thereafter. This is realistic — legitimate clients have bursty patterns (page load triggers 20 parallel asset requests).
+**Allows bursts**: a client that hasn't made requests for 10 seconds has accumulated tokens. They can burst 100 requests in 100ms and then only 10/second thereafter. This is realistic - legitimate clients have bursty patterns (page load triggers 20 parallel asset requests).
 
 **Implementation**: store `{tokens, last_refill_time}` per client. On each request:
 1. Calculate tokens earned since last refill: `min(capacity, tokens + (now - last_refill) × rate)`.
@@ -197,7 +197,7 @@ flowchart TD
 ### Algorithm comparison
 
 | Algorithm | Burst allowed | Memory | Accuracy | Best for |
-|---|---|---|---|---|
+| - | - | - | - | - |
 | Fixed window | Yes (at boundary) | O(1) per client | Low (boundary issue) | Simple, low-stakes |
 | Sliding window log | No | O(requests) | Exact | High-precision, low traffic |
 | Sliding window counter | Partial | O(1) | ~95% accurate | Production APIs |
@@ -217,8 +217,8 @@ sequenceDiagram
     participant S2 as Server 2 (local counter: 50)
 
     C->>S1: Request #51 (S1 thinks: 51/100, allow)
-    C->>S2: Request #52 (S2 thinks: 51/100, allow — doesn't know about S1's counter)
-    Note over S1,S2: 102 requests processed — limit bypassed!
+    C->>S2: Request #52 (S2 thinks: 51/100, allow  -  doesn't know about S1's counter)
+    Note over S1,S2: 102 requests processed  -  limit bypassed!
 ```
 
 ### Redis as shared counter (the standard solution)
@@ -270,7 +270,7 @@ else
 end
 ```
 
-Lua scripts in Redis execute atomically — no other command runs between the read and write.
+Lua scripts in Redis execute atomically - no other command runs between the read and write.
 
 ## Rate Limit Headers
 
@@ -311,7 +311,7 @@ Content-Type: application/json
 Rate limits can be applied at different granularities:
 
 | Scope | Key | Use case |
-|---|---|---|
+| - | - | - |
 | IP address | `rate:ip:1.2.3.4` | Unauthenticated endpoints, bots |
 | User ID | `rate:user:42` | Authenticated user actions |
 | API key | `rate:key:sk_live_abc` | Third-party API clients |

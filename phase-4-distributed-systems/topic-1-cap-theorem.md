@@ -3,7 +3,7 @@
 ## Concept
 
 - **CAP Theorem** (Brewer's Theorem) states that a distributed data store can simultaneously provide at most two of the following three guarantees:
-  - **Consistency (C)**: Every read receives the most recent write or an error. This is equivalent to **linearizability** (Phase 4, topic 3) — the system behaves as if there is only a single copy of the data.
+  - **Consistency (C)**: Every read receives the most recent write or an error. This is equivalent to **linearizability** (Phase 4, topic 3) - the system behaves as if there is only a single copy of the data.
   - **Availability (A)**: Every non-failing node returns a non-error response for every request, without any guarantee that it contains the most recent write.
   - **Partition Tolerance (P)**: The system continues to operate despite an arbitrary number of messages being dropped or delayed by the network between nodes.
 - In any distributed system over a physical network, network partitions (dropped/delayed packets, fiber cuts) are inevitable. Therefore, **we cannot choose CA** (Consistency + Availability) in practice.

@@ -3,19 +3,19 @@
 ## Concept
 
 - A browser is a client (topic 1) that fetches resources over HTTP/HTTPS (topic 2), resolves names via DNS (topic 4), receives assets from CDN edge nodes (topic 5), and renders them into an interactive visual experience.
-- Modern browsers are among the most complex software ever built — they handle sandboxed execution of arbitrary code (JavaScript), GPU-accelerated rendering, network request multiplexing, and security isolation, all while maintaining 60 fps.
+- Modern browsers are among the most complex software ever built - they handle sandboxed execution of arbitrary code (JavaScript), GPU-accelerated rendering, network request multiplexing, and security isolation, all while maintaining 60 fps.
 - Understanding browser internals helps you write faster front-ends, diagnose performance problems, understand security models, and answer "what happens when you type a URL?" in interviews.
 
 **Major browser engines**:
 | Browser | HTML/CSS Engine | JavaScript Engine |
-|---|---|---|
+| - | - | - |
 | Chrome, Edge | Blink | V8 |
 | Firefox | Gecko | SpiderMonkey |
 | Safari | WebKit | JavaScriptCore (Nitro) |
 
 ## Multi-Process Architecture
 
-Modern browsers run **each tab in an isolated process** (Site Isolation). This is not an accident — it's a deliberate security architecture:
+Modern browsers run **each tab in an isolated process** (Site Isolation). This is not an accident - it's a deliberate security architecture:
 
 ```mermaid
 flowchart TD
@@ -82,15 +82,15 @@ sequenceDiagram
 ### Each step's latency contribution
 
 | Step | Typical latency | Optimization |
-|---|---|---|
-| DNS lookup (uncached) | 20–150 ms | `dns-prefetch`, local DNS cache |
-| DNS lookup (cached) | 0–1 ms | — |
+| - | - | - |
+| DNS lookup (uncached) | 20-150 ms | `dns-prefetch`, local DNS cache |
+| DNS lookup (cached) | 0-1 ms | - |
 | TCP handshake | 1 RTT (~50 ms cross-continent) | Connection pooling, QUIC |
 | TLS handshake | 1 RTT (TLS 1.3) | Session resumption, 0-RTT |
-| Server processing | 1–500 ms | Backend optimization |
+| Server processing | 1-500 ms | Backend optimization |
 | HTML transfer | depends on size + bandwidth | Compression, HTTP/2 |
 | CSS parsing | < 10 ms typical | Reduce CSS size |
-| JS parse + compile | 50–300 ms for large bundles | Code splitting, lazy loading |
+| JS parse + compile | 50-300 ms for large bundles | Code splitting, lazy loading |
 | Layout | < 5 ms for simple pages | Reduce layout triggers |
 | Paint + composite | < 16 ms (to hit 60 fps) | GPU compositing |
 
@@ -115,11 +115,11 @@ flowchart LR
 4. Tokens form DOM nodes.
 5. Nodes linked into the DOM tree based on nesting.
 
-Incremental: the browser starts parsing and rendering before the full HTML is downloaded. That's why putting `<script>` tags at the end of `<body>` matters — scripts in `<head>` block parsing.
+Incremental: the browser starts parsing and rendering before the full HTML is downloaded. That's why putting `<script>` tags at the end of `<body>` matters - scripts in `<head>` block parsing.
 
 ### CSSOM construction
 
-CSS is **render-blocking**: the browser won't render anything until all CSS referenced in `<head>` is downloaded and parsed into the CSSOM. Why? Without CSS, the browser would render a flash of unstyled content, then re-render — a visible flicker.
+CSS is **render-blocking**: the browser won't render anything until all CSS referenced in `<head>` is downloaded and parsed into the CSSOM. Why? Without CSS, the browser would render a flash of unstyled content, then re-render - a visible flicker.
 
 **Implication**: minimise CSS that's in the critical path. Inline critical CSS for above-the-fold content. Use `media` attributes to mark non-critical CSS:
 ```html
@@ -149,7 +149,7 @@ A `<script>` tag without `async` or `defer` **pauses HTML parsing** while the sc
 ```
 
 | | Download | Execute | Ordering |
-|---|---|---|---|
+| - | - | - | - |
 | `<script>` | Blocks parsing | Immediately | Sequential |
 | `async` | Parallel with parsing | On download complete | No guarantee |
 | `defer` | Parallel with parsing | After DOM ready, before DOMContentLoaded | Document order |
@@ -158,7 +158,7 @@ Use `defer` for scripts that need the DOM. Use `async` for fully independent scr
 
 ## The Event Loop and JavaScript Execution
 
-JavaScript is **single-threaded** — it runs on one thread called the **main thread**. The main thread also handles layout, painting, and user input events.
+JavaScript is **single-threaded** - it runs on one thread called the **main thread**. The main thread also handles layout, painting, and user input events.
 
 ```mermaid
 flowchart LR
@@ -217,15 +217,15 @@ for (let i = 0; i < 100; i++) {
 
 Triggered when visual appearance changes but geometry doesn't: `color`, `background-color`, `visibility`, `box-shadow`.
 
-Cheaper than reflow — only the affected element and its painted children need repainting. Still requires the CPU to regenerate paint instructions.
+Cheaper than reflow - only the affected element and its painted children need repainting. Still requires the CPU to regenerate paint instructions.
 
 ### Composite
 
 Some properties bypass both reflow and repaint and run entirely on the GPU compositor thread:
-- `transform: translate(x, y)` — moves without triggering layout
-- `transform: scale(x)` — scales without triggering layout
-- `opacity` — fades without triggering repaint
-- `will-change: transform` — promotes element to its own layer (use sparingly)
+- `transform: translate(x, y)` - moves without triggering layout
+- `transform: scale(x)` - scales without triggering layout
+- `opacity` - fades without triggering repaint
+- `will-change: transform` - promotes element to its own layer (use sparingly)
 
 **Compositing is the fastest path**:
 ```javascript
@@ -246,7 +246,7 @@ Browsers support hints to start work before it's strictly needed:
 <!-- Resolve DNS for this origin in the background -->
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-<!-- DNS + TCP + TLS — full preconnect for origins you'll definitely use -->
+<!-- DNS + TCP + TLS  -  full preconnect for origins you'll definitely use -->
 <link rel="preconnect" href="https://api.example.com">
 
 <!-- Download this specific resource early (high priority, before parser finds it) -->
@@ -261,7 +261,7 @@ Browsers support hints to start work before it's strictly needed:
 ```
 
 | Hint | DNS | TCP | TLS | Download | Execute |
-|---|---|---|---|---|---|
+| - | - | - | - | - | - |
 | dns-prefetch | ✓ | | | | |
 | preconnect | ✓ | ✓ | ✓ | | |
 | preload | ✓ | ✓ | ✓ | ✓ | deferred |
@@ -274,10 +274,10 @@ HTTP responses are cached in the browser according to `Cache-Control` (topic 2) 
 ### Cache storage types
 
 | Storage | Controlled by | Lifetime | Capacity |
-|---|---|---|---|
+| - | - | - | - |
 | HTTP Cache | `Cache-Control` headers | Per TTL | Browser-managed |
-| localStorage | JavaScript | Until explicitly cleared | ~5–10 MB |
-| sessionStorage | JavaScript | Tab session only | ~5–10 MB |
+| localStorage | JavaScript | Until explicitly cleared | ~5-10 MB |
+| sessionStorage | JavaScript | Tab session only | ~5-10 MB |
 | IndexedDB | JavaScript | Until explicitly cleared | 50%+ of disk |
 | Cache API (Service Worker) | JavaScript | Until explicitly cleared | 50%+ of disk |
 | Cookies | `Set-Cookie` header | Per `Max-Age` / `Expires` | ~4 KB per cookie |
@@ -319,10 +319,10 @@ Lifecycle: **install** → **activate** → **fetch** (intercepts all requests f
 The industry has standardised on Core Web Vitals for measuring user-perceived performance:
 
 | Metric | Measures | Good | Needs Improvement | Poor |
-|---|---|---|---|---|
-| LCP (Largest Contentful Paint) | Loading performance — when is the largest visible element rendered? | < 2.5s | 2.5–4s | > 4s |
-| INP (Interaction to Next Paint) | Responsiveness — time from user interaction to next frame | < 200ms | 200–500ms | > 500ms |
-| CLS (Cumulative Layout Shift) | Visual stability — do elements jump around? | < 0.1 | 0.1–0.25 | > 0.25 |
+| - | - | - | - | - |
+| LCP (Largest Contentful Paint) | Loading performance - when is the largest visible element rendered? | < 2.5s | 2.5-4s | > 4s |
+| INP (Interaction to Next Paint) | Responsiveness - time from user interaction to next frame | < 200ms | 200-500ms | > 500ms |
+| CLS (Cumulative Layout Shift) | Visual stability - do elements jump around? | < 0.1 | 0.1-0.25 | > 0.25 |
 
 **FCP (First Contentful Paint)**: when first text or image is painted. Rough proxy for "server responded."
 **TTFB (Time to First Byte)**: time from request to first response byte. Measures server + network speed.

@@ -1,10 +1,10 @@
-# System Design — Frontend, Backend & Everything In Between
+# System Design: Frontend, Backend & Everything In Between
 
 A structured, self-paced roadmap for mastering system design end to end, from interview framing and low-level design to distributed systems, frontend architecture, cloud scalability, AI/ML systems, and complete case studies.
 
 Most system design resources focus only on backend architecture. This repo treats every layer of the stack as a first-class design surface: APIs, databases, browsers, rendering, infrastructure, observability, ML serving, and trade-off communication.
 
----
+ - 
 
 ## How to Use This Repo
 
@@ -23,12 +23,12 @@ system-design/
 └── phase-8-case-studies/
 ```
 
----
+ - 
 
 ## Roadmap
 
 | Phase | Folder | Focus | Topics |
-|---|---|---|---:|
+| - | - | - | - :|
 | Phase 0 | [Interview Primer](phase-0-interview-primer) | Interview framing, requirements, estimation, diagrams, trade-offs | 8 |
 | Phase 1 | [Low Level Design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies | 6 |
 | Phase 2 | [Foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases | 19 |
@@ -39,14 +39,14 @@ system-design/
 | Phase 7 | [AI and ML Systems](phase-7-ai-and-ml-systems) | ML infrastructure, LLMs, RAG, agents, context engineering, MCP, semantic caching, safety & evals | 26 |
 | Phase 8 | [Case Studies](phase-8-case-studies) | End-to-end system design examples | 17 |
 
----
+ - 
 
-## Phase 0 — Interview Primer
+## Phase 0: Interview Primer
 
 > How to approach system design interviews with structure, numbers, diagrams, and clear trade-off communication.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [The 6-Step Framework](phase-0-interview-primer/topic-1-the-6-step-framework.md) |
 | 2 | [Functional vs Non-Functional Requirements](phase-0-interview-primer/topic-2-functional-vs-non-functional-requirements.md) |
 | 3 | [Capacity Estimation](phase-0-interview-primer/topic-3-capacity-estimation.md) |
@@ -56,14 +56,14 @@ system-design/
 | 7 | [Trade-Off Communication](phase-0-interview-primer/topic-7-trade-off-communication.md) |
 | 8 | [Scaling a Design](phase-0-interview-primer/topic-8-scaling-a-design.md) |
 
----
+ - 
 
-## Phase 1 — Low-Level Design
+## Phase 1: Low-Level Design
 
 > Object-oriented design foundations for building maintainable systems and discussing component-level architecture.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [SOLID Principles](phase-1-low-level-design/topic-1-solid-principles.md) |
 | 2 | [Design Patterns: Creational](phase-1-low-level-design/topic-2-design-patterns-creational.md) |
 | 3 | [Design Patterns: Structural](phase-1-low-level-design/topic-3-design-patterns-structural.md) |
@@ -71,14 +71,14 @@ system-design/
 | 5 | [UML and Class Diagrams](phase-1-low-level-design/topic-5-uml-and-class-diagrams.md) |
 | 6 | [LLD Case Studies](phase-1-low-level-design/topic-6-lld-case-studies.md) |
 
----
+ - 
 
-## Phase 2 — Foundations
+## Phase 2: Foundations
 
 > The protocol, networking, API, authentication, caching, and database basics every system design discussion builds on.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [Client-Server Architecture](phase-2-foundations/topic-1-client-server-architecture.md) |
 | 2 | [HTTP and HTTPS](phase-2-foundations/topic-2-http-and-https.md) |
 | 3 | [HTTP/2 and HTTP/3 QUIC](phase-2-foundations/topic-3-http2-and-http3-quic.md) |
@@ -99,14 +99,14 @@ system-design/
 | 18 | [Database Fundamentals](phase-2-foundations/topic-18-database-fundamentals.md) |
 | 19 | [SQL vs NoSQL](phase-2-foundations/topic-19-sql-vs-nosql.md) |
 
----
+ - 
 
-## Phase 3 — Backend & Data Architecture
+## Phase 3: Backend & Data Architecture
 
 > Core patterns for building reliable, scalable server-side systems, plus data-layer internals, backend architecture discipline, and messaging reliability.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [Monolith Architecture](phase-3-backend/topic-1-monolith-architecture.md) |
 | 2 | [Modular Monolith](phase-3-backend/topic-2-modular-monolith.md) |
 | 3 | [Microservices Architecture](phase-3-backend/topic-3-microservices-architecture.md) |
@@ -146,16 +146,16 @@ system-design/
 | 37 | [Exactly-Once vs At-Least-Once Delivery](phase-3-backend/topic-37-exactly-once-vs-at-least-once-delivery.md) |
 | 38 | [Choreography vs Orchestration](phase-3-backend/topic-38-choreography-vs-orchestration.md) |
 
-> New in this revision (topics 26–38): backend architecture discipline (DDD, hexagonal, multi-tenancy, BFF), data-layer depth (storage engines, query optimization, partitioning/hot partitions, secondary indexes, data lifecycle), and messaging reliability (DLQ/retries, outbox/inbox, delivery semantics, choreography vs orchestration). See `ROADMAP-REVIEW.md` for the full rationale.
+> New in this revision (topics 26-38): backend architecture discipline (DDD, hexagonal, multi-tenancy, BFF), data-layer depth (storage engines, query optimization, partitioning/hot partitions, secondary indexes, data lifecycle), and messaging reliability (DLQ/retries, outbox/inbox, delivery semantics, choreography vs orchestration). See `ROADMAP-REVIEW.md` for the full rationale.
 
----
+ - 
 
-## Phase 4 — Distributed Systems
+## Phase 4: Distributed Systems
 
 > The hard problems that emerge when systems are split across machines, regions, and failure domains.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [CAP Theorem](phase-4-distributed-systems/topic-1-cap-theorem.md) |
 | 2 | [PACELC Theorem](phase-4-distributed-systems/topic-2-pacelc-theorem.md) |
 | 3 | [Consistency Models](phase-4-distributed-systems/topic-3-consistency-models.md) |
@@ -189,14 +189,14 @@ system-design/
 | 31 | [Retry Storms & Failure Domains](phase-4-distributed-systems/topic-31-retry-storms-and-failure-domains.md) |
 | 32 | [Cell-Based Architecture](phase-4-distributed-systems/topic-32-cell-based-architecture.md) |
 
----
+ - 
 
-## Phase 5 — Frontend
+## Phase 5: Frontend
 
 > Browser, rendering, performance, and application architecture topics that matter in modern frontend system design.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [Browser Rendering Pipeline](phase-5-frontend/topic-1-browser-rendering-pipeline.md) |
 | 2 | [Critical Rendering Path](phase-5-frontend/topic-2-critical-rendering-path.md) |
 | 3 | [CSR vs SSR vs SSG vs ISR](phase-5-frontend/topic-3-csr-vs-ssr-vs-ssg-vs-isr.md) |
@@ -227,16 +227,16 @@ system-design/
 | 28 | [Frontend Observability & RUM](phase-5-frontend/topic-28-frontend-observability-and-rum.md) |
 | 29 | [Frontend CI/CD & Deployment](phase-5-frontend/topic-29-frontend-ci-cd-and-deployment.md) |
 
-> New in this revision (topics 26–29): client data fetching & caching (server-state libraries), React architecture at scale (RSC), frontend observability & RUM, and frontend CI/CD & deployment.
+> New in this revision (topics 26-29): client data fetching & caching (server-state libraries), React architecture at scale (RSC), frontend observability & RUM, and frontend CI/CD & deployment.
 
----
+ - 
 
-## Phase 6 — Cloud & Scalability
+## Phase 6: Cloud & Scalability
 
 > Production readiness: deployment, cloud infrastructure, observability, resilience, security, and operating cost.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [Docker](phase-6-cloud-and-scalability/topic-1-docker.md) |
 | 2 | [Kubernetes](phase-6-cloud-and-scalability/topic-2-kubernetes.md) |
 | 3 | [Serverless Architecture](phase-6-cloud-and-scalability/topic-3-serverless-architecture.md) |
@@ -266,16 +266,16 @@ system-design/
 | 27 | [Platform Engineering & Internal Developer Platforms](phase-6-cloud-and-scalability/topic-27-platform-engineering-and-idp.md) |
 | 28 | [Secrets Management](phase-6-cloud-and-scalability/topic-28-secrets-management.md) |
 
-> New in this revision (topics 21–28): the reliability-engineering layer (SLOs/SLIs/error budgets, chaos engineering, load testing, autoscaling, capacity planning), explicit deployment strategies (blue-green & canary), and platform/security (internal developer platforms, secrets management). Note: Time-Series DBs (15) and Geospatial Indexing (16) are data topics that pair with Phase 3; Data Pipelines (17) anchors the data-engineering material — see ROADMAP-REVIEW.md.
+> New in this revision (topics 21-28): the reliability-engineering layer (SLOs/SLIs/error budgets, chaos engineering, load testing, autoscaling, capacity planning), explicit deployment strategies (blue-green & canary), and platform/security (internal developer platforms, secrets management). Note: Time-Series DBs (15) and Geospatial Indexing (16) are data topics that pair with Phase 3; Data Pipelines (17) anchors the data-engineering material - see ROADMAP-REVIEW.md.
 
----
+ - 
 
-## Phase 7 — AI & ML Systems
+## Phase 7: AI & ML Systems
 
 > Designing production ML and LLM systems, from data pipelines and serving to RAG, agents, guardrails, feedback loops, and observability.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [ML System Design Overview](phase-7-ai-and-ml-systems/topic-1-ml-system-design-overview.md) |
 | 2 | [Data Pipelines for ML](phase-7-ai-and-ml-systems/topic-2-data-pipelines-for-ml.md) |
 | 3 | [Model Training Infrastructure](phase-7-ai-and-ml-systems/topic-3-model-training-infrastructure.md) |
@@ -303,16 +303,16 @@ system-design/
 | 25 | [Hallucination Mitigation & AI Safety](phase-7-ai-and-ml-systems/topic-25-hallucination-mitigation-and-ai-safety.md) |
 | 26 | [Evaluation Pipelines](phase-7-ai-and-ml-systems/topic-26-evaluation-pipelines.md) |
 
-> New in this revision (topics 16–26): the 2026 agentic and MLOps layer — feature stores, model registry, embedding/vector search pipelines, context engineering, tool-calling, agent memory, multi-agent systems, MCP architecture, semantic caching, hallucination mitigation/safety, and evaluation pipelines.
+> New in this revision (topics 16-26): the 2026 agentic and MLOps layer - feature stores, model registry, embedding/vector search pipelines, context engineering, tool-calling, agent memory, multi-agent systems, MCP architecture, semantic caching, hallucination mitigation/safety, and evaluation pipelines.
 
----
+ - 
 
-## Phase 8 — Case Studies
+## Phase 8: Case Studies
 
 > Full system design walkthroughs that combine requirements, architecture, data modeling, scaling, reliability, and trade-offs.
 
 | # | Topic |
-|---:|---|
+| - :| - |
 | 1 | [Design a URL Shortener](phase-8-case-studies/topic-1-design-a-url-shortener.md) |
 | 2 | [Design Twitter/X Feed](phase-8-case-studies/topic-2-design-twitter-x-feed.md) |
 | 3 | [Design a Notification System](phase-8-case-studies/topic-3-design-a-notification-system.md) |
@@ -331,7 +331,7 @@ system-design/
 | 16 | [Design an LLM-Powered Search](phase-8-case-studies/topic-16-design-an-llm-powered-search.md) |
 | 17 | [Design a React Component Library](phase-8-case-studies/topic-17-design-a-react-component-library.md) |
 
----
+ - 
 
 ## Who This Is For
 
@@ -341,7 +341,7 @@ system-design/
 - Engineers preparing for system design interviews, frontend, backend, low-level design, or AI/ML systems
 - Anyone building production systems who wants to understand every layer, not just their own
 
----
+ - 
 
 ## Contributing
 
@@ -352,7 +352,7 @@ Contributions are welcome. If you are adding a new topic:
 3. Keep the topic number sequential within that phase.
 4. Update this README so the roadmap stays aligned with the project structure.
 
----
+ - 
 
 ## Star This Repo
 

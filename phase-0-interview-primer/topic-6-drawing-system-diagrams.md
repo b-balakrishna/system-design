@@ -10,7 +10,7 @@
 - Annotate arrows with protocol/action ("HTTP GET timeline", "publish event").
 - Mark where data is partitioned or replicated.
 - Label read vs. write paths when they differ.
-- It is a *communication tool*, not art — a shared map to point at while discussing trade-offs.
+- It is a *communication tool*, not art - a shared map to point at while discussing trade-offs.
 
 ```mermaid
 flowchart LR
@@ -32,15 +32,15 @@ flowchart LR
 - Externalises your mental model so the interviewer can follow your reasoning.
 - Lets them point at a component and ask "what happens when this fails?"
 - Verifies the data flow actually satisfies the requirements.
-- Disciplines your thinking — every arrow must land somewhere.
+- Disciplines your thinking - every arrow must land somewhere.
 - Provides anchors for the deep-dive phase (point at the DB box and start sharding).
 
 ## Trade-offs
 
-- **Detail vs. clarity** — start minimal; add detail only where you deep-dive.
-- **Breadth-first vs. depth-first** — sketch the full flow first, then drill into one component.
-- **Logical vs. physical** — logical (services/responsibilities) for the overview; physical (instances, AZs, replicas) only for availability/scaling talk.
-- **Drawing vs. talking** — keep it rough and legible; narrate as you draw rather than drawing in silence.
+- **Detail vs. clarity**: start minimal; add detail only where you deep-dive.
+- **Breadth-first vs. depth-first**: sketch the full flow first, then drill into one component.
+- **Logical vs. physical**: logical (services/responsibilities) for the overview; physical (instances, AZs, replicas) only for availability/scaling talk.
+- **Drawing vs. talking**: keep it rough and legible; narrate as you draw rather than drawing in silence.
 
 ## Examples
 

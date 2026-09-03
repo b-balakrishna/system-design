@@ -57,7 +57,7 @@ flowchart TD
   - Prevents financial errors, double-delivery, and database corruption.
   - Decouples client retry logic from business risk.
 - **Cons**:
-  - **Storage Overhead**: Response payloads must be stored in a database or Redis cache with an appropriate Time-To-Live (TTL) (e.g., 24–72 hours), increasing memory and storage costs.
+  - **Storage Overhead**: Response payloads must be stored in a database or Redis cache with an appropriate Time-To-Live (TTL) (e.g., 24-72 hours), increasing memory and storage costs.
   - **Concurrency Issues (Race Conditions)**: If two identical requests hit the server at the exact same millisecond, they might both pass the check. Enforcing this requires atomic cache operations (like Redis `SETNX`) or transactional database locks.
   - **Client-Side Dependency**: Relies on clients correctly generating and persisting UUIDs across retries.
 

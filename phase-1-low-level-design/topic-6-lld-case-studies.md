@@ -9,11 +9,11 @@
   2. Identify nouns as candidate entities.
   3. Identify verbs as candidate behaviors.
   4. Assign responsibilities using SOLID (topic 1).
-  5. Choose patterns from topics 2–4 only where they solve an actual variation point.
+  5. Choose patterns from topics 2-4 only where they solve an actual variation point.
   6. Draw a class diagram (topic 5 notation).
   7. Walk one or two important flows with a sequence diagram.
   8. Discuss trade-offs and extensions.
-- Keep the design at object level. External capabilities — payment, persistence, network — should be abstract interfaces.
+- Keep the design at object level. External capabilities - payment, persistence, network - should be abstract interfaces.
 
 ```mermaid
 flowchart LR
@@ -35,13 +35,13 @@ flowchart LR
 
 ## Trade-offs
 
-- **General design vs. prompt-specific design** — reusable abstractions help, but too much generality hides the actual problem.
-- **Patterns vs. plain classes** — use a pattern when behavior varies; otherwise plain composition is enough.
-- **Inheritance vs. composition** — inheritance is clear for stable type hierarchies; composition is safer for behavior that changes independently.
-- **Full model vs. interview model** — a real implementation needs many more details; an interview design should focus on core entities and flows.
-- **Abstract interfaces vs. concrete classes** — interfaces protect the design from external details, but too many make the diagram noisy.
+- **General design vs. prompt-specific design**: reusable abstractions help, but too much generality hides the actual problem.
+- **Patterns vs. plain classes**: use a pattern when behavior varies; otherwise plain composition is enough.
+- **Inheritance vs. composition**: inheritance is clear for stable type hierarchies; composition is safer for behavior that changes independently.
+- **Full model vs. interview model**: a real implementation needs many more details; an interview design should focus on core entities and flows.
+- **Abstract interfaces vs. concrete classes**: interfaces protect the design from external details, but too many make the diagram noisy.
 
----
+ - 
 
 ## Case Study 1: Parking Lot
 
@@ -145,7 +145,7 @@ sequenceDiagram
 
 - **Extension:** adding `Truck` or `NearestExitStrategy` should not rewrite the parking flow.
 
----
+ - 
 
 ## Case Study 2: Vending Machine
 
@@ -248,7 +248,7 @@ sequenceDiagram
 
 - **Extension:** adding a refund action is a new behavior in each state, not a branch in every method.
 
----
+ - 
 
 ## Case Study 3: Elevator
 
@@ -333,7 +333,7 @@ sequenceDiagram
 
 - **Extension:** a new scheduling strategy can be plugged in without changing `Elevator`.
 
----
+ - 
 
 ## Case Study 4: Document Editor
 
@@ -437,7 +437,7 @@ sequenceDiagram
 
 - **Extension:** adding `ResizeImageCommand` follows the same `EditorCommand` contract.
 
----
+ - 
 
 ## Case Study 5: Tic-Tac-Toe
 
@@ -523,7 +523,7 @@ sequenceDiagram
 
 - **Extension:** a 4×4 version or a connect-4 variant can use a different `WinCondition`.
 
----
+ - 
 
 ## Case Study 6: ATM Machine
 
@@ -533,7 +533,7 @@ sequenceDiagram
 - **Responsibilities:**
   - `ATM` delegates all user actions to the current session state.
   - `Session` records the verified card and active account.
-  - `BankService` is an interface for account access — the ATM does not depend on a concrete bank (DIP).
+  - `BankService` is an interface for account access - the ATM does not depend on a concrete bank (DIP).
   - `CashDispenser` manages physical cash notes.
   - `Transaction` records each operation.
 
@@ -647,9 +647,9 @@ sequenceDiagram
     A->>A: setState(NoCardState)
 ```
 
-- **Extension:** contactless or biometric entry changes `CardInsertedState` internals only — the flow is the same.
+- **Extension:** contactless or biometric entry changes `CardInsertedState` internals only - the flow is the same.
 
----
+ - 
 
 ## Case Study 7: Library Management System
 
@@ -658,7 +658,7 @@ sequenceDiagram
 - **Patterns used:** Observer (topic 4) for due-date notifications; Strategy (topic 4) for fine calculation.
 - **Responsibilities:**
   - `Catalog` manages search and availability of books.
-  - `BookCopy` tracks the physical copy — its status and current borrower.
+  - `BookCopy` tracks the physical copy - its status and current borrower.
   - `Loan` records which member has which copy and when it is due.
   - `FinePolicy` is a Strategy that calculates overdue fines.
   - `LoanObserver` gets notified when a due date approaches or a copy is returned late.
@@ -768,7 +768,7 @@ sequenceDiagram
 
 - **Extension:** a new `WeeklyFinePolicy` adds one class. A new notification channel adds one `LoanObserver` implementation.
 
----
+ - 
 
 ## Case Study 8: Movie Ticket Booking (BookMyShow)
 
@@ -897,7 +897,7 @@ sequenceDiagram
 
 - **Extension:** adding a new payment method adds one `Payment` implementation. Adding loyalty points adds one `BookingObserver`.
 
----
+ - 
 
 ## Case Study 9: Chess Game
 
@@ -1030,59 +1030,59 @@ sequenceDiagram
     G-->>P: MoveResult(SUCCESS)
 ```
 
-- **Extension:** adding en passant changes `PawnStrategy` only. Adding timed chess adds a `Clock` per player — `Game` observes it.
+- **Extension:** adding en passant changes `PawnStrategy` only. Adding timed chess adds a `Clock` per player - `Game` observes it.
 
----
+ - 
 
 ## How to Present in an Interview
 
 A well-structured LLD answer follows a consistent 6-step flow:
 
-### Step 1 — Clarify scope (1–2 minutes)
+### Step 1: Clarify scope (1-2 minutes)
 
 - Ask one or two questions to pin the scope before drawing anything.
 - Example for parking lot: "Single lot or multi-site? What vehicle types? Is pricing required?"
 - State your assumed answers clearly: "I'll design a single lot with multiple floors, supporting cars and bikes, with hourly pricing."
 - This signals that you think before designing and avoids building the wrong thing.
 
-### Step 2 — Identify entities (2–3 minutes)
+### Step 2: Identify entities (2-3 minutes)
 
 - List the main nouns from your scoped requirements.
 - For each noun, say what it *owns* (its data) and what it *does* (its behavior).
 - Discard entities that are just fields on another entity.
-- Example: a `Ticket` owns vehicle, spot, and entry time — it is a real entity. "Spot type" is just a field on `ParkingSpot`, not its own entity.
+- Example: a `Ticket` owns vehicle, spot, and entry time - it is a real entity. "Spot type" is just a field on `ParkingSpot`, not its own entity.
 
-### Step 3 — Sketch the class diagram (5–8 minutes)
+### Step 3: Sketch the class diagram (5-8 minutes)
 
-- Draw 5–8 core classes. Start with the obvious central class and expand outward.
+- Draw 5-8 core classes. Start with the obvious central class and expand outward.
 - Label key relationships: composition, association, inheritance, realization.
 - Add one or two interfaces where behavior varies (discount policy, strategy, observer).
 - Name methods that matter for the flow you will show next.
 - Say SOLID connection aloud: "I'm making `SpotSelectionStrategy` an interface so we can add new policies without changing `ParkingLot`."
 
-### Step 4 — Walk one key flow with a sequence diagram (3–5 minutes)
+### Step 4: Walk one key flow with a sequence diagram (3-5 minutes)
 
 - Pick the core happy-path action (park a vehicle, withdraw cash, book seats).
 - Walk through which object calls which, and what each returns.
 - Say it out loud as you draw: "Driver calls `park(vehicle)`, lot asks each floor for available spots, strategy picks the best one, lot occupies it and creates a ticket."
-- This proves the class diagram works — a sequence diagram that cannot be drawn means a missing method or a misplaced responsibility.
+- This proves the class diagram works - a sequence diagram that cannot be drawn means a missing method or a misplaced responsibility.
 
-### Step 5 — Discuss trade-offs (2–3 minutes)
+### Step 5: Discuss trade-offs (2-3 minutes)
 
 - Name one trade-off you made and why: "I used Strategy for spot selection to make it easy to add new policies. For a simpler system, I could inline the logic in `ParkingLot`."
 - Mention where you simplified: "I left `FeeCalculator` as an interface but didn't implement different pricing tiers."
 - Optionally raise a risk: "If concurrent users try to park at the same time, `occupy()` needs to be atomic."
 
-### Step 6 — Show one extension (1–2 minutes)
+### Step 6: Show one extension (1-2 minutes)
 
 - Show that the design can absorb a new requirement without rewriting stable code.
-- Example: "If they add EV charging spots, I add `ChargingSpot extends ParkingSpot` and a new strategy — `ParkingLot.park()` is untouched."
+- Example: "If they add EV charging spots, I add `ChargingSpot extends ParkingSpot` and a new strategy - `ParkingLot.park()` is untouched."
 - This closes the loop: you started with scope, designed for extensibility, and proved it.
 
 ### Quick reference: pattern signals in LLD prompts
 
 | Prompt signal | Likely pattern |
-|---|---|
+| - | - |
 | "Support multiple pricing rules / algorithms" | Strategy |
 | "Notify users / components when state changes" | Observer |
 | "Support undo or action history" | Command |

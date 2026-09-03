@@ -20,17 +20,17 @@ flowchart LR
 - Centralizes cross-cutting edge concerns so backends stay simple and uniform.
 - **TLS termination**: decrypt once at the edge; backends speak plain HTTP internally.
 - **Caching**: serve cacheable responses without hitting the app (topic 16 in Phase 2).
-- **Routing**: send `/api` to the app, `/static` to a file store, `/auth` to an identity service — by path or host.
+- **Routing**: send `/api` to the app, `/static` to a file store, `/auth` to an identity service - by path or host.
 - **Security**: hide backend topology, enforce rate limits and WAF rules, strip dangerous headers.
 - **Compression & buffering**: gzip/brotli responses and absorb slow clients so app threads aren't tied up.
 
 ## Trade-offs
 
-- **Centralization vs. SPOF** — a powerful single point that must be made redundant.
-- **Extra hop** — adds a small latency and another component to operate and monitor.
-- **Config complexity** — routing/rewrite rules can become intricate and hard to reason about.
-- **Reverse proxy vs. API gateway** — a gateway (topic 7) is a specialized reverse proxy with API-specific features (auth, quotas, request transformation, developer portal); a plain reverse proxy is lower-level and more general.
-- **TLS termination vs. end-to-end encryption** — terminating at the edge means internal traffic is plaintext unless you re-encrypt (or use a mesh, topic 4).
+- **Centralization vs. SPOF**: a powerful single point that must be made redundant.
+- **Extra hop**: adds a small latency and another component to operate and monitor.
+- **Config complexity**: routing/rewrite rules can become intricate and hard to reason about.
+- **Reverse proxy vs. API gateway**: a gateway (topic 7) is a specialized reverse proxy with API-specific features (auth, quotas, request transformation, developer portal); a plain reverse proxy is lower-level and more general.
+- **TLS termination vs. end-to-end encryption**: terminating at the edge means internal traffic is plaintext unless you re-encrypt (or use a mesh, topic 4).
 
 ## Examples
 

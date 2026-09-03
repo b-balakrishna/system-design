@@ -2,12 +2,12 @@
 
 ## Concept
 
-- **Code splitting** breaks a monolithic JavaScript bundle into smaller **chunks** that are loaded **on demand**, so users download only the code needed for what they're currently viewing — not the entire app upfront.
+- **Code splitting** breaks a monolithic JavaScript bundle into smaller **chunks** that are loaded **on demand**, so users download only the code needed for what they're currently viewing - not the entire app upfront.
 - As SPAs grow, a single bundle balloons to megabytes, delaying Time-to-Interactive while the browser downloads, parses, and executes code for pages the user may never visit. Code splitting defers that cost.
 - The main split points:
-  - **Route-based** — each route/page is its own chunk, loaded when navigated to (the highest-impact, easiest win).
-  - **Component-based** — heavy components (a charting library, a rich editor, a modal) load lazily when actually rendered.
-  - **Vendor splitting** — separate third-party libraries into a chunk that changes rarely and caches well across deploys.
+  - **Route-based**: each route/page is its own chunk, loaded when navigated to (the highest-impact, easiest win).
+  - **Component-based**: heavy components (a charting library, a rich editor, a modal) load lazily when actually rendered.
+  - **Vendor splitting**: separate third-party libraries into a chunk that changes rarely and caches well across deploys.
 - It's enabled by dynamic `import()`, which bundlers (Webpack, Vite, topic 17) turn into separate chunk files.
 
 ```mermaid
@@ -19,16 +19,16 @@ flowchart LR
 
 ## Problem It Solves
 
-- **Faster initial load / TTI** — shipping only the critical code for the first view shrinks the initial bundle, so the page becomes interactive sooner (a core lever for Core Web Vitals on JS-heavy apps).
-- **Pay-for-what-you-use** — code for rarely-visited routes or heavy optional features isn't downloaded until needed.
-- **Better caching** — vendor/runtime chunks that rarely change stay cached across app deploys, so users re-download only what actually changed.
+- **Faster initial load / TTI**: shipping only the critical code for the first view shrinks the initial bundle, so the page becomes interactive sooner (a core lever for Core Web Vitals on JS-heavy apps).
+- **Pay-for-what-you-use**: code for rarely-visited routes or heavy optional features isn't downloaded until needed.
+- **Better caching**: vendor/runtime chunks that rarely change stay cached across app deploys, so users re-download only what actually changed.
 
 ## Trade-offs
 
-- **Fewer big chunks vs. many small chunks** — too coarse and you ship unused code; too granular and you incur many requests and waterfall delays. Aim for sensible boundaries (per route + heavy components).
-- **Lazy loading adds latency on demand** — a lazily-loaded route/component has a load delay when first accessed; mitigate with **prefetching** (load the next likely chunk during idle time) and good loading states (topic 9).
-- **Loading-state UX** — split points need fallbacks (skeletons/spinners) and error boundaries (topic 21) for failed chunk loads (e.g., a chunk 404 after a deploy).
-- **Waterfalls** — naive nested dynamic imports can serialize loads; preload critical chunks to parallelize.
+- **Fewer big chunks vs. many small chunks**: too coarse and you ship unused code; too granular and you incur many requests and waterfall delays. Aim for sensible boundaries (per route + heavy components).
+- **Lazy loading adds latency on demand**: a lazily-loaded route/component has a load delay when first accessed; mitigate with **prefetching** (load the next likely chunk during idle time) and good loading states (topic 9).
+- **Loading-state UX**: split points need fallbacks (skeletons/spinners) and error boundaries (topic 21) for failed chunk loads (e.g., a chunk 404 after a deploy).
+- **Waterfalls**: naive nested dynamic imports can serialize loads; preload critical chunks to parallelize.
 
 ## Examples
 

@@ -28,8 +28,8 @@ flowchart TD
 
 ## Problem It Solves
 
-- **Prohibitive LLM Operating Costs**: High-volume customer support, FAQ systems, and conversational search frequently observe 30–60% query redundancy. Serving from cache eliminates LLM per-token billing for those queries.
-- **Tail Latency Mitigation**: Replaces high-variance generation latency (1–5 seconds depending on output token count) with deterministic sub-20ms vector lookups.
+- **Prohibitive LLM Operating Costs**: High-volume customer support, FAQ systems, and conversational search frequently observe 30-60% query redundancy. Serving from cache eliminates LLM per-token billing for those queries.
+- **Tail Latency Mitigation**: Replaces high-variance generation latency (1-5 seconds depending on output token count) with deterministic sub-20ms vector lookups.
 - **Throttling & Rate-Limit Protection**: Shields downstream GPU clusters or third-party APIs from traffic spikes during flash events.
 
 ## Trade-offs
@@ -41,7 +41,7 @@ flowchart TD
 - **Dynamic / Personalized Context Interference**:
   - If prompts include user-specific variables (`user_id`, timestamps, session history), the embedding vector shifts, reducing cache hit rates unless the architecture isolates the static intent from dynamic parameters.
 - **Vector Search Overhead**:
-  - At scale (millions of cached queries), embedding generation (5–20ms) plus ANN vector lookup adds slight latency to true cache misses before hitting the LLM.
+  - At scale (millions of cached queries), embedding generation (5-20ms) plus ANN vector lookup adds slight latency to true cache misses before hitting the LLM.
 
 ## Examples
 
@@ -67,4 +67,4 @@ flowchart TD
 - **KV-Cache Prefix Sharing in vLLM**
   - An enterprise agent with a 4,000-token system prompt and API schema documentation serves 100 concurrent users. Automatic prefix caching retains the KV-cache of those 4,000 tokens in GPU memory, cutting prefill latency by 85%.
 - **Interview Framing**
-  - Discuss caching on both architectural planes: **Application-Level Semantic Caching** (embeddings + vector similarity) for external cost and latency reduction, and **Engine-Level Prefix Caching** (KV-cache reuse via PagedAttention) for GPU throughput optimization. Highlight the production pitfalls: **tuning similarity thresholds ($\theta \approx 0.90\text{--}0.94$), metadata filtering to avoid cross-tenant data leaks, and invalidation strategies**.
+  - Discuss caching on both architectural planes: **Application-Level Semantic Caching** (embeddings + vector similarity) for external cost and latency reduction, and **Engine-Level Prefix Caching** (KV-cache reuse via PagedAttention) for GPU throughput optimization. Highlight the production pitfalls: **tuning similarity thresholds ($\theta \approx 0.90\text{ - }0.94$), metadata filtering to avoid cross-tenant data leaks, and invalidation strategies**.

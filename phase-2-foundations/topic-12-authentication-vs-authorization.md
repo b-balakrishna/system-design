@@ -4,8 +4,8 @@
 
 These two words are so frequently confused that confusing them in a design interview is a red flag. They are different problems, solved by different mechanisms, happening at different steps:
 
-- **Authentication (AuthN)** — *"Who are you?"* Verifying the identity of the entity making a request. The entity proves they are who they claim to be.
-- **Authorization (AuthZ)** — *"What are you allowed to do?"* Determining whether a verified identity has permission to perform a specific action on a specific resource.
+- **Authentication (AuthN)**: *"Who are you?"* Verifying the identity of the entity making a request. The entity proves they are who they claim to be.
+- **Authorization (AuthZ)**: *"What are you allowed to do?"* Determining whether a verified identity has permission to perform a specific action on a specific resource.
 
 **The critical sequence**: authentication always happens first. You can't authorise an unknown identity. Authentication establishes the identity; authorization uses that established identity to make access decisions.
 
@@ -32,7 +32,7 @@ sequenceDiagram
     AuthZ-->>API: ALLOW
     API-->>C: 204 No Content
 
-    Note over C,AuthZ: Separate request — different user
+    Note over C,AuthZ: Separate request  -  different user
     C->>API: DELETE /orders/42\nAuthorization: Bearer other_token
     API->>AuthN: Verify token
     AuthN-->>API: Identity: {userId: "99", roles: ["buyer"]}
@@ -45,27 +45,27 @@ sequenceDiagram
 ## HTTP Status Codes for Auth Errors
 
 | Code | Name | Meaning | When to use |
-|---|---|---|---|
+| - | - | - | - |
 | 401 | Unauthorized | Not authenticated | Token missing, expired, or invalid signature. Despite the name, this is an *authentication* error. Re-authenticating may fix it. |
 | 403 | Forbidden | Not authorised | Authenticated but not permitted. Re-authenticating will NOT fix it. The identity is known; the permission is denied. |
 
-**Common mistake**: returning 404 when a user requests a resource they're not authorised to see. This is a deliberate security pattern — revealing whether a resource exists leaks information. If user 99 isn't allowed to see order 42, return 404, not 403. This prevents an attacker from enumerating valid resource IDs.
+**Common mistake**: returning 404 when a user requests a resource they're not authorised to see. This is a deliberate security pattern - revealing whether a resource exists leaks information. If user 99 isn't allowed to see order 42, return 404, not 403. This prevents an attacker from enumerating valid resource IDs.
 
-## Authentication — How Identity Is Proved
+## Authentication: How Identity Is Proved
 
 ### Factor types
 
 Authentication factors fall into three categories:
 
 | Category | Factor | Examples | Strengths | Weaknesses |
-|---|---|---|---|---|
+| - | - | - | - | - |
 | Knowledge | Something you know | Password, PIN, security questions | Easy to implement | Can be phished, guessed, or leaked |
 | Possession | Something you have | TOTP app, SMS code, hardware key (YubiKey) | Requires physical access | Can be intercepted (SMS), lost, or stolen |
 | Inherence | Something you are | Fingerprint, face ID, retina | Hard to steal, non-transferable | Not revocable, false positives/negatives |
 
-**MFA (Multi-Factor Authentication)**: requiring factors from at least two categories. The most secure practical option is **password + hardware security key (FIDO2/WebAuthn)** — phishing-resistant. Password + TOTP is also strong. Password + SMS is weak (SIM-swap attacks).
+**MFA (Multi-Factor Authentication)**: requiring factors from at least two categories. The most secure practical option is **password + hardware security key (FIDO2/WebAuthn)** - phishing-resistant. Password + TOTP is also strong. Password + SMS is weak (SIM-swap attacks).
 
-### Password storage — the right way
+### Password storage: the right way
 
 **Never store plaintext or reversible encryption of passwords.** Store a slow, salted hash:
 
@@ -74,13 +74,13 @@ stored = Argon2id(password + salt, iterations=3, memory=64MB, parallelism=4)
 ```
 
 **Why Argon2id?**
-- **Slow by design**: bcrypt costs ~100ms, scrypt/Argon2 costs 100ms–seconds. A database breach exposes the hashes. Slow hashing means an attacker can only attempt ~100 passwords/second with a GPU instead of billions.
+- **Slow by design**: bcrypt costs ~100ms, scrypt/Argon2 costs 100ms - seconds. A database breach exposes the hashes. Slow hashing means an attacker can only attempt ~100 passwords/second with a GPU instead of billions.
 - **Memory-hard**: Argon2id requires large amounts of RAM, making GPU/ASIC acceleration impractical.
 - **Salt**: a random value (32 bytes) mixed in before hashing. Even if two users have the same password, their hashes differ. Prevents rainbow table attacks (pre-computed hash lookups).
 
 **Hashing comparison**:
 | Algorithm | Speed (GPU) | Memory-hard | Recommendation |
-|---|---|---|---|
+| - | - | - | - |
 | MD5 | ~30 billion/s | No | Never use for passwords |
 | SHA-256 | ~10 billion/s | No | Never use for passwords |
 | bcrypt | ~100k/s | No | Acceptable, but Argon2 is better |
@@ -90,7 +90,7 @@ stored = Argon2id(password + salt, iterations=3, memory=64MB, parallelism=4)
 ### Common authentication attacks
 
 | Attack | Description | Mitigation |
-|---|---|---|
+| - | - | - |
 | Brute force | Try every possible password | Rate limiting, account lockout, CAPTCHA |
 | Credential stuffing | Use leaked password lists from other breaches | Breached password check (HaveIBeenPwned API), MFA |
 | Phishing | Trick user into submitting credentials to a fake site | WebAuthn/FIDO2 (phishing-resistant), HSTS preload |
@@ -100,7 +100,7 @@ stored = Argon2id(password + salt, iterations=3, memory=64MB, parallelism=4)
 
 ## Authorization Models
 
-### RBAC — Role-Based Access Control
+### RBAC: Role-Based Access Control
 
 The most common and simplest model. Users are assigned roles; roles have permissions:
 
@@ -134,10 +134,10 @@ buyer:   read:own_orders, write:own_orders
 Check: `user.roles.any { role → role.permissions.contains("delete:orders") }`
 
 **RBAC limitations**:
-- Doesn't naturally express "user can only access their own resources" — you have to bake that into the service logic.
+- Doesn't naturally express "user can only access their own resources" - you have to bake that into the service logic.
 - Permission explosion: with many fine-grained actions, you get hundreds of permissions and complex role definitions.
 
-### ABAC — Attribute-Based Access Control
+### ABAC: Attribute-Based Access Control
 
 Policies evaluate **attributes** of the subject (user), resource, action, and environment:
 
@@ -151,7 +151,7 @@ More expressive than RBAC. Can encode fine-grained ownership rules, time-of-day 
 
 **OPA (Open Policy Agent)**: a popular, language-agnostic policy engine. Policies are written in Rego. Services query OPA with context; OPA returns an allow/deny decision. Centralises policy so it doesn't drift between services.
 
-### ReBAC — Relationship-Based Access Control
+### ReBAC: Relationship-Based Access Control
 
 Used by Google (Zanzibar paper), GitHub, and Google Drive. Permissions depend on the relationships between entities in a graph:
 
@@ -168,7 +168,7 @@ Check: "Can user:bob view document:report-42?"
 → Is bob in group:engineering? Yes.
 → ALLOW.
 
-ReBAC handles complex sharing models naturally (Google Drive "share with link", GitHub team permissions). The tradeoff is complexity — you need a graph database and recursive resolution.
+ReBAC handles complex sharing models naturally (Google Drive "share with link", GitHub team permissions). The tradeoff is complexity - you need a graph database and recursive resolution.
 
 ## API Key Authentication
 
@@ -180,18 +180,18 @@ Authorization: ApiKey sk_live_a7f5c3e8d4b24f9a8c1e3b7d2a5f9c8e
 
 **Secure API key design**:
 - Generate with cryptographically secure random (CSPRNG): 256-bit key.
-- Store a **hash** (e.g., SHA-256) of the key — not the key itself. Just like passwords.
-- On validation: `storedHash == SHA256(submittedKey)` — if match, authenticated.
+- Store a **hash** (e.g., SHA-256) of the key - not the key itself. Just like passwords.
+- On validation: `storedHash == SHA256(submittedKey)` - if match, authenticated.
 - If the database is breached, attackers get hashes, not usable keys.
-- The key itself is only shown to the user once on creation — it cannot be retrieved again.
+- The key itself is only shown to the user once on creation - it cannot be retrieved again.
 - Keys should be scoped to permissions: `read-only`, `full-access`, per-resource.
 - Keys should be revocable without affecting other keys or requiring password changes.
 
-**API key format** (Stripe's pattern — contains the tier for fast routing):
+**API key format** (Stripe's pattern - contains the tier for fast routing):
 ```
-sk_live_xxx    — secret key, production
-sk_test_xxx    — secret key, test environment
-pk_live_xxx    — publishable key, can be embedded in frontend (limited permissions)
+sk_live_xxx     -  secret key, production
+sk_test_xxx     -  secret key, test environment
+pk_live_xxx     -  publishable key, can be embedded in frontend (limited permissions)
 ```
 
 ## Service-to-Service Authentication
@@ -215,7 +215,7 @@ sequenceDiagram
     S1->>S2: Encrypted request
 ```
 
-**mTLS in a service mesh** (Istio, Linkerd): the mesh injects sidecar proxies that handle mTLS automatically. Services don't need to manage certificates directly — the mesh issues short-lived certificates, rotates them automatically, and enforces mutual auth.
+**mTLS in a service mesh** (Istio, Linkerd): the mesh injects sidecar proxies that handle mTLS automatically. Services don't need to manage certificates directly - the mesh issues short-lived certificates, rotates them automatically, and enforces mutual auth.
 
 ### JWT service tokens
 
@@ -230,18 +230,18 @@ An internal token service issues signed JWTs for each service:
 }
 ```
 
-Simpler to implement than mTLS. The receiving service verifies the signature and checks `aud` and `scope`. Short-lived tokens (5–15 min) limit damage from leakage.
+Simpler to implement than mTLS. The receiving service verifies the signature and checks `aud` and `scope`. Short-lived tokens (5-15 min) limit damage from leakage.
 
 ### Network policy only (zero-trust opposite)
 
-Trust all traffic that arrives on the internal network. Simple, but provides no defence in depth — if one service is compromised, it can impersonate any other.
+Trust all traffic that arrives on the internal network. Simple, but provides no defence in depth - if one service is compromised, it can impersonate any other.
 
 **Industry trend**: zero-trust networks. Every service-to-service call is authenticated (mTLS or JWT). Network connectivity alone does not imply trust.
 
 ## Centralised vs. Distributed Authorization
 
 | Approach | How it works | Pros | Cons |
-|---|---|---|---|
+| - | - | - | - |
 | Centralised (OPA, Casbin, AWS IAM) | Services query a policy engine per request | Consistent rules, auditable, one place to update | Extra network hop per request |
 | Distributed (logic in each service) | Each service enforces its own rules | No extra latency | Rules drift across services, hard to audit |
 | Hybrid | Services cache policy decisions | Low latency + consistency | Staleness window on rule changes |

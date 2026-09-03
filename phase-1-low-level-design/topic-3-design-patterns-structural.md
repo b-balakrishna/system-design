@@ -5,13 +5,13 @@
 - Structural patterns organize how classes and objects are composed.
 - They help objects fit together when their shapes, responsibilities, or ownership relationships differ.
 - Common structural patterns:
-  - **Adapter** — translate one interface into another expected interface.
-  - **Facade** — provide a simple entry point over several collaborating classes.
-  - **Decorator** — add behavior by wrapping an object with the same interface.
-  - **Composite** — treat individual objects and groups uniformly.
-  - **Proxy** — stand in front of another object to control access.
-  - **Bridge** — split an abstraction from its implementation so both can vary independently.
-  - **Flyweight** — share repeated immutable state across many small objects.
+  - **Adapter**: translate one interface into another expected interface.
+  - **Facade**: provide a simple entry point over several collaborating classes.
+  - **Decorator**: add behavior by wrapping an object with the same interface.
+  - **Composite**: treat individual objects and groups uniformly.
+  - **Proxy**: stand in front of another object to control access.
+  - **Bridge**: split an abstraction from its implementation so both can vary independently.
+  - **Flyweight**: share repeated immutable state across many small objects.
 - Structural patterns usually prefer composition over inheritance.
 - Connection to SOLID: Decorator and Proxy add behavior or control without modifying existing classes (OCP from topic 1). Facade gives one class one coordination responsibility (SRP). Adapter lets callers depend on stable abstractions even when the underlying class changes (DIP).
 - Connection to creational patterns (topic 2): Flyweight often uses a Factory Method internally to reuse shared instances, and a Facade may use a Builder to construct complex objects on behalf of its callers.
@@ -55,13 +55,13 @@ classDiagram
 
 ## Trade-offs
 
-- **Adapter vs. changing the class** — adapt when the class is external, stable, or used elsewhere; change it when you own it and the new interface is better.
-- **Facade vs. hiding too much** — a Facade simplifies common use, but should not block access to important lower-level operations.
-- **Decorator vs. subclassing** — Decorators compose behavior flexibly, but many nested wrappers can be harder to trace.
-- **Composite vs. simple lists** — Composite is powerful for recursive structures, but unnecessary for flat collections.
-- **Proxy vs. direct access** — Proxy adds control points, but can surprise callers if behavior becomes too different from the real object.
-- **Bridge vs. one hierarchy** — Bridge is worth the extra interface when two axes of variation grow independently; a single hierarchy is simpler when they do not.
-- **Flyweight vs. clarity** — sharing state saves memory, but separates intrinsic (shared) state from extrinsic (per-object) state.
+- **Adapter vs. changing the class**: adapt when the class is external, stable, or used elsewhere; change it when you own it and the new interface is better.
+- **Facade vs. hiding too much**: a Facade simplifies common use, but should not block access to important lower-level operations.
+- **Decorator vs. subclassing**: Decorators compose behavior flexibly, but many nested wrappers can be harder to trace.
+- **Composite vs. simple lists**: Composite is powerful for recursive structures, but unnecessary for flat collections.
+- **Proxy vs. direct access**: Proxy adds control points, but can surprise callers if behavior becomes too different from the real object.
+- **Bridge vs. one hierarchy**: Bridge is worth the extra interface when two axes of variation grow independently; a single hierarchy is simpler when they do not.
+- **Flyweight vs. clarity**: sharing state saves memory, but separates intrinsic (shared) state from extrinsic (per-object) state.
 
 ## Examples
 
@@ -151,7 +151,7 @@ classDiagram
     Folder --> FileSystemItem
 ```
 
-- Why it fits: client code treats a single `File` and a deeply nested `Folder` tree uniformly — both implement `FileSystemItem`. `Folder.getSize()` recursively sums child sizes without any type checks.
+- Why it fits: client code treats a single `File` and a deeply nested `Folder` tree uniformly - both implement `FileSystemItem`. `Folder.getSize()` recursively sums child sizes without any type checks.
 
 ### Proxy: protected document
 
@@ -237,7 +237,7 @@ classDiagram
     Device <|.. Speaker
 ```
 
-- Why it fits: adding `Projector` adds one `Device` class — no remote changes. Adding `VoiceRemote` adds one `RemoteControl` subclass — no device changes. The two hierarchies vary independently (ISP and OCP from SOLID).
+- Why it fits: adding `Projector` adds one `Device` class - no remote changes. Adding `VoiceRemote` adds one `RemoteControl` subclass - no device changes. The two hierarchies vary independently (ISP and OCP from SOLID).
 
 ### Flyweight: chess board pieces
 

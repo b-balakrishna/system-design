@@ -9,7 +9,7 @@
      - **Prompt injection defense**: Dual-LLM pattern (a separate, lightweight classifier verifies user input is not trying to override system instructions).
      - RAG grounding: Injecting retrieved verified context and constraining the model to answer *only* from the provided text.
   2. **In-Generation (Decoding & Sampling Controls)**:
-     - **Temperature & Top-p tuning**: Setting temperature near 0.0–0.2 for deterministic extraction.
+     - **Temperature & Top-p tuning**: Setting temperature near 0.0-0.2 for deterministic extraction.
      - **Logit bias & constrained decoding**: Enforcing structured JSON schemas via grammar-guided generation (Outlines, Guidance) to prevent syntax-level hallucination.
   3. **Post-Generation (Verification & Output Guardrails)**:
      - **Chain-of-Verification (CoVe)**: The model drafts a response, generates verification questions against its own assertions, answers them against ground-truth context, and rewrites the final response.
@@ -45,7 +45,7 @@ flowchart TD
 - **Safety vs. Utility (Over-Refusal)**:
   - Overly aggressive safety guardrails cause models to refuse benign queries (e.g., refusing to summarize a news article because it mentions a historical conflict). Calibrating refusal classifiers requires continuous testing against evaluation benchmarks (topic 26).
 - **Latency Multiplication**:
-  - Running pre-input safety checks, dual-LLM classifiers, CoVe self-verification, and post-output moderation adds 3–4 extra LLM round-trips per user interaction.
+  - Running pre-input safety checks, dual-LLM classifiers, CoVe self-verification, and post-output moderation adds 3-4 extra LLM round-trips per user interaction.
 - **Context Overhead**:
   - Detailed safety guidelines, few-shot refusal examples, and grounding constraints consume valuable context tokens that could otherwise hold user documents.
 

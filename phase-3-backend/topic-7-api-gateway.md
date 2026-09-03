@@ -18,7 +18,7 @@ flowchart TB
 
 ## Problem It Solves
 
-- Without a gateway, every service must independently implement auth, rate limiting, and TLS — inconsistently and in different languages.
+- Without a gateway, every service must independently implement auth, rate limiting, and TLS - inconsistently and in different languages.
 - Gives clients one endpoint and one auth scheme instead of N service URLs.
 - **Aggregation/composition**: one client request fans out to several services and the gateway stitches the responses, cutting round trips on slow networks (related: BFF, topic 29).
 - **Protocol translation**: external REST/JSON ↔ internal gRPC.
@@ -26,11 +26,11 @@ flowchart TB
 
 ## Trade-offs
 
-- **Centralization vs. bottleneck/SPOF** — must be horizontally scaled and made highly available, or it gates the whole system.
-- **Convenience vs. coupling** — putting business logic in the gateway turns it into a new monolith; keep it to cross-cutting concerns only.
-- **Latency** — an extra hop; aggregation can help or hurt depending on fan-out.
-- **One gateway for all clients vs. BFF** — a single general-purpose gateway can become a lowest-common-denominator API; a **Backend-for-Frontend** per client type (web, mobile) avoids over/under-fetching.
-- **Operational ownership** — a shared gateway needs a clear owner or it becomes a contested chokepoint.
+- **Centralization vs. bottleneck/SPOF**: must be horizontally scaled and made highly available, or it gates the whole system.
+- **Convenience vs. coupling**: putting business logic in the gateway turns it into a new monolith; keep it to cross-cutting concerns only.
+- **Latency**: an extra hop; aggregation can help or hurt depending on fan-out.
+- **One gateway for all clients vs. BFF**: a single general-purpose gateway can become a lowest-common-denominator API; a **Backend-for-Frontend** per client type (web, mobile) avoids over/under-fetching.
+- **Operational ownership**: a shared gateway needs a clear owner or it becomes a contested chokepoint.
 
 ## Examples
 
