@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { useApp } from "../context/AppContext";
 import { GLOSSARY_ID } from "../glossary";
+import { CHEATSHEET_ID } from "./CheatSheet";
 import type { Phase, Topic } from "../data";
 
 export default function Sidebar() {
-  const { phases, activeId, setActiveId, mobileOpen } = useApp();
+  const { phases, activeId, setActiveId, mobileOpen, completedIds } = useApp();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -16,7 +17,8 @@ export default function Sidebar() {
         topics: p.topics.filter(
           (t) =>
             t.title.toLowerCase().includes(q) ||
-            p.title.toLowerCase().includes(q)
+            p.title.toLowerCase().includes(q) ||
+            t.content.toLowerCase().includes(q)
         ),
       }))
       .filter((p) => p.topics.length > 0);
@@ -52,6 +54,19 @@ export default function Sidebar() {
       >
         <span className="text-[11px] text-brand">≡</span>
         <span>Glossary</span>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setActiveId(CHEATSHEET_ID)}
+        className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+          activeId === CHEATSHEET_ID
+            ? "bg-brand-soft text-brand-text"
+            : "text-ink-soft hover:bg-sunk hover:text-ink"
+        }`}
+      >
+        <span className="text-[11px] text-brand">⚡</span>
+        <span>Numbers Cheat Sheet</span>
       </button>
 
       <div className="my-3.5 px-1.5">
@@ -139,28 +154,31 @@ interface TopicItemProps {
 }
 
 function TopicItem({ topic, activeId, onSelect }: TopicItemProps) {
+  const { completedIds } = useApp();
   const active = topic.id === activeId;
+  const isDone = completedIds.has(topic.id);
+
   return (
     <li>
       <button
         type="button"
         onClick={() => onSelect(topic.id)}
-        title={topic.empty ? "Not written yet" : topic.title}
-        className={`flex w-full items-baseline gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-[13px] leading-snug transition-colors ${
+        title={topic.title}
+        className={`flex w-full items-baseline gap-2 rounded-lg px-2.5 py-1.5 text-left text-[13px] leading-snug transition-colors ${
           active
             ? "bg-brand-soft font-semibold text-brand-text"
-            : topic.empty
-              ? "text-ink-faint hover:bg-sunk"
+            : isDone
+              ? "text-ink/80 hover:bg-sunk hover:text-ink"
               : "text-ink-soft hover:bg-sunk hover:text-ink"
         }`}
       >
         <span className="min-w-[14px] text-[11px] tabular-nums text-ink-faint">
           {topic.num}
         </span>
-        <span className="flex-1">{topic.title}</span>
-        {topic.empty && (
-          <span className="rounded border border-line px-1.5 text-[9.5px] uppercase tracking-wide text-ink-faint">
-            soon
+        <span className="flex-1 truncate">{topic.title}</span>
+        {isDone && (
+          <span className="text-[11px] font-bold text-emerald-500" title="Completed">
+            ✓
           </span>
         )}
       </button>

@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useApp } from "../context/AppContext";
@@ -7,6 +8,35 @@ import Mermaid from "./Mermaid";
 
 interface MarkdownProps {
   content: string;
+}
+
+function PreBlock({ children, ...props }: any) {
+  const [copied, setCopied] = useState(false);
+  const ref = useRef<HTMLPreElement>(null);
+
+  const handleCopy = () => {
+    if (!ref.current) return;
+    const text = ref.current.innerText || "";
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="group relative my-4">
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="absolute right-2.5 top-2.5 z-10 rounded border border-line bg-sunk/90 px-2 py-0.5 text-[11px] font-medium text-ink-soft opacity-0 shadow-sm backdrop-blur transition-all hover:border-line-strong hover:bg-elev hover:text-ink group-hover:opacity-100"
+        aria-label="Copy code"
+      >
+        {copied ? "✓ Copied" : "Copy"}
+      </button>
+      <pre ref={ref} {...props}>
+        {children}
+      </pre>
+    </div>
+  );
 }
 
 function isMermaidPre(node: any): boolean {
@@ -45,9 +75,9 @@ export default function Markdown({ content }: MarkdownProps) {
   const { flatTopics, phases } = useApp();
 
   const components: Components = {
-    pre({ node, children }: any) {
+    pre({ node, children, ...props }: any) {
       if (isMermaidPre(node)) return <>{children}</>;
-      return <pre>{children}</pre>;
+      return <PreBlock {...props}>{children}</PreBlock>;
     },
     code({ className, children, ...props }: any) {
       const match = /language-(\w+)/.exec(className || "");

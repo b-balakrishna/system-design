@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -20,9 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify Repository Integrity
+        run: python scripts/verify-repo.py
+
       - uses: pnpm/action-setup@v4
         with:
-          package_json_file: viewer/package.json # reads version from packageManager field
+          package_json_file: viewer/package.json
 
       - uses: actions/setup-node@v4
         with:
@@ -34,17 +44,24 @@ jobs:
         working-directory: viewer
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Typecheck Viewer
+        working-directory: viewer
+        run: pnpm typecheck
+
+      - name: Build Viewer
         working-directory: viewer
         run: pnpm build
 
       - uses: actions/configure-pages@v5
+        if: github.ref == 'refs/heads/master'
 
       - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/master'
         with:
           path: viewer/dist
 
   deploy:
+    if: github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -53,3 +70,4 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+

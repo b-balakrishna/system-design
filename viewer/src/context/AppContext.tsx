@@ -17,6 +17,7 @@ import {
   type Topic,
 } from "../data";
 import { GLOSSARY_ID } from "../glossary";
+import { CHEATSHEET_ID } from "../components/CheatSheet";
 
 export type Theme = "light" | "dark";
 
@@ -33,12 +34,24 @@ function getInitialTheme(): Theme {
   return "light";
 }
 
+function getInitialCompleted(): Set<string> {
+  try {
+    const saved = localStorage.getItem("sd-completed-topics");
+    if (saved) {
+      return new Set(JSON.parse(saved));
+    }
+  } catch {
+    /* ignore */
+  }
+  return new Set<string>();
+}
+
 // Parse the URL hash into an app-internal topic ID (or special page ID).
-// Handles both the short format ("0/1") and the legacy long format.
 function parseHash(): string | null {
   const h = decodeURIComponent(window.location.hash.replace(/^#/, ""));
   if (!h) return null;
   if (h === GLOSSARY_ID) return GLOSSARY_ID;
+  if (h === CHEATSHEET_ID || h === "cheatsheet") return CHEATSHEET_ID;
   const fromShort = hashToTopicId(h);
   if (fromShort) return fromShort;
   if (findTopic(h)) return h; // legacy long-form bookmark
@@ -49,6 +62,7 @@ function parseHash(): string | null {
 function idToHash(id: string | null): string {
   if (!id) return "";
   if (id === GLOSSARY_ID) return GLOSSARY_ID;
+  if (id === CHEATSHEET_ID) return "cheatsheet";
   return topicIdToHash(id);
 }
 
@@ -65,6 +79,8 @@ interface AppContextValue {
   prev: Topic | null;
   next: Topic | null;
   readme: string;
+  completedIds: Set<string>;
+  toggleCompleted: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -116,6 +132,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setTheme((t) => (t === "dark" ? "light" : "dark"));
   }
 
+  const [completedIds, setCompletedIds] = useState<Set<string>>(getInitialCompleted);
+
+  function toggleCompleted(id: string) {
+    setCompletedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      try {
+        localStorage.setItem("sd-completed-topics", JSON.stringify(Array.from(next)));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }
+
   const active = activeId ? findTopic(activeId) : null;
 
   const { prev, next } = useMemo(() => {
@@ -142,6 +177,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         prev,
         next,
         readme: repoReadme,
+        completedIds,
+        toggleCompleted,
       }}
     >
       {children}

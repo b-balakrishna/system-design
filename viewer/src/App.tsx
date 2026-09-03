@@ -3,6 +3,7 @@ import Sidebar from "./components/Sidebar";
 import Markdown from "./components/Markdown";
 import Home from "./components/Home";
 import Glossary from "./components/Glossary";
+import CheatSheet, { CHEATSHEET_ID } from "./components/CheatSheet";
 import { GLOSSARY_ID } from "./glossary";
 import type { Topic } from "./data";
 
@@ -19,10 +20,13 @@ export default function App() {
     next,
     flatTopics,
     phases,
+    completedIds,
+    toggleCompleted,
   } = useApp();
 
-  const totalDone = flatTopics.filter((t) => !t.empty).length;
   const totalTopics = flatTopics.length;
+  const completedCount = completedIds.size;
+  const progressPercent = Math.round((completedCount / totalTopics) * 100);
 
   return (
     <div className="flex h-full flex-col bg-bg text-ink">
@@ -45,8 +49,11 @@ export default function App() {
           <span className="hidden sm:inline">System Design</span>
         </button>
         <div className="flex-1" />
-        <span className="hidden rounded-full border border-line bg-sunk px-3 py-1 text-xs text-ink-soft sm:inline">
-          {totalDone}/{totalTopics} written
+        <span
+          className="hidden rounded-full border border-line bg-sunk px-3 py-1 text-xs text-ink-soft sm:inline"
+          title="Track your personal learning progress"
+        >
+          {completedCount}/{totalTopics} mastered ({progressPercent}%)
         </span>
         <button
           type="button"
@@ -74,27 +81,24 @@ export default function App() {
           <article className="mx-auto max-w-prose px-5 pb-24 pt-10 sm:px-8">
             {active ? (
               <>
-                <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-brand-text">
-                  Phase {phaseNumOf(active, phases)} · {active.phaseTitle}
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-line/60 pb-3">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-brand-text">
+                    Phase {phaseNumOf(active, phases)} · {active.phaseTitle}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleCompleted(active.id)}
+                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-medium transition-colors ${
+                      completedIds.has(active.id)
+                        ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
+                        : "border-line bg-sunk text-ink-soft hover:border-line-strong hover:text-ink"
+                    }`}
+                  >
+                    <span>{completedIds.has(active.id) ? "✓ Completed" : "○ Mark as Completed"}</span>
+                  </button>
                 </div>
 
-                {active.empty ? (
-                  <div className="py-8">
-                    <h1 className="mb-3 text-3xl font-extrabold tracking-tight">
-                      {active.title}
-                    </h1>
-                    <p className="mb-2">This topic hasn't been written yet.</p>
-                    <p className="text-sm text-ink-faint">
-                      Add notes to{" "}
-                      <code className="rounded bg-sunk px-1.5 py-0.5 font-mono text-[0.85em]">
-                        {active.phaseSlug}/{active.slug}.md
-                      </code>{" "}
-                      and they'll appear here.
-                    </p>
-                  </div>
-                ) : (
-                  <Markdown content={active.content} />
-                )}
+                <Markdown content={active.content} />
 
                 {/* Prev / next pager */}
                 <nav className="mt-12 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:justify-between">
@@ -112,6 +116,8 @@ export default function App() {
               </>
             ) : activeId === GLOSSARY_ID ? (
               <Glossary />
+            ) : activeId === CHEATSHEET_ID ? (
+              <CheatSheet />
             ) : (
               <Home />
             )}
