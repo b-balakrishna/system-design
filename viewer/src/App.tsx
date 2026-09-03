@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useApp } from "./context/AppContext";
 import Sidebar from "./components/Sidebar";
 import Markdown from "./components/Markdown";
@@ -6,6 +7,12 @@ import Glossary from "./components/Glossary";
 import CheatSheet, { CHEATSHEET_ID } from "./components/CheatSheet";
 import { GLOSSARY_ID } from "./glossary";
 import type { Topic } from "./data";
+
+function getReadingStats(content: string) {
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return { words, minutes };
+}
 
 export default function App() {
   const {
@@ -27,6 +34,66 @@ export default function App() {
   const totalTopics = flatTopics.length;
   const completedCount = completedIds.size;
   const progressPercent = Math.round((completedCount / totalTopics) * 100);
+  const readingStats = active ? getReadingStats(active.content) : null;
+
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Monitor scroll on main content container for Back to Top button
+  useEffect(() => {
+    const main = document.querySelector("[data-content]");
+    if (!main) return;
+    function onScroll() {
+      setShowBackToTop((main?.scrollTop || 0) > 400);
+    }
+    main.addEventListener("scroll", onScroll);
+    return () => main.removeEventListener("scroll", onScroll);
+  }, []);
+
+  function scrollToTop() {
+    const main = document.querySelector("[data-content]");
+    if (main) main.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Global Keyboard Shortcuts
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable
+      ) {
+        return;
+      }
+
+      // Next / Prev topic navigation (Arrow keys or J / K)
+      if (e.key === "ArrowRight" || (e.key === "k" && !e.metaKey && !e.ctrlKey)) {
+        if (next) setActiveId(next.id);
+      } else if (e.key === "ArrowLeft" || (e.key === "j" && !e.metaKey && !e.ctrlKey)) {
+        if (prev) setActiveId(prev.id);
+      }
+      // Toggle Complete (M key)
+      else if ((e.key === "m" || e.key === "M") && active) {
+        toggleCompleted(active.id);
+      }
+      // Toggle Theme (T key)
+      else if ((e.key === "t" || e.key === "T") && !e.metaKey && !e.ctrlKey) {
+        toggleTheme();
+      }
+      // Search Focus (/ key or Cmd+K / Ctrl+K)
+      else if (e.key === "/" || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")) {
+        e.preventDefault();
+        const searchInput = document.querySelector<HTMLInputElement>("input[type='search']");
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [active, prev, next, toggleCompleted, toggleTheme, setActiveId]);
 
   return (
     <div className="flex h-full flex-col bg-bg text-ink">
@@ -60,6 +127,7 @@ export default function App() {
           aria-label="Toggle theme"
           onClick={toggleTheme}
           className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-sunk text-base hover:border-line-strong"
+          title="Toggle theme (Press T)"
         >
           {theme === "dark" ? "☀" : "☾"}
         </button>
@@ -82,8 +150,14 @@ export default function App() {
             {active ? (
               <>
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-line/60 pb-3">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-brand-text">
-                    Phase {phaseNumOf(active, phases)} · {active.phaseTitle}
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-text">
+                    <span>Phase {phaseNumOf(active, phases)} · {active.phaseTitle}</span>
+                    {readingStats && (
+                      <>
+                        <span className="text-ink-faint">·</span>
+                        <span className="text-ink-soft normal-case font-medium">⏱ ~{readingStats.minutes} min read</span>
+                      </>
+                    )}
                   </div>
                   <button
                     type="button"
@@ -93,6 +167,7 @@ export default function App() {
                         ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
                         : "border-line bg-sunk text-ink-soft hover:border-line-strong hover:text-ink"
                     }`}
+                    title="Toggle completion (Press M)"
                   >
                     <span>{completedIds.has(active.id) ? "✓ Completed" : "○ Mark as Completed"}</span>
                   </button>
@@ -100,8 +175,8 @@ export default function App() {
 
                 <Markdown content={active.content} />
 
-                {/* Bottom Mark as Completed Button */}
-                <div className="mt-12 flex justify-center">
+                {/* Bottom Completion & Navigation Actions */}
+                <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
                     onClick={() => toggleCompleted(active.id)}
@@ -114,6 +189,23 @@ export default function App() {
                     <span className="text-base font-bold">{completedIds.has(active.id) ? "✓" : "○"}</span>
                     <span>{completedIds.has(active.id) ? "Completed (Click to unmark)" : "Mark Topic as Completed"}</span>
                   </button>
+
+                  {next && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!completedIds.has(active.id)) {
+                          toggleCompleted(active.id);
+                        }
+                        setActiveId(next.id);
+                      }}
+                      className="flex items-center gap-2 rounded-xl border border-brand bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.02] hover:bg-brand/90"
+                      title="Mark this topic complete and advance to next"
+                    >
+                      <span>Complete & Next Topic</span>
+                      <span>→</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Prev / next pager */}
@@ -139,6 +231,18 @@ export default function App() {
             )}
           </article>
         </main>
+
+        {showBackToTop && (
+          <button
+            type="button"
+            onClick={scrollToTop}
+            aria-label="Back to top"
+            className="fixed bottom-6 right-6 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-elev/95 text-sm font-bold text-ink shadow-lg backdrop-blur transition-all hover:scale-110 hover:border-brand hover:text-brand"
+            title="Back to top (↑)"
+          >
+            ↑
+          </button>
+        )}
       </div>
     </div>
   );
