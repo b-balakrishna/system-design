@@ -4,25 +4,29 @@ import { GLOSSARY_ID } from "../glossary";
 import { CHEATSHEET_ID } from "./CheatSheet";
 import type { Phase, Topic } from "../data";
 
-export default function Sidebar() {
+type FilterMode = "all" | "unread" | "completed";
+
+interface SidebarProps {
+  onOpenPalette: () => void;
+  modKey: string;
+}
+
+export default function Sidebar({ onOpenPalette, modKey }: SidebarProps) {
   const { phases, activeId, setActiveId, mobileOpen, completedIds } = useApp();
-  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<FilterMode>("all");
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return phases;
     return phases
       .map((p) => ({
         ...p,
-        topics: p.topics.filter(
-          (t) =>
-            t.title.toLowerCase().includes(q) ||
-            p.title.toLowerCase().includes(q) ||
-            t.content.toLowerCase().includes(q)
-        ),
+        topics: p.topics.filter((t) => {
+          if (filter === "unread" && completedIds.has(t.id)) return false;
+          if (filter === "completed" && !completedIds.has(t.id)) return false;
+          return true;
+        }),
       }))
       .filter((p) => p.topics.length > 0);
-  }, [phases, query]);
+  }, [phases, filter, completedIds]);
 
   return (
     <aside
@@ -69,15 +73,53 @@ export default function Sidebar() {
         <span>Numbers Cheat Sheet</span>
       </button>
 
-      <div className="my-3.5 px-1.5">
-        <input
-          type="search"
-          placeholder="Search topics…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search topics"
-          className="w-full rounded-lg border border-line bg-sunk px-3 py-2 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-brand focus:ring-2 focus:ring-brand-soft"
-        />
+      {/* Spotlight Command Palette Trigger */}
+      <div className="my-3 px-0.5">
+        <button
+          type="button"
+          onClick={onOpenPalette}
+          className="group flex w-full items-center justify-between rounded-xl border border-line bg-sunk px-3 py-2 text-xs text-ink-soft shadow-sm transition-all hover:border-line-strong hover:bg-elev hover:text-ink"
+          title={`Search all topics (Press ${modKey} or /)`}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-sm">🔍</span>
+            <span>Search 211 topics...</span>
+          </div>
+          <kbd className="rounded border border-line bg-elev px-1.5 py-0.5 font-mono text-[10px] text-ink-soft group-hover:border-line-strong group-hover:text-ink">
+            {modKey}
+          </kbd>
+        </button>
+      </div>
+
+      {/* 3-Way Study Progress Filter */}
+      <div className="mb-3 flex rounded-lg border border-line bg-sunk p-0.5 text-xs font-semibold">
+        <button
+          type="button"
+          onClick={() => setFilter("all")}
+          className={`flex-1 rounded-md py-1 text-center transition-colors ${
+            filter === "all" ? "bg-elev text-ink shadow-sm" : "text-ink-soft hover:text-ink"
+          }`}
+        >
+          All
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter("unread")}
+          className={`flex-1 rounded-md py-1 text-center transition-colors ${
+            filter === "unread" ? "bg-elev text-brand-text shadow-sm" : "text-ink-soft hover:text-ink"
+          }`}
+        >
+          Unread
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter("completed")}
+          className={`flex-1 rounded-md py-1 text-center transition-colors ${
+            filter === "completed" ? "bg-elev text-emerald-500 shadow-sm" : "text-ink-soft hover:text-ink"
+          }`}
+        >
+          Done
+        </button>
       </div>
 
       <nav className="flex flex-col gap-0.5">
@@ -87,12 +129,14 @@ export default function Sidebar() {
             phase={phase}
             activeId={activeId}
             onSelect={setActiveId}
-            forceOpen={query.trim().length > 0}
+            forceOpen={filter !== "all"}
           />
         ))}
         {filtered.length === 0 && (
-          <p className="px-3 py-2 text-sm text-ink-faint">
-            No topics match "{query}".
+          <p className="px-3 py-6 text-center text-sm text-ink-faint">
+            {filter === "completed"
+              ? "No topics marked completed yet."
+              : "All topics in this view are completed!"}
           </p>
         )}
       </nav>

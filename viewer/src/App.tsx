@@ -5,6 +5,7 @@ import Markdown from "./components/Markdown";
 import Home from "./components/Home";
 import Glossary from "./components/Glossary";
 import CheatSheet, { CHEATSHEET_ID } from "./components/CheatSheet";
+import CommandPalette from "./components/CommandPalette";
 import { GLOSSARY_ID } from "./glossary";
 import type { Topic } from "./data";
 
@@ -12,6 +13,14 @@ function getReadingStats(content: string) {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.ceil(words / 200));
   return { words, minutes };
+}
+
+function getModifierKeyLabel(): string {
+  if (typeof navigator === "undefined") return "Ctrl K";
+  const isMac = /(Mac|iPhone|iPod|iPad)/i.test(
+    (navigator as any).userAgentData?.platform || navigator.platform || navigator.userAgent || ""
+  );
+  return isMac ? "⌘K" : "Ctrl K";
 }
 
 export default function App() {
@@ -29,6 +38,8 @@ export default function App() {
     phases,
     completedIds,
     toggleCompleted,
+    searchQuery,
+    setSearchQuery,
   } = useApp();
 
   const totalTopics = flatTopics.length;
@@ -37,6 +48,12 @@ export default function App() {
   const readingStats = active ? getReadingStats(active.content) : null;
 
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [modKey, setModKey] = useState("Ctrl K");
+
+  useEffect(() => {
+    setModKey(getModifierKeyLabel());
+  }, []);
 
   // Monitor scroll on main content container for Back to Top button
   useEffect(() => {
@@ -80,14 +97,10 @@ export default function App() {
       else if ((e.key === "t" || e.key === "T") && !e.metaKey && !e.ctrlKey) {
         toggleTheme();
       }
-      // Search Focus (/ key or Cmd+K / Ctrl+K)
+      // Command Palette (/ key or Cmd+K / Ctrl+K)
       else if (e.key === "/" || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")) {
         e.preventDefault();
-        const searchInput = document.querySelector<HTMLInputElement>("input[type='search']");
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.select();
-        }
+        setIsPaletteOpen((prev) => !prev);
       }
     }
 
@@ -135,7 +148,7 @@ export default function App() {
 
       {/* Body */}
       <div className="relative flex min-h-0 flex-1">
-        <Sidebar />
+        <Sidebar onOpenPalette={() => setIsPaletteOpen(true)} modKey={modKey} />
 
         {mobileOpen && (
           <div
@@ -173,7 +186,30 @@ export default function App() {
                   </button>
                 </div>
 
-                <Markdown content={active.content} />
+                {/* Search Match Highlight Banner */}
+                {searchQuery && (
+                  <div className="mb-6 flex items-center justify-between rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs text-ink shadow-sm">
+                    <span className="flex items-center gap-2">
+                      <span>🔍</span>
+                      <span>
+                        Highlighting matches for:{" "}
+                        <strong className="font-bold text-amber-600 dark:text-amber-300">
+                          "{searchQuery}"
+                        </strong>
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="rounded px-2 py-0.5 font-semibold text-ink-soft hover:bg-amber-500/20 hover:text-ink"
+                      title="Clear search highlight"
+                    >
+                      ✕ Clear
+                    </button>
+                  </div>
+                )}
+
+                <Markdown content={active.content} searchQuery={searchQuery} />
 
                 {/* Bottom Completion & Navigation Actions */}
                 <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
@@ -244,6 +280,8 @@ export default function App() {
           </button>
         )}
       </div>
+
+      <CommandPalette isOpen={isPaletteOpen} onClose={() => setIsPaletteOpen(false)} />
     </div>
   );
 }

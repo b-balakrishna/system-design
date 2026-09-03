@@ -81,6 +81,8 @@ interface AppContextValue {
   readme: string;
   completedIds: Set<string>;
   toggleCompleted: (id: string) => void;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -89,6 +91,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [activeId, setActiveIdRaw] = useState<string | null>(parseHash);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
@@ -179,6 +182,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         readme: repoReadme,
         completedIds,
         toggleCompleted,
+        searchQuery,
+        setSearchQuery,
       }}
     >
       {children}

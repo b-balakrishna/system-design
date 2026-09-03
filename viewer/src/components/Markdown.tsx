@@ -8,6 +8,36 @@ import Mermaid from "./Mermaid";
 
 interface MarkdownProps {
   content: string;
+  searchQuery?: string;
+}
+
+function highlightChildren(children: any, query?: string): any {
+  if (!query || !query.trim()) return children;
+  const escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(${escaped})`, "gi");
+
+  if (typeof children === "string") {
+    const parts = children.split(regex);
+    if (parts.length === 1) return children;
+    return parts.map((part, i) =>
+      part.toLowerCase() === query.trim().toLowerCase() ? (
+        <mark
+          key={i}
+          className="rounded bg-amber-400/40 px-1 py-0.5 font-bold text-ink not-italic shadow-sm dark:bg-amber-400/30 dark:text-amber-200"
+        >
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  }
+
+  if (Array.isArray(children)) {
+    return children.map((c, i) => <span key={i}>{highlightChildren(c, query)}</span>);
+  }
+
+  return children;
 }
 
 function PreBlock({ children, ...props }: any) {
@@ -71,10 +101,19 @@ function resolveInternalHref(
   return null;
 }
 
-export default function Markdown({ content }: MarkdownProps) {
+export default function Markdown({ content, searchQuery }: MarkdownProps) {
   const { flatTopics, phases } = useApp();
 
   const components: Components = {
+    p({ children, ...props }: any) {
+      return <p {...props}>{highlightChildren(children, searchQuery)}</p>;
+    },
+    li({ children, ...props }: any) {
+      return <li {...props}>{highlightChildren(children, searchQuery)}</li>;
+    },
+    td({ children, ...props }: any) {
+      return <td {...props}>{highlightChildren(children, searchQuery)}</td>;
+    },
     pre({ node, children, ...props }: any) {
       if (isMermaidPre(node)) return <>{children}</>;
       return <PreBlock {...props}>{children}</PreBlock>;

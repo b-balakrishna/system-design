@@ -1,8 +1,43 @@
 # System Design: Frontend, Backend & Everything In Between
 
-A structured, self-paced roadmap for mastering system design end to end, from interview framing and low-level design to distributed systems, frontend architecture, cloud scalability, AI/ML systems, and complete case studies.
+[![Topics](https://img.shields.io/badge/curriculum-211%20%2F%20211%20topics-brightgreen)](README.md)
+[![Integrity Gates](https://img.shields.io/badge/quality%20gates-100%25%20passing-success)](scripts/verify-repo.py)
+[![Interactive Viewer](https://img.shields.io/badge/interactive%20viewer-live-blueviolet)](viewer)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+A structured, production-grade roadmap for mastering system design end to end: from interview framing and low-level design to distributed systems, frontend architecture, cloud scalability, AI/ML systems, and real-world case studies.
 
 Most system design resources focus only on backend architecture. This repo treats every layer of the stack as a first-class design surface: APIs, databases, browsers, rendering, infrastructure, observability, ML serving, and trade-off communication.
+
+---
+
+## Interactive Web Viewer & Quick Start
+
+This repository includes a modern, high-performance web viewer with instant full-text search, keyboard shortcuts (`Cmd+K`, arrow keys), a personal study progress tracker, and interactive Mermaid architecture diagrams.
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/b-balakrishna/system-design.git
+cd system-design
+
+# 2. Run the interactive reader locally
+pnpm --prefix viewer dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser to study offline or locally.
+
+---
+
+## The 45-Minute Interview Pacing Guide
+
+In a FAANG / Tier-1 system design interview, managing your time is half the evaluation. Use this 45-minute pacing rubric:
+
+| Time | Phase | Focus & Deliverables |
+|---|---|---|
+| **0 - 5 min** | **Scope & Requirements** | Clarify functional vs non-functional requirements. Define scale (DAU, write/read ratio), define out-of-scope boundaries. |
+| **5 - 10 min** | **Capacity Estimation** | Compute back-of-the-envelope math: QPS (average & peak), network ingress/egress, cache RAM, and 5-year storage. |
+| **10 - 25 min** | **High-Level Design** | Sketch end-to-end architecture (Client -> Gateway -> Microservices -> Storage). Define API endpoints and data model schema. |
+| **25 - 40 min** | **Deep Dives & Trade-offs** | Dive into 2-3 core bottlenecks: caching strategies, concurrency control (locks vs Saga), data partitioning, and failure recovery. |
+| **40 - 45 min** | **Wrap-up & Resilience** | Summarize single points of failure (SPOFs), monitoring metrics, SLOs, and horizontal auto-scaling. |
 
 ---
 
