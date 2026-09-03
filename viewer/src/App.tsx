@@ -100,8 +100,24 @@ export default function App() {
 
                 <Markdown content={active.content} />
 
+                {/* Bottom Mark as Completed Button */}
+                <div className="mt-12 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => toggleCompleted(active.id)}
+                    className={`flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:scale-[1.02] ${
+                      completedIds.has(active.id)
+                        ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25"
+                        : "border-line bg-elev text-ink-soft hover:border-brand hover:text-ink"
+                    }`}
+                  >
+                    <span className="text-base font-bold">{completedIds.has(active.id) ? "✓" : "○"}</span>
+                    <span>{completedIds.has(active.id) ? "Completed (Click to unmark)" : "Mark Topic as Completed"}</span>
+                  </button>
+                </div>
+
                 {/* Prev / next pager */}
-                <nav className="mt-12 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:justify-between">
+                <nav className="mt-8 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:justify-between">
                   {prev ? (
                     <PagerButton dir="prev" topic={prev} />
                   ) : (
