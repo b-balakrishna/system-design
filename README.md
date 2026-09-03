@@ -30,8 +30,8 @@ system-design/
 | Phase | Folder | Focus | Topics |
 | - | - | - | - :|
 | Phase 0 | [Interview Primer](phase-0-interview-primer) | Interview framing, requirements, estimation, diagrams, trade-offs | 8 |
-| Phase 1 | [Low Level Design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies | 6 |
-| Phase 2 | [Foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases | 19 |
+| Phase 1 | [Low Level Design](phase-1-low-level-design) | SOLID, design patterns, UML, LLD case studies, concurrency | 7 |
+| Phase 2 | [Foundations](phase-2-foundations) | Networking, protocols, APIs, auth, caching, databases, data modeling | 20 |
 | Phase 3 | [Backend](phase-3-backend) | Backend & data architecture, databases, queues, messaging reliability, search, storage | 38 |
 | Phase 4 | [Distributed Systems](phase-4-distributed-systems) | Consistency, consensus, transactions, clocks, event/stream patterns, resilience, distributed data structures | 32 |
 | Phase 5 | [Frontend](phase-5-frontend) | Browser internals, rendering, state, data fetching, performance, observability, frontend architecture | 29 |
@@ -70,6 +70,7 @@ system-design/
 | 4 | [Design Patterns: Behavioral](phase-1-low-level-design/topic-4-design-patterns-behavioral.md) |
 | 5 | [UML and Class Diagrams](phase-1-low-level-design/topic-5-uml-and-class-diagrams.md) |
 | 6 | [LLD Case Studies](phase-1-low-level-design/topic-6-lld-case-studies.md) |
+| 7 | [Concurrency in Low-Level Design](phase-1-low-level-design/topic-7-concurrency-in-low-level-design.md) |
 
  - 
 
@@ -98,6 +99,7 @@ system-design/
 | 17 | [Rate Limiting](phase-2-foundations/topic-17-rate-limiting.md) |
 | 18 | [Database Fundamentals](phase-2-foundations/topic-18-database-fundamentals.md) |
 | 19 | [SQL vs NoSQL](phase-2-foundations/topic-19-sql-vs-nosql.md) |
+| 20 | [Data Modeling & Schema Design](phase-2-foundations/topic-20-data-modeling-and-schema-design.md) |
 
  - 
 
