@@ -144,7 +144,7 @@ flowchart TD
    - Rider clicks "Request Ride" in the mobile app.
    - `Trip Lifecycle Service` generates a trip record in `TripDB` with status `REQUESTED`.
 3. **Candidate Search**:
-   - `Dispatch Engine` converts pickup `(lat, long)` into its primary H3 cell and identifies the 6 adjacent concentric hexagonal rings ($k$-ring search).
+   - `Dispatch Engine` converts pickup `(lat, long)` into its primary H3 cell and identifies the 6 adjacent concentric hexagonal rings (k-ring search).
    - Retrieves all `AVAILABLE` drivers located within those cells from Redis in <5 ms.
 4. **Ranking & Offer**:
    - Candidate drivers are ranked by real driving ETA (accounting for traffic and one-way streets via a routing engine).

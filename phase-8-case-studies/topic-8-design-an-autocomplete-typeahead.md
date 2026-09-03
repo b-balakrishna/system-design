@@ -86,7 +86,7 @@ A Trie is an in-memory tree where each node represents a character. A path from 
   2. Traverse *all* descendant branches of `'sys'` to locate all completed words.
   3. Sort all completed words by frequency and pick the top 5.
   - *Bottleneck*: Traversing all descendant subtrees can touch millions of leaf nodes in worst-case scenarios, taking hundreds of milliseconds.
-- **Production Solution: Node-Level Top-$k$ Caching**:
+- **Production Solution: Node-Level Top-K Caching**:
   - Store the **top 5 most popular completed queries directly inside every node**:
   ```python
   class TrieNode:

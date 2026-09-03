@@ -115,8 +115,8 @@ When RAM fills up, which items do we evict?
   - *The Downside*: Every key node requires two 64-bit pointers (prev and next = 16 bytes). For 200 million keys, pointer bookkeeping alone consumes **3.2 GB of pure RAM waste**!
 - **Redis Approximated LRU (Sampled LRU)**:
   - Eliminates pointers entirely! Each key stores a compact 24-bit idle timestamp.
-  - When memory is full, the engine randomly samples $K$ keys (typically $K = 5$) and evicts the one with the oldest timestamp.
-  - *Verdict*: With $K = 10$, sampled LRU matches the statistical eviction efficiency of true LRU while saving gigabytes of memory.
+  - When memory is full, the engine randomly samples K keys (typically K = 5) and evicts the one with the oldest timestamp.
+  - *Verdict*: With K = 10, sampled LRU matches the statistical eviction efficiency of true LRU while saving gigabytes of memory.
 
 ### 2. Cache Stampede (Dog-Piling / Thundering Herd)
 When a hot cache key expires, thousands of concurrent threads simultaneously experience a cache miss and query the primary database, causing catastrophic database failure:

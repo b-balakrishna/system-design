@@ -4,12 +4,12 @@
 
 ### Functional Requirements
 - **Score Updates**: Players submit their match scores or rating adjustments in real-time upon match completion.
-- **Top-$K$ Global Leaderboard**: Retrieve the top 100 global players with usernames, avatars, scores, and exact ranks in sub-50 ms.
+- **Top-K Global Leaderboard**: Retrieve the top 100 global players with usernames, avatars, scores, and exact ranks in sub-50 ms.
 - **Relative Ranking (Player Surroundings)**: Retrieve a player's current rank and the 5 players immediately above and below them (e.g., rank 1,420 to 1,430).
 - **Seasonal & Weekly Leaderboards**: Support periodic leaderboard resets (e.g., Season 4) while archiving historical past-season winners.
 
 ### Non-Functional Requirements
-- **Ultra-Low Latency**: Top-$K$ and relative rank queries must return in **<10 ms** to render smoothly in game lobby menus.
+- **Ultra-Low Latency**: Top-K and relative rank queries must return in **<10 ms** to render smoothly in game lobby menus.
 - **High Concurrency**: Sustain tens of thousands of score updates per second during peak tournament weekends.
 - **Real-Time Accuracy**: Ranks must reflect updates within <1 second without lag or stale ordering.
 - **High Availability & Fault Tolerance**: 99.99% uptime. Score updates must not be lost if an in-memory node restarts.
@@ -56,7 +56,7 @@
   ```
 - **Response**: `HTTP 200 OK` with updated `new_score` and `new_rank`.
 
-### 2. Get Top-$K$ Leaderboard
+### 2. Get Top-K Leaderboard
 - **Endpoint**: `GET /api/v1/leaderboards/{season_id}/top?limit=100`
 - **Response**: `HTTP 200 OK`
   ```json
@@ -168,5 +168,5 @@ If a global game exceeds 100 million players across dozens of game modes:
   - *Challenge*: The top shard handles 90% of read traffic.
 - **Approach B: Scatter-Gather Sharding (Recommended)**:
   - Shard players across $M$ Redis nodes using `hash(user_id) % M`.
-  - For Top-$K$ queries: query the top $K$ from all $M$ shards in parallel and merge them in application memory (takes <5 ms for small $M \le 8$).
+  - For Top-K queries: query the top K from all M shards in parallel and merge them in application memory (takes <5 ms for small M ≤ 8).
   - For relative rank queries: maintain a lightweight **Score Histogram** (bucket counts: 0-100, 101-200...) across the cluster to calculate global rank offsets.

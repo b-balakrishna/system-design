@@ -3,7 +3,7 @@
 ## Step 1: Clarify Requirements
 
 ### Functional Requirements
-- **Proximity Search**: Given a user's current GPS coordinates (latitude and longitude) and a search radius $R$, return the top $K$ nearby businesses (e.g., restaurants within 3 km).
+- **Proximity Search**: Given a user's current GPS coordinates (latitude and longitude) and a search radius $R$, return the top K nearby businesses (e.g., restaurants within 3 km).
 - **Filtering & Ranking**: Allow users to filter search results by category (e.g., coffee, Italian), price tier (`$$`), and rating ($\ge 4.0\text{ stars}$).
 - **Business Management**: Business owners can add, update, and delete business listings, operating hours, photos, and descriptions.
 - **Detailed Place View**: Fetch comprehensive business information, customer reviews, and photos.
