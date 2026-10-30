@@ -198,7 +198,7 @@ classDiagram
 ```
 
 > [!NOTE]
-> **Reading the Diagram ($ = static)**: In Mermaid UML class diagram notation, a trailing `$` indicates a **static member** (underlined in UML standards):
+> **Reading the Diagram (`$ = static`)**: In Mermaid UML class diagram notation, a trailing `$` indicates a **static member** (underlined in UML standards):
 > - `-instance IdGenerator$`: private static field holding the singleton instance.
 > - `+getInstance()$ IdGenerator`: public static method returning the singleton instance.
 

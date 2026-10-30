@@ -162,14 +162,14 @@ flowchart TD
 ### 1. The Dangers of Floating-Point Math
 - **Never use `FLOAT` or `DOUBLE` for financial amounts**: In IEEE 754 floating point, `0.1 + 0.2 = 0.30000000000000004`. Over millions of calculations, rounding errors accumulate into noticeable financial discrepancies.
 - **Store Amounts as Lowest Currency Denominations (Integers)**:
-  - Store USD as **Cents** ($10.50 $\rightarrow$ `1050`).
-  - Store JPY as **Yen** ($¥500 $\rightarrow$ `500`).
+  - Store USD as **Cents** (\$10.50 $\rightarrow$ `1050`).
+  - Store JPY as **Yen** (¥500 $\rightarrow$ `500`).
   - For micro-transactions (e.g., cryptocurrency or sub-cent ad clicks), store as fixed-point decimal with 6 to 8 digits of precision or `BIGINT` representing tenths of a cent.
 
 ### 2. Preventing Deadlocks in Concurrent Transfers
 Consider two concurrent transfers occurring simultaneously:
-- Transfer 1: User A sends $10 to User B.
-- Transfer 2: User B sends $10 to User A.
+- Transfer 1: User A sends \$10 to User B.
+- Transfer 2: User B sends \$10 to User A.
 If Transfer 1 locks Account A first, and Transfer 2 locks Account B first, a **distributed deadlock** occurs.
 - **Global Lock Ordering Rule**:
   Always acquire database row locks in deterministic order sorted by `account_id`:
@@ -189,5 +189,5 @@ External banking systems (ACH, Fedwire, card acquiring) are asynchronous batch p
   1. Compares internal transaction logs against the bank settlement file.
   2. Flags discrepancies:
      - **Missing Transaction**: Internal system records a deposit, but the bank never received it (requires alerting).
-     - **Amount Mismatch**: Internal system charged $50.00, but the bank processed $55.00 due to an unmodeled fee.
+     - **Amount Mismatch**: Internal system charged \$50.00, but the bank processed \$55.00 due to an unmodeled fee.
   3. Unmatched items are dispatched to a human operations queue for investigation.

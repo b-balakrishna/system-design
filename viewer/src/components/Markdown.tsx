@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import { useApp } from "../context/AppContext";
 import { topicIdToHash } from "../data";
 import type { Phase, Topic } from "../data";
 import Mermaid from "./Mermaid";
+import remarkDisplayMath from "../plugins/remarkDisplayMath";
 
 interface MarkdownProps {
   content: string;
@@ -190,7 +193,11 @@ export default function Markdown({ content, searchQuery }: MarkdownProps) {
         prose-th:text-left prose-img:rounded-lg
         prose-blockquote:border-brand prose-blockquote:bg-brand-soft/40 prose-blockquote:py-0.5 prose-blockquote:not-italic"
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkMath, remarkDisplayMath]}
+        rehypePlugins={[rehypeKatex]}
+        components={components}
+      >
         {content}
       </ReactMarkdown>
     </div>

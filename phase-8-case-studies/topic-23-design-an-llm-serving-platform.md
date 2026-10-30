@@ -135,7 +135,7 @@ Most enterprise LLM applications use long, repetitive prompts (e.g., 3,000-token
   - **Result**: Slashes Time-to-First-Token (TTFT) from **1,200 ms to <35 ms**.
 
 ### 3. Dynamic Multi-LoRA Serving
-Deploying separate 70B models for 100 enterprise customers requires hundreds of expensive GPU servers ($100 \times \$300{,}000$).
+Deploying separate 70B models for 100 enterprise customers requires hundreds of expensive GPU servers ($100 \times 300{,}000\text{ USD}$).
 - **Low-Rank Adaptation (LoRA)**:
   - Freezes base model weights $W$ and trains small rank-decomposition matrices $\Delta W = A \times B$.
   - Adapter size is tiny (~50 MB compared to 140 GB for the base model).

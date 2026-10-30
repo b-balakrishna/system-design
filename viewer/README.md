@@ -10,6 +10,7 @@ deep-linkable topics, light/dark themes, and a fully responsive layout.
 - Sidebar grouped by phase, with per-phase progress and live search.
 - Renders Mermaid diagrams (the ```mermaid blocks in your notes) inline, re-themed for light/dark.
 - GitHub-flavoured markdown via `@tailwindcss/typography`: tables, task lists, strikethrough.
+- Typesets `$...$` inline math and `$$...$$` display equations with KaTeX, with local fonts and scrollable wide equations.
 - Light / dark theme, remembered across visits and matched to your OS preference.
 - Fully responsive — collapsible drawer sidebar on mobile, multi-column phase grid on desktop.
 - Shareable URLs — each topic has its own `#phase/topic` hash, with back/forward support.
@@ -22,6 +23,7 @@ deep-linkable topics, light/dark themes, and a fully responsive layout.
 - Vite 5 (build tooling)
 - Tailwind CSS 3 + `@tailwindcss/typography`
 - `react-markdown` + `remark-gfm`
+- `remark-math` + `rehype-katex` for mathematical notation
 - `mermaid` for diagrams
 
 ## Run it
@@ -39,6 +41,7 @@ Then open the printed local URL (usually http://localhost:5173).
 
 ```bash
 pnpm typecheck   # tsc --noEmit
+pnpm test        # math rendering and curriculum regression checks (Node 24+)
 pnpm build       # type-check, then build to viewer/dist
 pnpm preview     # serve the production build locally
 ```

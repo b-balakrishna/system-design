@@ -69,6 +69,14 @@ body {
   height: auto;
 }
 
+/* Keep wide display equations scrollable within the notes on small screens. */
+.prose .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.25rem;
+}
+
 /*
   prose-pre:bg-sunk gives code blocks a light background in light theme.
   prose-slate's --tw-prose-pre-code is #e2e8f0 (near-white) — designed for dark

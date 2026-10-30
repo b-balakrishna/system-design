@@ -84,13 +84,13 @@ flowchart TD
 ### End-to-End Trade Lifecycle:
 1. **Pre-Trade Risk Check**:
    - Trader submits: `BUY 2 BTC @ $60,000`.
-   - `RiskEngine` checks in-memory user balances (must have at least $\$120{,}000$ available USD) and places a hold.
+   - `RiskEngine` checks in-memory user balances (must have at least \$120,000 available USD) and places a hold.
 2. **Deterministic Sequencing**:
    - `Sequencer` stamps the order with a strictly increasing **monotonic Sequence Number** (e.g., `seq_1002931`) and writes it to an append-only log.
 3. **Single-Threaded In-Memory Matching**:
    - The matching engine processes events one-by-one in sequence order.
    - It checks the opposite side of the book (Asks):
-     - If lowest Ask $\le \$60{,}000$, a trade is generated immediately!
+     - If lowest Ask $\le$ \$60,000, a trade is generated immediately!
      - Any remaining unfilled volume is inserted as a Limit Order on the Bid side.
 4. **Trade Output Event**:
    - The engine emits a `TradeExecuted` event (`seq_1002931`, `matched_with=ord_4412`, `price=60000`, `qty=2`).

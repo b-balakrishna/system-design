@@ -48,6 +48,10 @@ jobs:
         working-directory: viewer
         run: pnpm typecheck
 
+      - name: Test Math Rendering
+        working-directory: viewer
+        run: pnpm test
+
       - name: Build Viewer
         working-directory: viewer
         run: pnpm build
