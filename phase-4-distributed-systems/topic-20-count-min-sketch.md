@@ -8,10 +8,7 @@
   - A 2D array of counters with depth $d$ (rows) and width $w$ (columns).
   - $d$ independent hash functions ($h_1, h_2, \dots, h_d$) that map input keys to columns in the range $[0, w-1]$.
 
-```mermaid
-grid-layout
-```
-*(Note: Represented below as a structured flow showing row increments)*
+The diagram below shows how each hash function increments a counter in its row:
 
 ```mermaid
 flowchart TD
@@ -21,9 +18,9 @@ flowchart TD
     
     subgraph Counter Grid
         direction TB
-        R0[Row 0: [0] [0] [0] [12+1] [0] [0]]
-        R1[Row 1: [0] [0] [0] [0] [0] [0] [0] [8+1] [0]]
-        R2[Row 2: [0] [4+1] [0] [0] [0] [0]]
+        R0["Row 0: [0] [0] [0] [12+1] [0] [0]"]
+        R1["Row 1: [0] [0] [0] [0] [0] [0] [0] [8+1] [0]"]
+        R2["Row 2: [0] [4+1] [0] [0] [0] [0]"]
     end
     
     Row0 --> R0

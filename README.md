@@ -1,6 +1,6 @@
 # System Design: Frontend, Backend & Everything In Between
 
-[![Topics](https://img.shields.io/badge/curriculum-217%20%2F%20217%20topics-brightgreen)](README.md)
+[![Topics](https://img.shields.io/badge/curriculum-223%20%2F%20223%20topics-brightgreen)](README.md)
 [![Integrity Gates](https://img.shields.io/badge/quality%20gates-100%25%20passing-success)](scripts/verify-repo.py)
 [![Interactive Viewer](https://img.shields.io/badge/interactive%20viewer-live-blueviolet)](viewer)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -393,6 +393,12 @@ system-design/
 | 27 | [Design a Distributed Message Broker](phase-8-case-studies/topic-27-design-a-distributed-message-broker.md) | Enterprise & Financial Engines (Batch 7) |
 | 28 | [Design a Global Content Delivery Network](phase-8-case-studies/topic-28-design-a-global-content-delivery-network.md) | Enterprise & Financial Engines (Batch 7) |
 | 29 | [Design a Distributed Caching Service](phase-8-case-studies/topic-29-design-a-distributed-caching-service.md) | Enterprise & Financial Engines (Batch 7) |
+| 30 | [Design an Infinite Scroll Virtualized Feed](phase-8-case-studies/topic-30-design-an-infinite-scroll-virtualized-feed.md) | Frontend System Design & Architecture (Batch 8) |
+| 31 | [Design an Accessible Combobox Component](phase-8-case-studies/topic-31-design-an-accessible-combobox-component.md) | Frontend System Design & Architecture (Batch 8) |
+| 32 | [Design a Collaborative Canvas Whiteboard](phase-8-case-studies/topic-32-design-a-collaborative-canvas-whiteboard.md) | Frontend System Design & Architecture (Batch 8) |
+| 33 | [Design a Multi-Step Form Wizard Engine](phase-8-case-studies/topic-33-design-a-multi-step-form-wizard-engine.md) | Frontend System Design & Architecture (Batch 8) |
+| 34 | [Design a Real-Time Toast Notification System](phase-8-case-studies/topic-34-design-a-real-time-toast-notification-system.md) | Frontend System Design & Architecture (Batch 8) |
+| 35 | [Design a Resumable File Video Uploader](phase-8-case-studies/topic-35-design-a-resumable-file-video-uploader.md) | Frontend System Design & Architecture (Batch 8) |
 
 ---
 

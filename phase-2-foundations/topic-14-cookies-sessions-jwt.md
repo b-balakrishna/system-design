@@ -77,7 +77,7 @@ sequenceDiagram
     B->>S: POST /login {username, password}
     S->>S: verify credentials
     S->>Store: SET session:abc123 {userId:42, roles:["buyer"], expiresAt:...} EX 3600
-    S-->>B: 200 OK\nSet-Cookie: sid=abc123; HttpOnly; Secure; SameSite=Lax
+    S-->>B: 200 OK\nSet-Cookie: sid=abc123#59; HttpOnly#59; Secure#59; SameSite=Lax
 
     B->>S: GET /orders (Cookie: sid=abc123)
     S->>Store: GET session:abc123
@@ -86,7 +86,7 @@ sequenceDiagram
 
     B->>S: POST /logout (Cookie: sid=abc123)
     S->>Store: DEL session:abc123
-    S-->>B: 200 OK\nSet-Cookie: sid=; Max-Age=0 (clear the cookie)
+    S-->>B: 200 OK\nSet-Cookie: sid=#59; Max-Age=0 (clear the cookie)
 ```
 
 **How the session ID is generated**: cryptographically secure random (CSPRNG), 128+ bits. In Python: `secrets.token_urlsafe(32)`. In Node.js: `crypto.randomBytes(32).toString('hex')`. This makes session IDs unguessable.
@@ -272,7 +272,7 @@ sequenceDiagram
     Auth->>Auth: verify credentials (Argon2id)
     Auth->>Auth: generate access_token (JWT, 15min) + refresh_token (random, 30 days)
     Auth->>R: SET refresh:hash(refresh_token) {userId, version} EX 2592000
-    Auth-->>B: 200 OK {access_token: "eyJ..."}\nSet-Cookie: rt=refresh_token_value; HttpOnly; Secure; SameSite=Lax; Path=/auth/refresh; Max-Age=2592000
+    Auth-->>B: 200 OK {access_token: "eyJ..."}\nSet-Cookie: rt=refresh_token_value#59; HttpOnly#59; Secure#59; SameSite=Lax#59; Path=/auth/refresh#59; Max-Age=2592000
 
     B->>API: GET /orders\nAuthorization: Bearer eyJ...
     API->>API: verify JWT (RS256)  -  no DB call
@@ -284,11 +284,11 @@ sequenceDiagram
     R-->>Auth: {userId, version}
     Auth->>Auth: generate new access_token + new refresh_token
     Auth->>R: DEL refresh:hash(old_rt)\nSET refresh:hash(new_rt) {userId, version}
-    Auth-->>B: 200 OK {access_token: "eyJ..."}\nSet-Cookie: rt=new_refresh_token; ...
+    Auth-->>B: 200 OK {access_token: "eyJ..."}\nSet-Cookie: rt=new_refresh_token#59; ...
 
     B->>Auth: POST /auth/logout\nCookie: rt=...
     Auth->>R: DEL refresh:hash(rt)
-    Auth-->>B: 200 OK\nSet-Cookie: rt=; Max-Age=0 (clear cookie)
+    Auth-->>B: 200 OK\nSet-Cookie: rt=#59; Max-Age=0 (clear cookie)
 ```
 
 Key design decisions:

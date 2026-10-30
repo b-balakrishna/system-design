@@ -14,7 +14,7 @@
 ```mermaid
 flowchart TD
     subgraph Network Partition
-        NodeA[Node A - Leader] -. x . - NodeB[Node B - Isolated]
+        NodeA[Node A - Leader] --x NodeB[Node B - Isolated]
     end
     ClientA[Client A] -->|1. Write key=value2| NodeA
     ClientB[Client B] -->|2. Read key| NodeB
@@ -22,8 +22,8 @@ flowchart TD
     classDef cp fill:#f9d,stroke:#333,stroke-width:2px;
     classDef ap fill:#bfb,stroke:#333,stroke-width:2px;
     
-    NodeA ::: cp
-    NodeB ::: ap
+    class NodeA cp
+    class NodeB ap
     
     noteA["CP: Node A rejects or stalls write\nbecause it cannot replicate to Node B"]
     noteB["AP: Node B returns stale 'value1'\nto maintain availability"]

@@ -88,7 +88,7 @@ sequenceDiagram
     participant R as Redis (Sorted Set)
 
     Note over R: Current window: last 60 seconds
-    R: [T-55, T-40, T-30, T-10, T-5] (5 requests in window)
+    Note right of R: [T-55, T-40, T-30, T-10, T-5] (5 requests in window)
     C->>RL: Request at T
     RL->>R: ZREMRANGEBYSCORE (remove entries older than T-60)
     RL->>R: ZCARD → 5 (within limit of 100)

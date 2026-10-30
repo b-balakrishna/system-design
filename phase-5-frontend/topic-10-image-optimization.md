@@ -13,7 +13,7 @@
 
 ```mermaid
 flowchart LR
-    SRC[Original image] --> CDN[Image CDN: resize +<br/>format (AVIF/WebP) + compress]
+    SRC[Original image] --> CDN["Image CDN: resize +<br/>format (AVIF/WebP) + compress"]
     CDN -->|"srcset per device"| DEV[Right-sized image]
     DEV --> LCP[Better LCP, less data]
 ```

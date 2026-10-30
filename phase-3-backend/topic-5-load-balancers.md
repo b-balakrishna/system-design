@@ -15,7 +15,7 @@ flowchart TB
     LB -->|health-checked| S1[Server 1]
     LB --> S2[Server 2]
     LB --> S3[Server 3]
-    LB -.x.-> S4[Server 4 unhealthy]
+    LB --x S4[Server 4 unhealthy]
 ```
 
 ## Problem It Solves
